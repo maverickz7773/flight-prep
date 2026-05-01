@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: flight-prep
+    runtime: docker
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8000

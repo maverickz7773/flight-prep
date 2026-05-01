@@ -1,0 +1,12 @@
+node_modules/
+.next/
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+.DS_Store
+.env
+frontend_build/
+frontend/out/
+*.pdf
+*.png
