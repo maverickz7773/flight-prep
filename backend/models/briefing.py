@@ -89,6 +89,7 @@ class Waypoint(BaseModel):
     ground_speed: int | None = None
     tas: int | None = None
     fuel_remaining: float | None = None
+    shear_rate: int | None = None
     eta: str | None = None
     distance: int | None = None
     is_toc: bool = False

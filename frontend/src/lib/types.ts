@@ -85,6 +85,7 @@ export interface Waypoint {
   tas: number | null;
   eta: string | null;
   fuel_remaining: number | null;
+  shear_rate: number | null;
   is_toc: boolean;
   is_tod: boolean;
   is_step_climb: boolean;

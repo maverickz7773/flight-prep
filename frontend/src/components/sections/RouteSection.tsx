@@ -4,9 +4,11 @@ import Section from "../Section";
 export default function RouteSection({
   route,
   etops,
+  ezfw,
 }: {
   route: RouteSummary;
   etops: ETOPSInfo | null;
+  ezfw: number;
 }) {
   const keyWaypoints = route.waypoints.filter(
     (w) => w.is_toc || w.is_tod || w.is_step_climb || w.fir_icao
@@ -29,7 +31,8 @@ export default function RouteSection({
             <span className="w-20">WPT</span>
             <span className="w-14 text-right">FL</span>
             <span className="w-16 text-right">ETA</span>
-            <span className="w-16 text-right">FUEL</span>
+            <span className="w-16 text-right">GW</span>
+            <span className="w-10 text-right">SR</span>
             <span className="ml-2">NOTE</span>
           </div>
           {displayWaypoints.map((w, i) => (
@@ -51,7 +54,10 @@ export default function RouteSection({
                 {w.eta || ""}
               </span>
               <span className="w-16 text-right tabular-nums">
-                {w.fuel_remaining ? `${w.fuel_remaining}t` : ""}
+                {w.fuel_remaining != null ? `${(ezfw / 1000 + w.fuel_remaining).toFixed(1)}t` : ""}
+              </span>
+              <span className={`w-10 text-right tabular-nums ${w.shear_rate != null && w.shear_rate > 5 ? "text-accent-amber font-bold" : ""}`}>
+                {w.shear_rate != null ? w.shear_rate : ""}
               </span>
               <span className="ml-2 text-muted">
                 {w.is_toc

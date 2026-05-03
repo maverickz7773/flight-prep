@@ -17,13 +17,16 @@ Flight Prep converts airline OFP (Operational Flight Plan) PDFs in Lido format i
 ## Development Commands
 
 ```bash
-# Start both servers locally (backend:8000 + frontend:3000)
-npm run dev
-
-# Backend only (requires venv)
+# Run locally (recommended): build frontend, copy to backend, start backend on port 8000
+cd frontend && npm run build && cd .. && cp -r frontend/out frontend_build
 cd backend && ../backend/venv/bin/uvicorn main:app --reload --port 8000
+# Then open http://localhost:8000
 
-# Frontend only
+# Note: `npm run dev` starts frontend:3000 + backend:8000 separately, but the
+# frontend uses relative `/api/parse` URLs so PDF parsing won't work from port 3000.
+# Always use the single-server approach above for local development.
+
+# Frontend only (for UI-only changes, no API)
 cd frontend && npm run dev
 
 # Build frontend static export (outputs to frontend/out/)
@@ -64,7 +67,7 @@ Stateless — no database. localStorage saves last briefing client-side.
 - **`main.py`** — FastAPI app. Mounts API routes then serves static frontend from `../frontend_build/`.
 - **`models/briefing.py`** — All Pydantic models. This is the JSON contract. Every field the frontend displays must exist here. When adding a field, update both this file and `frontend/src/lib/types.ts`.
 - **`parsers/ofp_parser.py`** — Orchestrator. Calls all sub-parsers, builds `BriefingData`, generates operational insights.
-- **`parsers/`** — One file per domain: `flight_info.py`, `fuel.py`, `weights.py`, `route.py`, `etops.py`, `arrival.py`, `weather.py`, `notams.py`, `crew_alerts.py`, `takeoff.py`. Each receives the full page list and knows which pages to search.
+- **`parsers/`** — One file per domain: `flight_info.py`, `fuel.py`, `weights.py`, `route.py`, `etops.py`, `arrival.py`, `weather.py`, `notams.py`, `crew_alerts.py`, `takeoff.py`. Each receives the full page list and knows which pages to search. `route.py` also parses enroute wind/shear pages for coordinates and shear rates at cruise FL.
 - **`services/briefing_generator.py`** — Generates plain-text briefing for clipboard copy (server-side).
 
 ### Frontend (`frontend/`)
@@ -76,7 +79,7 @@ Next.js 16 App Router with `output: "export"` (static HTML/JS/CSS). TypeScript, 
 - **`src/app/page.tsx`** — Single-page app: drag-and-drop upload → briefing display. Includes localStorage save/load.
 - **`src/components/BriefingView.tsx`** — Renders header card + all section components. Responsive padding.
 - **`src/components/NavSidebar.tsx`** — Desktop sidebar (xl+) and mobile bottom nav (below xl). Both powered by IntersectionObserver.
-- **`src/components/sections/`** — One component per briefing section (FlightOverview, FuelSection, etc.).
+- **`src/components/sections/`** — One component per briefing section (FlightOverview, FuelSection, etc.). RouteSection displays waypoint table with columns: WPT, FL, ETA, GW (gross weight = ZFW + fuel remaining), SR (shear rate at cruise FL, amber if >5), NOTE.
 - **`src/components/Section.tsx`** — Collapsible section wrapper used by all sections.
 
 ### Type Contract
@@ -101,6 +104,7 @@ All parsing is regex-based against pdfplumber text output. No LLM involved — L
 Key patterns in Lido OFPs:
 - Page 1: flight header, fuel summary, weights, alternates
 - Pages with `PAGE X/10` + `AWY` + `WPT` headers: route waypoint pages (where FIR boundaries, PLAN REQ/REM, SID/STAR are found)
+- Pages with `LAT/LONG` + `WAYPT` + `ITT` + `WIND DIRCTN SPEED/SHEAR RATE` headers: enroute wind/shear pages (coordinates, shear rates per waypoint at multiple flight levels). The dashed FL in the header row (e.g., `-320-`) indicates the aircraft's current cruise level. Wind/shear entries have format `DDDSS/R` (direction, speed, shear rate).
 - `ETOPS INFORMATION`: ETOPS section
 - `WX FORECAST` / `LIDO/WEATHER SERVICE`: weather pages
 - `LIDO-NOTAM-BULLETIN`: NOTAM pages with `++++` subcategory delimiters

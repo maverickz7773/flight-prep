@@ -198,6 +198,11 @@ def parse_route(pages: list[str]) -> RouteSummary:
         if wpt.name in coords:
             wpt.latitude, wpt.longitude = coords[wpt.name]
 
+    shear_rates = _parse_shear_rates(pages)
+    for wpt in waypoints:
+        if wpt.name in shear_rates:
+            wpt.shear_rate = shear_rates[wpt.name]
+
     mora_match = re.search(r"HIGHEST\s+MORA\s+IS\s+(\d+)\s+AT\s+(\w+)", "\n".join(pages))
     if mora_match:
         highest_mora = f"{mora_match.group(1)} at {mora_match.group(2)}"
@@ -223,6 +228,39 @@ def _parse_coordinates(pages: list[str]) -> dict[str, tuple[str, str]]:
             lat_raw, lon_raw, name = m.group(1), m.group(2), m.group(3)
             coords[name] = (lat_raw, lon_raw)
     return coords
+
+
+def _parse_shear_rates(pages: list[str]) -> dict[str, int]:
+    shear_rates: dict[str, int] = {}
+    cruise_col_idx: int | None = None
+
+    for page in pages:
+        if "LAT/LONG" not in page or "WAYPT" not in page or "ITT" not in page:
+            continue
+        for line in page.split("\n"):
+            stripped = line.strip()
+            if not stripped:
+                continue
+            dash_match = re.search(r"-(\d{3})-", stripped)
+            if dash_match and re.match(r"^[\d\s\-]+$", stripped):
+                tokens = stripped.split()
+                for idx, tok in enumerate(tokens):
+                    if tok.startswith("-") and tok.endswith("-"):
+                        cruise_col_idx = idx
+                        break
+                continue
+            wpt_match = re.match(
+                r"[NS]\d{4}\.\d/[EW]\d{4,5}\.\d\s+(\w+)\s+\d+\s+\d+\s+[PM]\d+\s+(.*)",
+                stripped,
+            )
+            if wpt_match and cruise_col_idx is not None:
+                name = wpt_match.group(1)
+                wind_part = wpt_match.group(2).strip()
+                if wind_part:
+                    entries = re.findall(r"\d{5}/(\d+)", wind_part)
+                    if len(entries) > cruise_col_idx:
+                        shear_rates[name] = int(entries[cruise_col_idx])
+    return shear_rates
 
 
 def _parse_fuel(s: str) -> float | None:
