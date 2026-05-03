@@ -222,6 +222,20 @@ export interface OperationalInsight {
   text: string;
 }
 
+export interface AerodromeBriefing {
+  icao: string;
+  name: string;
+  category: string;
+  general: string | null;
+  company_policy: string | null;
+  atc: string | null;
+  arrival_procedures: string | null;
+  ground_maneuvering: string | null;
+  departure_procedures: string | null;
+  miscellaneous: string | null;
+  destination_alternates: string | null;
+}
+
 export interface BriefingData {
   flight_info: FlightInfo;
   fuel: FuelSummary;
@@ -236,4 +250,6 @@ export interface BriefingData {
   crew_alerts: CrewAlert[];
   operational_insights: OperationalInsight[];
   enroute_airport_list: string[];
+  departure_briefing: AerodromeBriefing | null;
+  arrival_briefing: AerodromeBriefing | null;
 }

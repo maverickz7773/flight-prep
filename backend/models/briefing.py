@@ -228,6 +228,20 @@ class OperationalInsight(BaseModel):
     text: str
 
 
+class AerodromeBriefing(BaseModel):
+    icao: str
+    name: str
+    category: str
+    general: str | None = None
+    company_policy: str | None = None
+    atc: str | None = None
+    arrival_procedures: str | None = None
+    ground_maneuvering: str | None = None
+    departure_procedures: str | None = None
+    miscellaneous: str | None = None
+    destination_alternates: str | None = None
+
+
 class BriefingData(BaseModel):
     flight_info: FlightInfo
     fuel: FuelSummary
@@ -242,3 +256,5 @@ class BriefingData(BaseModel):
     crew_alerts: list[CrewAlert] = []
     operational_insights: list[OperationalInsight] = []
     enroute_airport_list: list[str] = []
+    departure_briefing: AerodromeBriefing | None = None
+    arrival_briefing: AerodromeBriefing | None = None

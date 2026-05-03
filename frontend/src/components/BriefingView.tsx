@@ -129,9 +129,9 @@ export default function BriefingView({ data }: { data: BriefingData }) {
       <FlightOverview data={fi} />
       <FuelSection data={data.fuel} />
       <WeightSection data={data.weights} />
-      <TakeoffSection data={data.takeoff} />
+      <TakeoffSection data={data.takeoff} departureBriefing={data.departure_briefing} />
       <RouteSection route={data.route} etops={data.etops} ezfw={data.weights.ezfw} />
-      <ArrivalSection data={data.arrival} />
+      <ArrivalSection data={data.arrival} arrivalBriefing={data.arrival_briefing} />
       <WxNotamSection
         weather={data.weather}
         notams={data.notams}

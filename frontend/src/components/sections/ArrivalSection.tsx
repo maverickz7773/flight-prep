@@ -1,7 +1,25 @@
-import type { ArrivalInfo } from "@/lib/types";
+import type { ArrivalInfo, AerodromeBriefing } from "@/lib/types";
 import Section from "../Section";
 
-export default function ArrivalSection({ data }: { data: ArrivalInfo }) {
+export default function ArrivalSection({
+  data,
+  arrivalBriefing,
+}: {
+  data: ArrivalInfo;
+  arrivalBriefing: AerodromeBriefing | null;
+}) {
+  const sections: { label: string; content: string | null }[] = arrivalBriefing
+    ? [
+        { label: "GENERAL", content: arrivalBriefing.general },
+        { label: "COMPANY POLICY", content: arrivalBriefing.company_policy },
+        { label: "ATC", content: arrivalBriefing.atc },
+        { label: "ARRIVAL PROCEDURES", content: arrivalBriefing.arrival_procedures },
+        { label: "GROUND MANEUVERING", content: arrivalBriefing.ground_maneuvering },
+        { label: "MISCELLANEOUS", content: arrivalBriefing.miscellaneous },
+        { label: "DESTINATION ALTERNATES", content: arrivalBriefing.destination_alternates },
+      ]
+    : [];
+
   return (
     <Section number={6} title="ARRIVAL">
       <div className="flex gap-8 mb-2">
@@ -49,6 +67,27 @@ export default function ArrivalSection({ data }: { data: ArrivalInfo }) {
                 </span>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {arrivalBriefing && (
+        <div className="mt-3 pt-3 border-t border-border">
+          <p className="text-accent-green text-xs font-bold mb-2">
+            OM C — {arrivalBriefing.icao} ({arrivalBriefing.name})
+          </p>
+          <div className="space-y-2">
+            {sections.map(
+              (s) =>
+                s.content && (
+                  <div key={s.label}>
+                    <p className="text-accent-amber text-xs font-bold">{s.label}</p>
+                    <p className="text-foreground text-xs whitespace-pre-line leading-relaxed">
+                      {s.content}
+                    </p>
+                  </div>
+                ),
+            )}
           </div>
         </div>
       )}

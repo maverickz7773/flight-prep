@@ -12,6 +12,7 @@ from parsers.notams import parse_notams
 from parsers.crew_alerts import parse_crew_alerts
 from parsers.takeoff import parse_takeoff
 from parsers.mel import parse_mel
+from parsers.omc import get_aerodrome_briefing
 
 
 def extract_pages(pdf_path: str) -> list[str]:
@@ -71,6 +72,8 @@ def parse_ofp(pdf_path: str) -> BriefingData:
         crew_alerts=crew_alerts,
         operational_insights=insights,
         enroute_airport_list=enroute_airports,
+        departure_briefing=get_aerodrome_briefing(flight_info.departure_icao),
+        arrival_briefing=get_aerodrome_briefing(flight_info.arrival_icao),
     )
 
 

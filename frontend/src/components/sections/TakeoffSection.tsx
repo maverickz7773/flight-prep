@@ -1,7 +1,23 @@
-import type { TakeoffData } from "@/lib/types";
+import type { TakeoffData, AerodromeBriefing } from "@/lib/types";
 import Section from "../Section";
 
-export default function TakeoffSection({ data }: { data: TakeoffData }) {
+export default function TakeoffSection({
+  data,
+  departureBriefing,
+}: {
+  data: TakeoffData;
+  departureBriefing: AerodromeBriefing | null;
+}) {
+  const sections: { label: string; content: string | null }[] = departureBriefing
+    ? [
+        { label: "GENERAL", content: departureBriefing.general },
+        { label: "COMPANY POLICY", content: departureBriefing.company_policy },
+        { label: "ATC", content: departureBriefing.atc },
+        { label: "DEPARTURE PROCEDURES", content: departureBriefing.departure_procedures },
+        { label: "MISCELLANEOUS", content: departureBriefing.miscellaneous },
+      ]
+    : [];
+
   return (
     <Section number={4} title="TAKEOFF">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0.5">
@@ -26,6 +42,27 @@ export default function TakeoffSection({ data }: { data: TakeoffData }) {
         <p className="text-muted text-xs mt-2 italic">
           V-speeds and flap setting: use EFB/OPT
         </p>
+      )}
+
+      {departureBriefing && (
+        <div className="mt-3 pt-3 border-t border-border">
+          <p className="text-accent-green text-xs font-bold mb-2">
+            OM C — {departureBriefing.icao} ({departureBriefing.name})
+          </p>
+          <div className="space-y-2">
+            {sections.map(
+              (s) =>
+                s.content && (
+                  <div key={s.label}>
+                    <p className="text-accent-amber text-xs font-bold">{s.label}</p>
+                    <p className="text-foreground text-xs whitespace-pre-line leading-relaxed">
+                      {s.content}
+                    </p>
+                  </div>
+                ),
+            )}
+          </div>
+        </div>
       )}
     </Section>
   );
