@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 import os
 import tempfile
 
@@ -8,9 +9,14 @@ from fastapi.staticfiles import StaticFiles
 
 from parsers.ofp_parser import parse_ofp
 from models.briefing import AirportNotes, BriefingData
-from parsers.notes import get_airport_notes
+from parsers.notes import (
+    get_airport_notes,
+    get_notes_data_path,
+    notes_data_file_exists,
+)
 
 app = FastAPI(title="Flight Prep API")
+logger = logging.getLogger(__name__)
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,7 +28,19 @@ app.add_middleware(
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "operational_info_present": notes_data_file_exists(),
+    }
+
+
+@app.on_event("startup")
+async def startup_checks():
+    notes_path = get_notes_data_path()
+    if notes_data_file_exists():
+        logger.info("Operational info file loaded from %s", notes_path)
+    else:
+        logger.warning("Operational info file missing at startup: %s", notes_path)
 
 
 @app.post("/api/parse", response_model=BriefingData)

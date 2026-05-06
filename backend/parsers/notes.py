@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 import re
 
@@ -7,10 +8,17 @@ _DATA_PATH = Path(__file__).resolve().parents[2] / "Operational Info.txt"
 _ICAO_HEADER_RE = re.compile(r"^\[([A-Z]{4})\]$")
 _cache: dict[str, dict[str, str]] | None = None
 _cache_mtime_ns: int | None = None
+_missing_file_warned = False
+logger = logging.getLogger(__name__)
 
 
 def _load() -> dict[str, dict[str, str]]:
+    global _missing_file_warned
+
     if not _DATA_PATH.exists():
+        if not _missing_file_warned:
+            logger.warning("Operational info file not found at %s", _DATA_PATH)
+            _missing_file_warned = True
         return {}
 
     text = _DATA_PATH.read_text(encoding="utf-8")
@@ -59,6 +67,14 @@ def _load() -> dict[str, dict[str, str]]:
 
     flush_section()
     return result
+
+
+def get_notes_data_path() -> Path:
+    return _DATA_PATH
+
+
+def notes_data_file_exists() -> bool:
+    return _DATA_PATH.exists()
 
 
 def get_airport_notes(icao: str) -> dict[str, str] | None:
