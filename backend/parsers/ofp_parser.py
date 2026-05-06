@@ -1,7 +1,7 @@
 from __future__ import annotations
 import pdfplumber
 
-from models.briefing import BriefingData, OperationalInsight
+from models.briefing import AirportNotes, BriefingData, OperationalInsight
 from parsers.flight_info import parse_flight_info
 from parsers.fuel import parse_fuel
 from parsers.weights import parse_weights
@@ -13,6 +13,7 @@ from parsers.crew_alerts import parse_crew_alerts
 from parsers.takeoff import parse_takeoff
 from parsers.mel import parse_mel
 from parsers.omc import get_aerodrome_briefing
+from parsers.notes import get_airport_notes
 
 
 def extract_pages(pdf_path: str) -> list[str]:
@@ -57,6 +58,16 @@ def parse_ofp(pdf_path: str) -> BriefingData:
             enroute_airports.append(alt.icao)
 
     insights = generate_insights(fuel, weights, etops, weather, notams, route)
+    dep_raw = get_airport_notes(flight_info.departure_icao)
+    arr_raw = get_airport_notes(flight_info.arrival_icao)
+    departure_note = dep_raw.get("departure") if dep_raw else None
+    arrival_note = arr_raw.get("arrival") if arr_raw else None
+    airport_notes = None
+    if departure_note or arrival_note:
+        airport_notes = AirportNotes(
+            departure=departure_note,
+            arrival=arrival_note,
+        )
 
     return BriefingData(
         flight_info=flight_info,
@@ -74,6 +85,7 @@ def parse_ofp(pdf_path: str) -> BriefingData:
         enroute_airport_list=enroute_airports,
         departure_briefing=get_aerodrome_briefing(flight_info.departure_icao),
         arrival_briefing=get_aerodrome_briefing(flight_info.arrival_icao),
+        airport_notes=airport_notes,
     )
 
 

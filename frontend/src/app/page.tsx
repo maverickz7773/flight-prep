@@ -1,9 +1,37 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import type { BriefingData } from "@/lib/types";
+import type { AirportNotes, BriefingData } from "@/lib/types";
 import BriefingView from "@/components/BriefingView";
 import { generateTextBriefing } from "@/lib/textBriefing";
+
+function getApiBase(): string {
+  if (process.env.NEXT_PUBLIC_API_BASE) {
+    return process.env.NEXT_PUBLIC_API_BASE;
+  }
+
+  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+    return "http://localhost:8000";
+  }
+
+  return "";
+}
+
+async function fetchAirportNotes(
+  briefing: BriefingData,
+): Promise<AirportNotes | null> {
+  const params = new URLSearchParams({
+    departure: briefing.flight_info.departure_icao,
+    arrival: briefing.flight_info.arrival_icao,
+  });
+
+  const res = await fetch(`${getApiBase()}/api/airport-notes?${params.toString()}`);
+  if (!res.ok) {
+    throw new Error(`Airport notes lookup failed: ${res.status}`);
+  }
+
+  return (await res.json()) as AirportNotes | null;
+}
 
 export default function Home() {
   const [briefing, setBriefing] = useState<BriefingData | null>(null);
@@ -14,8 +42,39 @@ export default function Home() {
   const [hasSaved, setHasSaved] = useState(false);
 
   useEffect(() => {
-    setHasSaved(!!localStorage.getItem("lastBriefing"));
+    const saved = !!localStorage.getItem("lastBriefing");
+    const timer = window.setTimeout(() => setHasSaved(saved), 0);
+    return () => window.clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!briefing || briefing.airport_notes) return;
+
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const airportNotes = await fetchAirportNotes(briefing);
+        if (!airportNotes || cancelled) return;
+
+        const updatedBriefing: BriefingData = {
+          ...briefing,
+          airport_notes: airportNotes,
+        };
+
+        setBriefing(updatedBriefing);
+        try {
+          localStorage.setItem("lastBriefing", JSON.stringify(updatedBriefing));
+        } catch {}
+      } catch {
+        // Saved briefings from older builds simply stay without notes if lookup fails.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [briefing]);
 
   const copyToClipboard = useCallback(() => {
     if (!briefing) return;
@@ -39,7 +98,10 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("/api/parse", { method: "POST", body: formData });
+      const res = await fetch(`${getApiBase()}/api/parse`, {
+        method: "POST",
+        body: formData,
+      });
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: "Parse failed" }));
         throw new Error(err.error || `Server error: ${res.status}`);

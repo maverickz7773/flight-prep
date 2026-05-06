@@ -76,7 +76,7 @@ export default function BriefingView({ data }: { data: BriefingData }) {
   return (
     <>
     <NavSidebar />
-    <div className="max-w-4xl mx-auto p-2 sm:p-4 space-y-1 pb-16 xl:pb-4">
+    <div className="max-w-4xl mx-auto p-2 sm:p-4 space-y-1 pb-4">
       <div id="section-header" className="bg-surface border border-accent-green/30 rounded-lg p-4 mb-4">
         <div className="flex justify-between items-start">
           <div>
@@ -129,14 +129,31 @@ export default function BriefingView({ data }: { data: BriefingData }) {
       <FlightOverview data={fi} />
       <FuelSection data={data.fuel} />
       <WeightSection data={data.weights} />
-      <TakeoffSection data={data.takeoff} departureBriefing={data.departure_briefing} />
+      <TakeoffSection
+        data={data.takeoff}
+        departureWeather={data.weather.departure}
+        departureTime={data.weather.departure ? airportTimes[data.weather.departure.icao] : undefined}
+        departureReferenceTime={data.flight_info.std}
+        flightDate={data.flight_info.date}
+        departureBriefing={data.departure_briefing}
+        departureNote={data.airport_notes?.departure ?? null}
+      />
       <RouteSection route={data.route} etops={data.etops} ezfw={data.weights.ezfw} />
-      <ArrivalSection data={data.arrival} arrivalBriefing={data.arrival_briefing} />
+      <ArrivalSection
+        data={data.arrival}
+        destinationWeather={data.weather.destination}
+        destinationTime={data.weather.destination ? airportTimes[data.weather.destination.icao] : undefined}
+        destinationReferenceTime={data.flight_info.sta}
+        flightDate={data.flight_info.date}
+        arrivalBriefing={data.arrival_briefing}
+        arrivalNote={data.airport_notes?.arrival ?? null}
+      />
       <WxNotamSection
         weather={data.weather}
         notams={data.notams}
         enrouteAirportList={data.enroute_airport_list}
         airportTimes={airportTimes}
+        flightDate={data.flight_info.date}
       />
       <InsightsSection
         insights={data.operational_insights}

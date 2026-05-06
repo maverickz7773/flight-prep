@@ -236,6 +236,11 @@ export interface AerodromeBriefing {
   destination_alternates: string | null;
 }
 
+export interface AirportNotes {
+  departure: string | null;
+  arrival: string | null;
+}
+
 export interface BriefingData {
   flight_info: FlightInfo;
   fuel: FuelSummary;
@@ -252,4 +257,5 @@ export interface BriefingData {
   enroute_airport_list: string[];
   departure_briefing: AerodromeBriefing | null;
   arrival_briefing: AerodromeBriefing | null;
+  airport_notes: AirportNotes | null;
 }

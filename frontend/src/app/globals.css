@@ -40,6 +40,12 @@ body {
   display: none;
 }
 
+.mobile-tab-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+}
+
 @media print {
   :root {
     --background: #ffffff;

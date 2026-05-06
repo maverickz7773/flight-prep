@@ -242,6 +242,11 @@ class AerodromeBriefing(BaseModel):
     destination_alternates: str | None = None
 
 
+class AirportNotes(BaseModel):
+    departure: str | None = None
+    arrival: str | None = None
+
+
 class BriefingData(BaseModel):
     flight_info: FlightInfo
     fuel: FuelSummary
@@ -258,3 +263,4 @@ class BriefingData(BaseModel):
     enroute_airport_list: list[str] = []
     departure_briefing: AerodromeBriefing | None = None
     arrival_briefing: AerodromeBriefing | None = None
+    airport_notes: AirportNotes | None = None

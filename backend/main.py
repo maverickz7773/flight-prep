@@ -7,7 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from parsers.ofp_parser import parse_ofp
-from models.briefing import BriefingData
+from models.briefing import AirportNotes, BriefingData
+from parsers.notes import get_airport_notes
 
 app = FastAPI(title="Flight Prep API")
 
@@ -41,6 +42,23 @@ async def parse_ofp_endpoint(file: UploadFile):
         raise HTTPException(status_code=500, detail=f"Failed to parse OFP: {str(e)}")
     finally:
         os.unlink(tmp_path)
+
+
+@app.get("/api/airport-notes", response_model=AirportNotes | None)
+async def airport_notes_endpoint(departure: str, arrival: str):
+    dep_raw = get_airport_notes(departure)
+    arr_raw = get_airport_notes(arrival)
+
+    departure_note = dep_raw.get("departure") if dep_raw else None
+    arrival_note = arr_raw.get("arrival") if arr_raw else None
+
+    if not departure_note and not arrival_note:
+        return None
+
+    return AirportNotes(
+        departure=departure_note,
+        arrival=arrival_note,
+    )
 
 
 frontend_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend_build")

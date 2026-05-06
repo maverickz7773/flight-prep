@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const SECTIONS = [
   { id: "section-1", num: 1, label: "Overview" },
@@ -16,6 +16,7 @@ const SECTIONS = [
 
 export default function NavSidebar() {
   const [activeId, setActiveId] = useState("");
+  const mobileTabRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -36,6 +37,15 @@ export default function NavSidebar() {
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!activeId) return;
+    mobileTabRefs.current[activeId]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [activeId]);
 
   return (
     <>
@@ -58,16 +68,19 @@ export default function NavSidebar() {
         ))}
       </nav>
 
-      {/* Mobile bottom bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 no-print xl:hidden bg-surface/95 backdrop-blur border-t border-border shadow-lg">
-        <div className="flex overflow-x-auto gap-1 px-2 py-1.5 scrollbar-hide">
+      {/* Mobile top tabs */}
+      <nav className="sticky top-0 z-40 no-print xl:hidden -mx-2 sm:-mx-4 mb-3 border-y border-border bg-background/95 backdrop-blur shadow-sm">
+        <div className="mobile-tab-scroll flex overflow-x-auto gap-2 px-2 py-2">
           {SECTIONS.map((s) => (
             <a
               key={s.id}
               href={`#${s.id}`}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs transition-colors whitespace-nowrap ${
+              ref={(el) => {
+                mobileTabRefs.current[s.id] = el;
+              }}
+              className={`flex-shrink-0 rounded-full px-4 py-2 text-sm leading-none transition-colors whitespace-nowrap ${
                 activeId === s.id
-                  ? "bg-accent-green/20 text-accent-green font-bold"
+                  ? "bg-accent-green/20 text-accent-green font-bold shadow-[inset_0_0_0_1px_rgba(0,255,136,0.18)]"
                   : "text-muted hover:text-foreground"
               }`}
             >

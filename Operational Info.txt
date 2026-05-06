@@ -1,0 +1,140 @@
+[VHHH]
+DEP: Cargo
+Gate X18. Dept : Rwy 07.C. Pecan.1Y
+Check notam for schedule runway closure.
+Request ATC clearance 20 mins before ETD.
+Check FMC speed and altitude retriction. Some
+speed constraint require to maintain Flaps 1 with
+speed 230 kts.
+When ready call Delivery. ATC will give airborne time
+and will ask level to reach by DAGBU.
+Pushback color blue.
+Taxxi L2, K hold short L1. Then continue K4 cross 07R,
+left J, N hold short B. Then continue A to holding point A1.
+After airborne remain tower freq until transferred to dept 123.8. Then via SID climb to certain altitude. Request speed
+270kt due performance.
+ATC then cancel speed restriction and gives direct SOSLU.
+Transferred to radar 123.475, given direct to SIKOU.
+Transferred to 127.1, given to climb on meters.
+
+ARR: Early descend by Guangzhao. Guanzhao still in RVSM meters. To be level FL 190 by SIERRA. 5 mins beforeSIERRA to contact HKG approach.
+HKG approach will give STAR clearance.
+If traffic separation required, expect radar vectors. If not,
+expect to descend via STAR. Ensure RNP 1 compliance.
+
+ILS.Z Rwy 07C. SIERA.7A
+Guanzhao 124.45 give early descend. Call HKG Radar
+127.55 5 mins prior SIERA. HKG radar will give STAR clearance. Expect vectors to LIMES, descend 3000.
+May direct to TONIC then clear for approach. Open V/S set arc ring 3000 just prior TONIC. Speed 180 kt at TONIC.
+Gear down on turn VH710 at 8nm final, then reduce speed 160 to 4nm.
+Vacate A8, right A hold short W then frequency change to ground. Taxi W hold H. Join J, enter Rwy 07R via J6.
+Join K, L1, L gate X14
+
+SIERA.7A : ILS.07L : Gate X18
+Until 1800, ATIS given ILS.07C in use and RNP.AR 07R available on request for cargo flight. Check Notam for runway maintainance schedule. After 1800, ILS.07L in use.
+After touchdown, vacate C8, left to C hold E. Join F, F7 cross Rwy25C. Right turn A, W, left turn J, J11, cross runway 25L, K7, K, L3 gate X18
+
+[ZGSZ]
+DEP: Gate 59 :Rwy 33: TOMUD.1.
+Climb initially 1200. Dept freq 121.4
+
+Gate 59 :Rwy 34 R : TOMUD.1.
+Climb initially 1500. Dept freq. 119.55
+
+Gate 109. Rwy 34 : TOM.9ZD. 900m
+Call DEL confirm clearance SID and initial altitude.
+Call apron 122.7 for pushback clearance. Pushback 
+color blue procedure( facing south).
+Taxi L, A12 hold short B. Call ground 121.8.
+Clear to cross runway 33 via C12.
+Continue C, R, E, holding point E11.
+After departure expect vectors to BOKAT, then BIGRO
+
+Gate 125 . Rwy 16 : TOM.9XD. 1200m
+After departure, while still on SID, ATC ask to offset 5nm
+to R. Check the next waypoint, set inbound to that point
+so that FMC out of SID mode. Use track select initially.
+
+ARR: OFP planned for thr minimum fuel and no STAR given.Expect early descend and slow speed,fuel extra around 600kg. Sometimes ATC give radar vector, flying almost like full STAR.
+RVSM Meter
+700m : 2300 => Initial approach altitude,
+check in approach chart, not writen in RVSM table
+
+If delay about one hour after single runway ops, expect shortcut SAREX to 15nm final. Taxi cross Rwy 15 via C6 then A8
+
+ILS.33
+No STAR was given. Plan in FMC for SAREX.1 for ILS 33.
+100nm before TOD, GZO asked to descend 10700m, use VNAV, pull throttle to idle so that AT in HOLD mode. Adjust ROD to be minimum 1500fpm. Further descend then was given all the way down to 5700m and to be reach by GYA.
+Adjust descend speed in FMC accordingly. 
+If hard to maintain ROD, use VS with minimum 1500fpm. Put
+18700 at GYA. Upon reaching GYA, radar vector was given.
+Update FMC sequence. Target ROD around 1000fpm to 1500fpm. Adjust the speed, try to sequence about 8nm with traffic ahead.
+
+Rwy 34 : Radar Vector. Plan FMC via SAR.9ZA trans NLG
+Guanzhao will ask to descend early. ROD 2000 fpm.
+Direct GYA. To reach 5700m by GYA. Passing GYA, expect radar vectors. Reduce speed 220 kts 30nm from ARP.
+Expect to be lower than profile.
+Land Rwy 34. Call groun 121.8.Vacate E4, join T4, D. 
+Taxi C, C2, cross Rwy 33 via A2.
+Right on A, hold K4. Report follow me car. Taxi K4, B, L2, L
+gate 109
+
+Rwy 16 : Radar Vector. Plan FMC via SAR.9XA
+Guanzhao will ask to descend early. ROD 2000 fpm.
+Direct GYA. To reach 5700m by GYA. Passing GYA, expect radar vectors. Reduce speed 220 kts 30nm from ARP.
+Expect to be lower than profile.
+Land Rwy 16. Vacate E7, left E join S, hold W1. Call apron.
+Taxi D, hold short C11. Call apron. Continue D hold T6.
+Taxi T6, B, L4 report follow me car insight. Follow the car via
+L4, L gate 115, report marshaller insight.
+
+
+
+[WMKK]
+DEP: Call delivery 20 mins before pushback. Request FL and Mach No. 
+For no delay, tell ATC can accept any level up to FLxxx.
+Slot time. Can expect delay on Pushback.
+Check Standard Routing Taxi.
+Terrain on East of AD.
+Check weather on SID, may require deviation.
+ARR: Set speed 270 kts in FMC.
+For 32L, may request cancel speed and level restriction at KARBO but using VNAV PATH for ILS.32L may cause intercept GS from above.
+Check initial Approach Chart
+Speed control 160 -> 5nm.
+Check standard routing.
+
+
+[OTHH]
+DEP: ACN : ADIRU alignment done by MOCC. GPS OFF, Nav Unable RNP pops out if dont change RNP. Put GPS back on after Muscat
+SCB - Shortened Rwy 16L/34R 
+RAAS GPWS Switch Override. Switch ON back after 10000.
+OPT Usage : 16L #SP1 (via A8), 32R #SP1 (full length)
+
+SCB - Special Southern Corridor
+GPS RFI - GPS Outage Procedure
+Monitor Frequency 121.175
+Transponder ON
+Cabin must be secure. Release cabin after crossing FIR.
+High Speed below 10000' approved.
+Lights on until TOC
+
+Departure Proc 32R - ALVEMI.2 - 500 feet, hdg 020 climb 4000
+Departure Proc 16 - TARVEX.2 - 500 feet, hdg 120 climb 4000
+Beware FMC was program on SID, check speed constraint.
+
+Hot Weather Operation - Check temp cabin. Switch on APU as necessary.
+
+ARR: SCB - Shortened Rwy 16L/34R 
+RAAS GPWS Switch Override. Approach RNP'T' 16L, RNP 34R. No ILS.
+GPS Outage. Monitor map shift during intercept localizer
+OPT Usage - 16L #SP1 (via A8), 32R #SP1 (full length)
+
+SCB - Special Southern Corridor
+GPS RFI - GPS Outage Procedure
+GPS Outage. Monitor map shift during intercept localizer. Taxi EFP not working
+Monitor Frequency 121.175
+Lights on TOD
+Transponder ON
+Cabin must be secure before FIR.
+
+Hot Weather Operation : Check temp cabin. Switch on APU as necessary.

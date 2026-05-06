@@ -16,7 +16,10 @@ export default function Section({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div id={`section-${number}`} className="bg-surface border border-border rounded-lg overflow-hidden scroll-mt-4">
+    <div
+      id={`section-${number}`}
+      className="bg-surface border border-border rounded-lg overflow-hidden scroll-mt-24 sm:scroll-mt-28 xl:scroll-mt-4"
+    >
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-surface-2 transition-colors no-print-collapse"

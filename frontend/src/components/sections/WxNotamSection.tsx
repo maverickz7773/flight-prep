@@ -11,22 +11,7 @@ import type {
   AirportNotamBlock,
 } from "@/lib/types";
 import Section from "../Section";
-
-function HighlightWx({ text }: { text: string }) {
-  const parts = text.split(/(TEMPO\s+[^\s]+\s+.*?)(?=\s+TEMPO|\s+BECMG|\s+PROB|$)/g);
-  return (
-    <>
-      {parts.map((part, i) => {
-        const isThreat = /TSRA|TS\s|CB|FEW\d+CB/.test(part) && /TEMPO/.test(part);
-        return (
-          <span key={i} className={isThreat ? "text-accent-amber font-bold" : ""}>
-            {part}
-          </span>
-        );
-      })}
-    </>
-  );
-}
+import TafText from "../TafText";
 
 function NotamItemRow({ notam }: { notam: NOTAMItem }) {
   const [expanded, setExpanded] = useState(false);
@@ -87,12 +72,14 @@ function AirportBlock({
   notams,
   showLow,
   expectedTime,
+  flightDate,
 }: {
   label?: string;
   wx: AirportWeather | null;
   notams: NOTAMItem[];
   showLow: boolean;
   expectedTime?: string;
+  flightDate: string;
 }) {
   if (!wx && notams.length === 0) return null;
 
@@ -131,7 +118,7 @@ function AirportBlock({
       {wx?.taf && (
         <p className="text-xs text-foreground ml-2 break-all">
           <span className="text-muted">TAF: </span>
-          <HighlightWx text={wx.taf} />
+          <TafText text={wx.taf} referenceTime={expectedTime} flightDate={flightDate} />
         </p>
       )}
 
@@ -146,12 +133,14 @@ function EnrouteFIRBlock({
   enrouteAirportNotams,
   showLow,
   airportTimes,
+  flightDate,
 }: {
   wxBlock: FIRWeatherBlock | null;
   notamBlock: FIRNotamBlock | null;
   enrouteAirportNotams: AirportNotamBlock[];
   showLow: boolean;
   airportTimes: Record<string, string>;
+  flightDate: string;
 }) {
   const fir_icao = wxBlock?.fir_icao ?? notamBlock?.fir_icao ?? "";
   const fir_name = wxBlock?.fir_name ?? notamBlock?.fir_name ?? "";
@@ -182,6 +171,7 @@ function EnrouteFIRBlock({
             notams={airportNotamBlock?.notams ?? []}
             showLow={showLow}
             expectedTime={airportTimes[a.icao]}
+            flightDate={flightDate}
           />
         );
       })}
@@ -194,11 +184,13 @@ export default function WxNotamSection({
   notams,
   enrouteAirportList,
   airportTimes,
+  flightDate,
 }: {
   weather: WeatherData;
   notams: NOTAMData;
   enrouteAirportList: string[];
   airportTimes: Record<string, string>;
+  flightDate: string;
 }) {
   const [showLow, setShowLow] = useState(false);
   const [showEnroute, setShowEnroute] = useState(false);
@@ -239,6 +231,7 @@ export default function WxNotamSection({
         notams={notams.departure}
         showLow={showLow}
         expectedTime={weather.departure ? airportTimes[weather.departure.icao] : undefined}
+        flightDate={flightDate}
       />
       <AirportBlock
         label="DESTINATION"
@@ -246,6 +239,7 @@ export default function WxNotamSection({
         notams={notams.destination}
         showLow={showLow}
         expectedTime={weather.destination ? airportTimes[weather.destination.icao] : undefined}
+        flightDate={flightDate}
       />
 
       {weather.alternates.length > 0 && (
@@ -262,6 +256,7 @@ export default function WxNotamSection({
                 notams={altNotamBlock?.notams ?? []}
                 showLow={showLow}
                 expectedTime={airportTimes[a.icao]}
+                flightDate={flightDate}
               />
             );
           })}
@@ -309,6 +304,7 @@ export default function WxNotamSection({
                     enrouteAirportNotams={notams.enroute_airports}
                     showLow={showLow}
                     airportTimes={airportTimes}
+                    flightDate={flightDate}
                   />
                 );
               })}
