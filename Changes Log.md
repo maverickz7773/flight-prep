@@ -20,6 +20,25 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 
 **Summary**
 
+- Updated `AGENTS.md` to match the current app behavior and team workflow
+- Corrected the mobile navigation note from bottom nav to sticky top tab bar
+- Added a shared update checklist for Codex and Claude Code
+- Added explicit handoff notes about `Changes Log.md`, `Operational Info.txt`, and smoke-test usage
+
+**Verification**
+
+- Reviewed `AGENTS.md` against the current deployed/local app behavior
+- Confirmed the checklist matches the working commands already validated today
+
+**Open Items**
+
+- Keep `AGENTS.md` and `Changes Log.md` in sync whenever workflow or architecture changes
+- Continue adding a new log entry after each meaningful repo change
+
+## 2026-05-06 — Codex
+
+**Summary**
+
 - Added airport-specific `OPS INFO` support from `Operational Info.txt`
 - Wired `airport_notes` through backend models, OFP parsing, frontend types, and Sections 4 and 6
 - Added `/api/airport-notes` fallback so older saved briefings can hydrate missing notes
