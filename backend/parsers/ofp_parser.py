@@ -20,8 +20,13 @@ def extract_pages(pdf_path: str) -> list[str]:
     pages: list[str] = []
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
-            text = page.extract_text() or ""
-            pages.append(text)
+            try:
+                text = page.extract_text() or ""
+                pages.append(text)
+            finally:
+                # Release pdfplumber page caches early to keep memory usage lower
+                # on large OFPs, especially on small Render instances.
+                page.close()
     return pages
 
 

@@ -24,12 +24,15 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Measured local `/api/parse` at about 5.9 seconds and Render `/api/parse` timing out with `502` after about 110.8 seconds
 - Added async parse job endpoints so uploads return quickly and the frontend polls for completion instead of waiting on one long request
 - Updated the frontend upload flow to use parse jobs and show clearer status/error messages
+- After the Render memory-limit alert, updated page extraction to close each `pdfplumber` page immediately after text extraction
+- Reduced in-memory parse job retention from 60 minutes to 10 minutes
 
 **Verification**
 
 - Local `QR 8091.pdf` parse confirmed route `KORD -> OTHH`
 - Verified local health endpoint before implementing the fix
-- Pending full verification after rebuild, local retest, and Render deploy
+- Verified local queued parse flow for `QR 8091.pdf`
+- Pending refreshed local tests and Render verification after the memory-focused extractor change
 
 **Open Items**
 

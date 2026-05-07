@@ -21,7 +21,7 @@ from parsers.notes import (
 
 app = FastAPI(title="Flight Prep API")
 logger = logging.getLogger(__name__)
-_PARSE_JOB_TTL_SECONDS = 60 * 60
+_PARSE_JOB_TTL_SECONDS = 10 * 60
 _parse_jobs: dict[str, dict[str, object | None]] = {}
 
 app.add_middleware(
