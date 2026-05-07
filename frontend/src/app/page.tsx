@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import type { AirportNotes, BriefingData } from "@/lib/types";
+import type { AirportNotes, BriefingData, ParseJobStart, ParseJobStatus } from "@/lib/types";
 import BriefingView from "@/components/BriefingView";
 import { generateTextBriefing } from "@/lib/textBriefing";
+
+const PARSE_POLL_INTERVAL_MS = 2000;
+const PARSE_POLL_TIMEOUT_MS = 5 * 60 * 1000;
 
 function getApiBase(): string {
   if (process.env.NEXT_PUBLIC_API_BASE) {
@@ -15,6 +18,22 @@ function getApiBase(): string {
   }
 
   return "";
+}
+
+function getErrorMessage(payload: unknown, fallback: string): string {
+  if (payload && typeof payload === "object") {
+    const detail = "detail" in payload ? payload.detail : undefined;
+    if (typeof detail === "string") return detail;
+
+    const error = "error" in payload ? payload.error : undefined;
+    if (typeof error === "string") return error;
+  }
+
+  return fallback;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
 async function fetchAirportNotes(
@@ -36,6 +55,7 @@ async function fetchAirportNotes(
 export default function Home() {
   const [briefing, setBriefing] = useState<BriefingData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("Parsing OFP...");
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -92,28 +112,64 @@ export default function Home() {
     }
 
     setLoading(true);
+    setLoadingMessage("Uploading OFP...");
     setError(null);
 
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      const res = await fetch(`${getApiBase()}/api/parse`, {
+      const createRes = await fetch(`${getApiBase()}/api/parse-jobs`, {
         method: "POST",
         body: formData,
       });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: "Parse failed" }));
-        throw new Error(err.error || `Server error: ${res.status}`);
+      if (!createRes.ok) {
+        const err = await createRes.json().catch(() => ({ error: "Parse failed" }));
+        throw new Error(getErrorMessage(err, `Server error: ${createRes.status}`));
       }
-      const data: BriefingData = await res.json();
-      setBriefing(data);
+
+      const job: ParseJobStart = await createRes.json();
+      const deadline = Date.now() + PARSE_POLL_TIMEOUT_MS;
+      let completedData: BriefingData | null = null;
+
+      setLoadingMessage("Parsing OFP on server...");
+
+      while (Date.now() < deadline) {
+        const statusRes = await fetch(`${getApiBase()}/api/parse-jobs/${job.job_id}`);
+        if (!statusRes.ok) {
+          const err = await statusRes.json().catch(() => ({ error: "Parse status check failed" }));
+          throw new Error(getErrorMessage(err, `Server error: ${statusRes.status}`));
+        }
+
+        const status: ParseJobStatus = await statusRes.json();
+        if (status.status === "completed" && status.result) {
+          completedData = status.result;
+          break;
+        }
+
+        if (status.status === "failed") {
+          throw new Error(status.error || "Parse failed");
+        }
+
+        setLoadingMessage(
+          status.status === "queued" ? "Queued for parsing..." : "Parsing OFP on server..."
+        );
+        await sleep(PARSE_POLL_INTERVAL_MS);
+      }
+
+      if (!completedData) {
+        throw new Error("Parsing timed out. Please try again in a moment.");
+      }
+
+      setBriefing(completedData);
+      const data = completedData;
       try { localStorage.setItem("lastBriefing", JSON.stringify(data)); } catch {}
       setHasSaved(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unknown error");
     } finally {
       setLoading(false);
+      setLoadingMessage("Parsing OFP...");
     }
   }, []);
 
@@ -195,7 +251,7 @@ export default function Home() {
           {loading ? (
             <div className="flex flex-col items-center gap-3">
               <div className="w-8 h-8 border-2 border-accent-green border-t-transparent rounded-full animate-spin" />
-              <p className="text-muted text-sm">Parsing OFP...</p>
+              <p className="text-muted text-sm">{loadingMessage}</p>
             </div>
           ) : (
             <>

@@ -247,6 +247,18 @@ class AirportNotes(BaseModel):
     arrival: str | None = None
 
 
+class ParseJobStart(BaseModel):
+    job_id: str
+    status: str
+
+
+class ParseJobStatus(BaseModel):
+    job_id: str
+    status: str
+    result: BriefingData | None = None
+    error: str | None = None
+
+
 class BriefingData(BaseModel):
     flight_info: FlightInfo
     fuel: FuelSummary

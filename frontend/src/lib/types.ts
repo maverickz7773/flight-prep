@@ -241,6 +241,18 @@ export interface AirportNotes {
   arrival: string | null;
 }
 
+export interface ParseJobStart {
+  job_id: string;
+  status: string;
+}
+
+export interface ParseJobStatus {
+  job_id: string;
+  status: string;
+  result: BriefingData | null;
+  error: string | null;
+}
+
 export interface BriefingData {
   flight_info: FlightInfo;
   fuel: FuelSummary;

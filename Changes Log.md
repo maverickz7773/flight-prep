@@ -16,6 +16,26 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-07 — Codex
+
+**Summary**
+
+- Diagnosed Render parsing failure for `QR 8091.pdf` as a long-request timeout, not a parser logic failure
+- Measured local `/api/parse` at about 5.9 seconds and Render `/api/parse` timing out with `502` after about 110.8 seconds
+- Added async parse job endpoints so uploads return quickly and the frontend polls for completion instead of waiting on one long request
+- Updated the frontend upload flow to use parse jobs and show clearer status/error messages
+
+**Verification**
+
+- Local `QR 8091.pdf` parse confirmed route `KORD -> OTHH`
+- Verified local health endpoint before implementing the fix
+- Pending full verification after rebuild, local retest, and Render deploy
+
+**Open Items**
+
+- Verify the new parse-job flow locally and on Render with `QR 8091.pdf`
+- Keep the direct `/api/parse` endpoint for scripts and smoke checks
+
 ## 2026-05-06 — Codex
 
 **Summary**
