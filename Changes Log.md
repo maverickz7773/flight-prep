@@ -16,6 +16,55 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-08 — Claude Code
+
+**Summary**
+
+- Diagnosed why `KORD` was missing from `backend/data/omc_briefings.json` despite being present in `OM C.pdf`
+- Root cause: `HEADER_RE` regex in `backend/scripts/extract_omc.py` matched only exactly 5-part section numbers (`\d+\.\d+\.\d+\.\d+\.\d+`); the current OM C PDF uses variable-length section numbering (4–7+ parts, e.g., `6.3.3.4.3.11`)
+- Fixed both occurrences of the pattern to `(?:\d+\.)+\d+` — handles any number of dot-separated parts
+- Re-ran `extract_omc.py` against `OM C.pdf` to fully rebuild `backend/data/omc_briefings.json`
+- OM C airport coverage grew from **389 → 503 airports**; all previously missed airports now included, including KORD
+- Committed and pushed to `main`; Render auto-deploy triggered
+
+**Verification**
+
+- `python3 scripts/extract_omc.py "../OM C.pdf"` reported: `Found 1433 aerodrome headers`, `Extracted 503 aerodromes`
+- `omc_briefings.json` confirmed: `KORD` present, name `Chicago - O'Hare International`, category `B`
+- Local parse of `QR 8091.pdf` confirmed: `departure_briefing.icao = KORD` (previously `null`)
+- Pushed commit `9c979ca` to `main`
+
+**Open Items**
+
+- Smoke check on Render after deploy completes (~3–5 min): verify Section 4 OM C appears for a KORD-departure flight
+- The previous Codex open item re KORD is now resolved; no manual JSON editing needed
+
+## 2026-05-08 — Codex
+
+**Summary**
+
+- Rebuilt and ran the app locally on `http://127.0.0.1:8000`
+- Rechecked `QR 8091.pdf`
+- Confirmed Section 4 has no `OM C` because `KORD` is not present in `backend/data/omc_briefings.json`
+- Confirmed Section 6 `OM C` is present because `OTHH` exists in the OM C dataset
+- Listed the current OM C airport coverage count: `389` airports
+
+**Verification**
+
+- Local health endpoint returned `{\"status\":\"ok\",\"operational_info_present\":true}`
+- Local parse for `QR 8091.pdf` returned:
+  - departure `KORD`
+  - arrival `OTHH`
+  - `departure_briefing = null`
+  - `arrival_briefing` present
+- Searched `backend/data/omc_briefings.json` and confirmed `KORD` is absent while `OTHH` is present
+- No repo code changes were made after this diagnosis
+
+**Open Items**
+
+- If OM C is needed for Section 4 on `QR 8091`, add a real `KORD` briefing entry to `backend/data/omc_briefings.json`
+- Do not invent `KORD` OM C content; source text or screenshots are needed first
+
 ## 2026-05-07 — Codex
 
 **Summary**
