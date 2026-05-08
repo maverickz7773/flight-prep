@@ -38,7 +38,7 @@ SECTION_KEYS = {
 }
 
 HEADER_RE = re.compile(
-    r"^\d+\.\d+\.\d+\.\d+\.\d+\s+.+?\((\w{4})/\w{3}\)\s*[-–—]\s*(?:.*?[-–—]\s*)?CATEGORY\s*[-–—]?\s*([A-Z])",
+    r"^(?:\d+\.)+\d+\s+.+?\((\w{4})/\w{3}\)\s*[-–—]\s*(?:.*?[-–—]\s*)?CATEGORY\s*[-–—]?\s*([A-Z])",
     re.MULTILINE,
 )
 
@@ -96,7 +96,7 @@ def parse_aerodrome_block(block: str) -> dict[str, str | None]:
             content = re.sub(r"Applicable to:.*$", "", content, flags=re.MULTILINE).strip()
             content = END_OF_GROUP_RE.sub("", content).strip()
             content = re.sub(
-                r"^\d+\.\d+\.\d+\.\d+\.\d+\s+.+?\(\w{4}/\w{3}\).*$",
+                r"^(?:\d+\.)+\d+\s+.+?\(\w{4}/\w{3}\).*$",
                 "",
                 content,
                 flags=re.MULTILINE,
