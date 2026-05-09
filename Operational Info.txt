@@ -138,3 +138,32 @@ Transponder ON
 Cabin must be secure before FIR.
 
 Hot Weather Operation : Check temp cabin. Switch on APU as necessary.
+
+
+[KORD]
+DEP: Inform metering to depart Rwy10L.
+Check performance on other runway.
+Log on KUSA for clearance. 30 mins before dept will get clearance. It will include Oceanic Clearance.
+Clearance might include new fix and points.
+When ready call ramp 129.05 for pushback. Advise when ready for taxi.
+Pushback tail direction.
+Call metering for taxi 121.675.
+Monitor ground 121.75.
+Monitor Tower 132.7.
+Dept 10L : 125.0 : Rwy Heading
+
+Chicago :
+Cleveland : 134.775, 120.625
+Boston : 123.875, 134.95
+Moncton: 127.125, 125.25
+
+* CPDLC CZQM
+ARR: Chicago Approach: 135.02 : give runway in use, radar vector
+133.62.
+ILS.Rwy 28C: Extend center from RZUKO (14nm).
+Descend on step 6000→5000 ft. Cross RZUKO at 5000’ and clear ILS.
+Contact Tower 120.75 at SEIKA (5 nm), SEIKA 180kts. Configure until gear down.
+Flap 25.
+Runway 28C: P1-P hold GG
+Ground: 132.7
+Call metering for gate number with QTR 725. Ensure get gate number, if not ATC will taxi u around.
