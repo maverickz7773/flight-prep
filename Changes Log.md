@@ -16,6 +16,25 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-09 — Claude Code
+
+**Summary**
+
+- Added KORD (Chicago O'Hare) personal operational notes to `Operational Info.txt`
+- Notes cover: DEP — metering contact, KUSA clearance (30 min prior), ramp/taxi/tower frequencies, Rwy 10L heading freq, enroute sector freqs (Chicago, Cleveland, Boston, Moncton), CPDLC CZQM
+- Notes cover: ARR — Chicago Approach 135.02/133.62, ILS Rwy 28C via RZUKO (14 nm), step-down 6000→5000, tower at SEIKA (5 nm), gate metering with QTR 725
+- Verified KORD parses correctly via `/api/airport-notes?departure=KORD` on the running local backend
+- Committed and pushed to `main`; Render auto-deploy triggered
+
+**Verification**
+
+- `curl http://localhost:8000/api/airport-notes?departure=KORD&arrival=OTHH` returned correct DEP/ARR JSON
+- Pushed commit `4c6a307` to `main`
+
+**Open Items**
+
+- Smoke test on Render after deploy: upload a KORD-departure OFP and confirm OPS INFO block appears in Section 4
+
 ## 2026-05-08 — Claude Code
 
 **Summary**
