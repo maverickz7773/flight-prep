@@ -2,6 +2,8 @@ from __future__ import annotations
 import re
 from models.briefing import WeatherData, AirportWeather, SIGMET, FIRWeatherBlock
 
+_OFP_PAGE_RE = re.compile(r"(?m)^Page\s+\d+\s+of\s+\d+\s*$")
+_OFP_HEADER_RE = re.compile(r"(?m)^QTR\s+.+?OFP:\d+/\d+/\d+\s*$")
 
 FIR_ICAO_TO_NAME = {
     "OBBB": "Bahrain",
@@ -64,7 +66,7 @@ def _parse_airport_weather(text: str, section_marker: str) -> AirportWeather | N
 
     icao = section_match.group(1)
     name = section_match.group(3).split("\n")[0].strip()
-    block = section_match.group(0)
+    block = _sanitize_weather_block(section_match.group(0))
 
     metar = _extract_metar(block)
     taf = _extract_taf(block)
@@ -88,7 +90,7 @@ def _parse_alternates_weather(text: str) -> list[AirportWeather]:
     for m in re.finditer(r"(\w{4})/(\w+)\s+(.*?)(?=\n\w{4}/|\Z)", alt_text, re.DOTALL):
         icao = m.group(1)
         name = m.group(3).split("\n")[0].strip()
-        block = m.group(0)
+        block = _sanitize_weather_block(m.group(0))
         metar = _extract_metar(block)
         taf = _extract_taf(block)
         results.append(AirportWeather(icao=icao, name=name, metar=metar, taf=taf))
@@ -117,7 +119,7 @@ def _parse_enroute_airports(text: str) -> list[AirportWeather]:
         for m in re.finditer(r"(\w{4})/(\w+)\s+(.*?)(?=\n\w{4}/|\Z)", sec_text, re.DOTALL):
             icao = m.group(1)
             name = m.group(3).split("\n")[0].strip()
-            block = m.group(0)
+            block = _sanitize_weather_block(m.group(0))
             metar = _extract_metar(block)
             taf = _extract_taf(block)
             results.append(AirportWeather(icao=icao, name=name, metar=metar, taf=taf))
@@ -233,7 +235,18 @@ def _extract_metar(block: str) -> str | None:
 
 
 def _extract_taf(block: str) -> str | None:
-    m = re.search(r"FT\s+(\d{6}\s+.*?)=", block, re.DOTALL)
-    if m:
-        return m.group(1).replace("\n", " ").strip()
-    return None
+    matches = re.findall(r"FT\s+(\d{6}\s+.*?)=", block, re.DOTALL)
+    if not matches:
+        return None
+
+    # When a forecast spans a PDF page break, the block may contain an older partial
+    # FT section followed by the continued/latest full FT section. Prefer the last one
+    # after sanitizing page footer/header artifacts.
+    return matches[-1].replace("\n", " ").strip()
+
+
+def _sanitize_weather_block(block: str) -> str:
+    block = _OFP_PAGE_RE.sub("", block)
+    block = _OFP_HEADER_RE.sub("", block)
+    block = re.sub(r"\n{2,}", "\n", block)
+    return block.strip()

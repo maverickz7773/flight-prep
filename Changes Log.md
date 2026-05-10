@@ -40,6 +40,27 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 
 - Smoke test on Render after deploy: verify ETOPS block in Section 1 and FIR line in Section 7 for `QR 849.pdf`
 
+## 2026-05-10 — Codex
+
+**Summary**
+
+- Fixed weather parsing for page-break-contaminated TAF blocks in `QR 8091.pdf`
+- Updated `backend/parsers/weather.py` to strip OFP page footer/header lines such as `Page X of Y` and `QTR ... OFP:...` before METAR/TAF extraction
+- Updated TAF extraction to prefer the last `FT ... =` block within a sanitized weather block, which handles split forecasts across PDF page breaks
+
+**Verification**
+
+- Re-parsed `QR 8091.pdf` locally
+- Confirmed EIDW now returns a clean TAF:
+  - `061100 0612/0712 VRB03KT 9999 FEW025 ... PROB30 TEMPO 0711/0712 5000 SHRA SCT015`
+- Confirmed the old embedded footer text is gone
+- `venv/bin/python -m unittest tests.test_airport_notes` passed
+
+**Open Items**
+
+- If EIDW still shows no underline for `~1100z`, that is expected with the current logic because `~1100z` is before the parsed TAF validity `0612/0712`
+- Push/deploy this parser cleanup if the user wants the same cleanup on Render
+
 ## 2026-05-09 — Claude Code
 
 **Summary**
