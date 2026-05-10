@@ -16,6 +16,30 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-10 — Claude Code
+
+**Summary**
+
+- **Section 1 — ETOPS stacked display**: ETOPS data moved out of the 2-column data grid into a dedicated full-width block below the grid (same pattern as crew rest section). Each sector shows ENTRY / EXIT / ALTN rows with EET and gross weight (GW = EZFW + fuel remaining). Multi-sector flights show S1/S2 prefixes. Single-sector shows plain ENTRY/EXIT/ALTN.
+- **Section 5 — Remove ETOPS SECTOR block**: The old amber "ETOPS SECTOR" entry/ETP/exit panel in the Route section was removed; all ETOPS detail is now in Section 1.
+- **Section 7 — Airport search filter**: Added search input next to "Show LOW relevance". Filters departure, destination, alternates, enroute airports pill list, and enroute FIR blocks simultaneously. Clear (×) button when query is active.
+- **Section 7 — NOTAM valid period**: Each NOTAM now shows `valid_from – valid_to` in small muted text below the reference badge. Only displayed when `valid_from` is present.
+- **Section 7 — FIR sequence line**: FIR route sequence (e.g. `FIR  JAKARTA (WIIF) → KUALA LUMPUR (WMFC) → ...`) now appears just below the controls row in Section 7, giving FIR context before scanning weather/NOTAM blocks.
+- **Backend — ETOPSSector model**: Extended `ETOPSSector` with `entry_eet`, `entry_fuel`, `exit_eet`, `exit_fuel` fields. Parser `_build_sectors()` in `etops.py` updated to extract EET (2nd token on row) and fuel (last float on row) for each entry/exit point.
+- Committed as `8811804` and pushed to `main`; Render auto-deploy triggered.
+
+**Verification**
+
+- `QR 849.pdf` — Section 1 shows full-width ETOPS block: `ENTRY VTSP EET 1.30 GW 276.0t`, `EXIT VCRI EET 1.57 GW 272.2t`, `ALTN WIMM`
+- Section 5 confirmed: no ETOPS SECTOR block
+- Section 7 search: typing an ICAO hides unrelated airports and FIR blocks
+- FIR sequence line visible in Section 7 on upload
+- `npm run build` passed with no TypeScript errors
+
+**Open Items**
+
+- Smoke test on Render after deploy: verify ETOPS block in Section 1 and FIR line in Section 7 for `QR 849.pdf`
+
 ## 2026-05-09 — Claude Code
 
 **Summary**
