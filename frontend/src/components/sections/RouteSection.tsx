@@ -1,13 +1,11 @@
-import type { RouteSummary, ETOPSInfo } from "@/lib/types";
+import type { RouteSummary } from "@/lib/types";
 import Section from "../Section";
 
 export default function RouteSection({
   route,
-  etops,
   ezfw,
 }: {
   route: RouteSummary;
-  etops: ETOPSInfo | null;
   ezfw: number;
 }) {
   const keyWaypoints = route.waypoints.filter(
@@ -89,43 +87,6 @@ export default function RouteSection({
         </p>
       )}
 
-      {etops && (
-        <div className="mt-2 pt-2 border-t border-border">
-          <p className="text-accent-amber text-xs font-bold mb-1">
-            ETOPS SECTOR
-          </p>
-          <div className="text-xs space-y-0.5">
-            {etops.entry && (
-              <p>
-                ENTRY: EET {etops.entry.eet} — ALT: {etops.entry.alternate_icao}
-                {etops.entry.fuel_remaining &&
-                  ` (${etops.entry.fuel_remaining}t)`}
-              </p>
-            )}
-            {etops.etp_points.map((etp, i) => (
-              <p key={i}>
-                ETP: EET {etp.eet} — ALT: {etp.alternate_icao}
-                {etp.alternate_icao_2 && `/${etp.alternate_icao_2}`}
-              </p>
-            ))}
-            {etops.exit && (
-              <p>
-                EXIT: EET {etops.exit.eet} — ALT: {etops.exit.alternate_icao}
-                {etops.exit.fuel_remaining &&
-                  ` (${etops.exit.fuel_remaining}t)`}
-              </p>
-            )}
-            {etops.suitable_alternates.length > 0 && (
-              <p className="text-muted">
-                Suitable alternates:{" "}
-                {etops.suitable_alternates
-                  .map((a) => `${a.icao} ${a.runway || ""}`)
-                  .join(", ")}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
     </Section>
   );
 }

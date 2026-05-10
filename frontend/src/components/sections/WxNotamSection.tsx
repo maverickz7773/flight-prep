@@ -26,16 +26,23 @@ function NotamItemRow({ notam }: { notam: NOTAMItem }) {
     <div className="mb-0.5">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="text-left w-full text-xs flex items-start gap-1 hover:bg-surface-2 rounded px-1 -mx-1"
+        className="text-left w-full text-xs hover:bg-surface-2 rounded px-1 -mx-1"
       >
-        <span className={`${color} font-bold shrink-0 w-4`}>
-          {notam.relevance === "HIGH" ? "!" : notam.relevance === "MEDIUM" ? "~" : "."}
-        </span>
-        <span className="text-muted shrink-0 w-20">{notam.reference}</span>
-        <span className="text-foreground flex-1 truncate">
-          {notam.summary || notam.text.slice(0, 80)}
-        </span>
-        <span className="text-muted shrink-0 no-print">{expanded ? "▼" : "▶"}</span>
+        <div className="flex items-start gap-1">
+          <span className={`${color} font-bold shrink-0 w-4`}>
+            {notam.relevance === "HIGH" ? "!" : notam.relevance === "MEDIUM" ? "~" : "."}
+          </span>
+          <span className="text-muted shrink-0 w-20">{notam.reference}</span>
+          <span className="text-foreground flex-1 truncate">
+            {notam.summary || notam.text.slice(0, 80)}
+          </span>
+          <span className="text-muted shrink-0 no-print">{expanded ? "▼" : "▶"}</span>
+        </div>
+        {notam.valid_from && (
+          <div className="ml-5 text-muted" style={{ fontSize: "0.65rem" }}>
+            {notam.valid_from}{notam.valid_to ? ` – ${notam.valid_to}` : ""}
+          </div>
+        )}
       </button>
       {expanded && (
         <pre className="text-xs text-muted ml-6 mt-0.5 whitespace-pre-wrap max-h-40 overflow-y-auto">
@@ -185,16 +192,26 @@ export default function WxNotamSection({
   enrouteAirportList,
   airportTimes,
   flightDate,
+  firSequence,
 }: {
   weather: WeatherData;
   notams: NOTAMData;
   enrouteAirportList: string[];
   airportTimes: Record<string, string>;
   flightDate: string;
+  firSequence: string[];
 }) {
   const [showLow, setShowLow] = useState(false);
   const [showEnroute, setShowEnroute] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const q = searchQuery.trim().toUpperCase();
+  const matchesAirport = (icao: string, name?: string | null) =>
+    !q || icao.toUpperCase().includes(q) || (name?.toUpperCase().includes(q) ?? false);
+  const filteredEnrouteAirports = q
+    ? enrouteAirportList.filter((icao) => icao.includes(q))
+    : enrouteAirportList;
 
   const copyAirportList = useCallback(() => {
     const text = enrouteAirportList.join(" ");
@@ -213,7 +230,7 @@ export default function WxNotamSection({
 
   return (
     <Section number={7} title="WEATHER & NOTAMS">
-      <div className="flex gap-4 mb-2 no-print">
+      <div className="flex gap-4 mb-2 no-print items-center flex-wrap">
         <label className="text-xs text-muted flex items-center gap-1">
           <input
             type="checkbox"
@@ -223,29 +240,62 @@ export default function WxNotamSection({
           />
           Show LOW relevance
         </label>
+        <div className="flex items-center gap-1">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search airport…"
+            className="text-xs bg-transparent border border-border rounded px-2 py-0.5 text-foreground placeholder:text-muted w-32 focus:outline-none focus:border-muted"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="text-muted hover:text-foreground text-sm leading-none"
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
-      <AirportBlock
-        label="DEPARTURE"
-        wx={weather.departure}
-        notams={notams.departure}
-        showLow={showLow}
-        expectedTime={weather.departure ? airportTimes[weather.departure.icao] : undefined}
-        flightDate={flightDate}
-      />
-      <AirportBlock
-        label="DESTINATION"
-        wx={weather.destination}
-        notams={notams.destination}
-        showLow={showLow}
-        expectedTime={weather.destination ? airportTimes[weather.destination.icao] : undefined}
-        flightDate={flightDate}
-      />
+      {firSequence.length > 0 && (
+        <div className="text-xs text-muted mb-2">
+          <span className="font-bold text-foreground">FIR </span>
+          {firSequence.map((f, i) => (
+            <span key={i}>
+              {i > 0 && <span className="text-accent-green"> → </span>}
+              {f}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {matchesAirport(weather.departure?.icao ?? "", weather.departure?.name) && (
+        <AirportBlock
+          label="DEPARTURE"
+          wx={weather.departure}
+          notams={notams.departure}
+          showLow={showLow}
+          expectedTime={weather.departure ? airportTimes[weather.departure.icao] : undefined}
+          flightDate={flightDate}
+        />
+      )}
+      {matchesAirport(weather.destination?.icao ?? "", weather.destination?.name) && (
+        <AirportBlock
+          label="DESTINATION"
+          wx={weather.destination}
+          notams={notams.destination}
+          showLow={showLow}
+          expectedTime={weather.destination ? airportTimes[weather.destination.icao] : undefined}
+          flightDate={flightDate}
+        />
+      )}
 
       {weather.alternates.length > 0 && (
         <div className="mb-2">
           <p className="text-xs font-bold text-muted mb-0.5">ALTERNATES</p>
-          {weather.alternates.map((a, i) => {
+          {weather.alternates.filter((a) => matchesAirport(a.icao, a.name)).map((a, i) => {
             const altNotamBlock = notams.alternates.find(
               (nb) => nb.icao === a.icao
             );
@@ -263,11 +313,11 @@ export default function WxNotamSection({
         </div>
       )}
 
-      {enrouteAirportList.length > 0 && (
+      {filteredEnrouteAirports.length > 0 && (
         <div className="mb-3 p-2 bg-surface-2 rounded border border-border">
           <div className="flex items-center justify-between mb-1">
             <p className="text-xs font-bold text-muted">
-              ENROUTE AIRPORTS ({enrouteAirportList.length})
+              ENROUTE AIRPORTS ({filteredEnrouteAirports.length})
             </p>
             <button
               onClick={copyAirportList}
@@ -277,7 +327,7 @@ export default function WxNotamSection({
             </button>
           </div>
           <p className="text-xs text-foreground font-mono">
-            {enrouteAirportList.join("  ")}
+            {filteredEnrouteAirports.join("  ")}
           </p>
         </div>
       )}
@@ -293,7 +343,15 @@ export default function WxNotamSection({
           </button>
           <div className="print-show">
             {(showEnroute || typeof window === "undefined") &&
-              Array.from(allFirKeys).map((firIcao) => {
+              Array.from(allFirKeys).filter((firIcao) => {
+                if (!q) return true;
+                const wxBlock = weather.enroute.find((b) => b.fir_icao === firIcao);
+                return (
+                  firIcao.includes(q) ||
+                  (wxBlock?.fir_name?.toUpperCase().includes(q) ?? false) ||
+                  (wxBlock?.airports.some((a) => matchesAirport(a.icao, a.name)) ?? false)
+                );
+              }).map((firIcao) => {
                 const wxBlock = weather.enroute.find((b) => b.fir_icao === firIcao) ?? null;
                 const notamBlock = notams.enroute.find((b) => b.fir_icao === firIcao) ?? null;
                 return (

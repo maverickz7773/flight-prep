@@ -119,7 +119,19 @@ class ETOPSAlternate(BaseModel):
     minima: str | None = None
 
 
+class ETOPSSector(BaseModel):
+    sector_number: int
+    entry_icao: str | None = None
+    entry_eet: str | None = None
+    entry_fuel: float | None = None
+    exit_icao: str | None = None
+    exit_eet: str | None = None
+    exit_fuel: float | None = None
+    alternates: list[str] = []
+
+
 class ETOPSInfo(BaseModel):
+    sectors: list["ETOPSSector"] = []
     entry: ETOPSPoint | None = None
     exit: ETOPSPoint | None = None
     etp_points: list[ETOPSPoint] = []

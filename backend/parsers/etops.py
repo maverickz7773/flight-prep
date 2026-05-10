@@ -1,6 +1,6 @@
 from __future__ import annotations
 import re
-from models.briefing import ETOPSInfo, ETOPSPoint, ETOPSAlternate
+from models.briefing import ETOPSInfo, ETOPSPoint, ETOPSAlternate, ETOPSSector
 
 
 def parse_etops(pages: list[str]) -> ETOPSInfo | None:
@@ -66,11 +66,99 @@ def parse_etops(pages: list[str]) -> ETOPSInfo | None:
             ))
 
     return ETOPSInfo(
+        sectors=_build_sectors(etops_text),
         entry=entry,
         exit=exit_pt,
         etp_points=etp_points,
         suitable_alternates=alternates,
     )
+
+
+def _build_sectors(text: str) -> list[ETOPSSector]:
+    # Multi-sector: ENTRY1/EXIT1/ENTRY2/EXIT2...
+    entry_matches = list(re.finditer(
+        r"ENTRY(\d)\s+([\d.]+)\s+[NS][\d.]+\s+\w{4}[^\n]*\n(\w{4})",
+        text,
+    ))
+    exit_matches = list(re.finditer(
+        r"EXIT(\d)\s+([\d.]+)\s+[NS][\d.]+\s+\w{4}[^\n]*\n(\w{4})",
+        text,
+    ))
+
+    if entry_matches:
+        sectors: list[ETOPSSector] = []
+        for i, em in enumerate(entry_matches):
+            num = em.group(1)
+            entry_eet = em.group(2)
+            entry_icao = em.group(3)
+            entry_line = text[em.start():].split("\n")[0]
+            entry_fuel = _last_float(entry_line)
+
+            xm = next((x for x in exit_matches if x.group(1) == num), None)
+            exit_icao = xm.group(3) if xm else None
+            exit_eet = xm.group(2) if xm else None
+            exit_fuel = None
+            if xm:
+                exit_line = text[xm.start():].split("\n")[0]
+                exit_fuel = _last_float(exit_line)
+
+            start = em.start()
+            end = entry_matches[i + 1].start() if i + 1 < len(entry_matches) else len(text)
+            sector_text = text[start:end]
+            sectors.append(ETOPSSector(
+                sector_number=int(num),
+                entry_icao=entry_icao,
+                entry_eet=entry_eet,
+                entry_fuel=entry_fuel,
+                exit_icao=exit_icao,
+                exit_eet=exit_eet,
+                exit_fuel=exit_fuel,
+                alternates=_etp_alternates(sector_text),
+            ))
+        return sectors
+
+    # Single sector: ENTRY/EXIT without digit
+    entry_m = re.search(r"ENTRY\s+([\d.]+)\s+[NS][\d.]+\s+\w{4}[^\n]*\n(\w{4})", text)
+    exit_m = re.search(r"EXIT\s+([\d.]+)\s+[NS][\d.]+\s+\w{4}[^\n]*\n(\w{4})", text)
+    if entry_m or exit_m:
+        entry_fuel = None
+        exit_fuel = None
+        if entry_m:
+            entry_line = text[entry_m.start():].split("\n")[0]
+            entry_fuel = _last_float(entry_line)
+        if exit_m:
+            exit_line = text[exit_m.start():].split("\n")[0]
+            exit_fuel = _last_float(exit_line)
+        return [ETOPSSector(
+            sector_number=1,
+            entry_icao=entry_m.group(2) if entry_m else None,
+            entry_eet=entry_m.group(1) if entry_m else None,
+            entry_fuel=entry_fuel,
+            exit_icao=exit_m.group(2) if exit_m else None,
+            exit_eet=exit_m.group(1) if exit_m else None,
+            exit_fuel=exit_fuel,
+            alternates=_etp_alternates(text),
+        )]
+    return []
+
+
+def _last_float(line: str) -> float | None:
+    nums = re.findall(r"\d+\.\d+", line)
+    return float(nums[-1]) if nums else None
+
+
+def _etp_alternates(text: str) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for m in re.finditer(
+        r"ETP\s+[\d.]+\s+[NS][\d.]+\s+(\w{4})[^\n]*(?:\n\s+\S+\s+(\w{4}))?",
+        text,
+    ):
+        for icao in (m.group(1), m.group(2)):
+            if icao and icao not in seen:
+                seen.add(icao)
+                result.append(icao)
+    return result
 
 
 def _parse_point(text: str, point_type: str) -> ETOPSPoint | None:

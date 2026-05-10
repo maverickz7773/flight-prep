@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import type { FlightInfo } from "@/lib/types";
+import type { FlightInfo, ETOPSInfo } from "@/lib/types";
 import Section from "../Section";
 
 function Row({ label, value }: { label: string; value: string | null }) {
@@ -42,7 +42,7 @@ function addMinutesToTime(base: string, addMins: number): string {
   return day ? `${dayNum.toString().padStart(2, "0")}/${hh}${mm}` : `${hh}${mm}`;
 }
 
-export default function FlightOverview({ data }: { data: FlightInfo }) {
+export default function FlightOverview({ data, etops, ezfw }: { data: FlightInfo; etops: ETOPSInfo | null; ezfw: number }) {
   const [crewCount, setCrewCount] = useState<2 | 3 | 4>(2);
 
   const tripMins = useMemo(() => {
@@ -99,10 +99,45 @@ export default function FlightOverview({ data }: { data: FlightInfo }) {
           value={data.ground_distance ? `${data.ground_distance} nm` : "N/A"}
         />
         <Row label="WIND" value={data.wind_component} />
-        {data.etops_minutes && (
-          <Row label="ETOPS" value={`${data.etops_minutes} MIN`} />
-        )}
       </div>
+
+      {etops && etops.sectors.length > 0 && (
+        <div className="mt-3 pt-2 border-t border-border space-y-0.5">
+          {data.etops_minutes && (
+            <Row label="ETOPS" value={`${data.etops_minutes} MIN`} />
+          )}
+          {etops.sectors.map((s) => {
+            const multi = etops.sectors.length > 1;
+            const pfx = multi ? `S${s.sector_number} ` : "";
+            const gw = (fuel: number | null) =>
+              fuel != null ? `  GW ${(ezfw / 1000 + fuel).toFixed(1)}t` : "";
+            return (
+              <div key={s.sector_number} className="space-y-0.5">
+                {s.entry_icao && (
+                  <Row
+                    label={`${pfx}ENTRY`}
+                    value={`${s.entry_icao}${s.entry_eet ? `  EET ${s.entry_eet}` : ""}${gw(s.entry_fuel)}`}
+                  />
+                )}
+                {s.exit_icao && (
+                  <Row
+                    label={`${pfx}EXIT`}
+                    value={`${s.exit_icao}${s.exit_eet ? `  EET ${s.exit_eet}` : ""}${gw(s.exit_fuel)}`}
+                  />
+                )}
+                {s.alternates.length > 0 && (
+                  <Row label={`${pfx}ALTN`} value={s.alternates.join(", ")} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {(!etops || etops.sectors.length === 0) && data.etops_minutes && (
+        <div className="mt-3 pt-2 border-t border-border">
+          <Row label="ETOPS" value={`${data.etops_minutes} MIN`} />
+        </div>
+      )}
 
       <div className="mt-3 pt-2 border-t border-border">
         <div className="flex items-center gap-3 mb-1">

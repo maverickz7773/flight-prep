@@ -113,7 +113,19 @@ export interface ETOPSAlternate {
   minima: string | null;
 }
 
+export interface ETOPSSector {
+  sector_number: number;
+  entry_icao: string | null;
+  entry_eet: string | null;
+  entry_fuel: number | null;
+  exit_icao: string | null;
+  exit_eet: string | null;
+  exit_fuel: number | null;
+  alternates: string[];
+}
+
 export interface ETOPSInfo {
+  sectors: ETOPSSector[];
   entry: ETOPSPoint | null;
   exit: ETOPSPoint | null;
   etp_points: ETOPSPoint[];
