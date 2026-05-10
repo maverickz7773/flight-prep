@@ -47,6 +47,7 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Fixed weather parsing for page-break-contaminated TAF blocks in `QR 8091.pdf`
 - Updated `backend/parsers/weather.py` to strip OFP page footer/header lines such as `Page X of Y` and `QTR ... OFP:...` before METAR/TAF extraction
 - Updated TAF extraction to prefer the last `FT ... =` block within a sanitized weather block, which handles split forecasts across PDF page breaks
+- Committed as `241ca2b` and pushed to `main`; Render auto-deploy triggered
 
 **Verification**
 
@@ -59,7 +60,7 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 **Open Items**
 
 - If EIDW still shows no underline for `~1100z`, that is expected with the current logic because `~1100z` is before the parsed TAF validity `0612/0712`
-- Push/deploy this parser cleanup if the user wants the same cleanup on Render
+- Optional Render smoke check if the user wants to confirm the cleaned EIDW TAF on the live site
 
 ## 2026-05-09 — Claude Code
 
