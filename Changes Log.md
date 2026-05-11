@@ -16,6 +16,67 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-11 — Codex
+
+**Summary**
+
+- Hardened SID/STAR parsing in `backend/parsers/flight_info.py` and `backend/parsers/arrival.py`
+- Added shared route-page procedure helpers in `backend/parsers/procedures.py` so SID/STAR extraction no longer depends on procedures ending with a trailing letter
+- SID extraction now uses the first valid route page and only scans the lines immediately after the departure runway row, stopping before the first FIR/boundary block
+- STAR extraction now scans backward from the arrival runway row across the final route page(s), allowing numeric-ending procedures such as `GLASR3`
+- Broadened the route-string STAR fallback to use the same shared procedure-token matcher
+- Fixed `cruise_levels` extraction in `backend/parsers/flight_info.py` so Flight Overview now captures both single-level cruise lines like `FL310` and wrapped step-climb sequences that continue onto the next line
+- Added regression coverage in `backend/tests/test_sid_star_parser.py`
+- Added regression coverage in `backend/tests/test_flight_info_parser.py`
+
+**Verification**
+
+- `venv/bin/python -m unittest tests.test_flight_info_parser tests.test_sid_star_parser tests.test_etops_parser tests.test_airport_notes` passed
+- Verified parsed outputs:
+  - `QR 719.pdf`: `SID = None`, `STAR = GLASR3`
+  - `QR 849.pdf`: `SID = PUGER1E`, `STAR = TOVOX2L`
+  - `QR 8240.pdf`: `SID = LNO8E`, `STAR = RIXUV3E`
+  - `QR 8945.pdf`: `SID = TOMUD3`, `STAR = LAEEB1P`
+- Verified cruise parsing:
+  - `QR 8240.pdf`: `CRUISE = [FL310]`
+  - `QR 8452.pdf`: `CRUISE = [FL270, FL290, FL310, FL350, FL370, FL390]`
+- Confirmed consistency:
+  - `flight_info.sid == takeoff.sid`
+  - `flight_info.star == arrival.star`
+
+**Open Items**
+
+- Push/deploy this SID/STAR parser hardening if the user wants it on Render
+- If future OFPs introduce new procedure naming formats, extend `procedures.py` and add another regression PDF before widening the matcher
+
+## 2026-05-11 — Codex
+
+**Summary**
+
+- Hardened ETOPS sector parsing in `backend/parsers/etops.py` to handle layout variants where the sector exit ICAO appears after an extra continuation line
+- Replaced the brittle fixed-line `ENTRY1/EXIT1` parsing with marker-block parsing keyed by sector number
+- The parser now tolerates patterns like `EXIT1 ...` followed by an intermediate line such as `2D W00833.4` and then the real ICAO on a later line
+- Added regression coverage in `backend/tests/test_etops_parser.py`
+
+**Verification**
+
+- `venv/bin/python -m unittest tests.test_etops_parser tests.test_airport_notes` passed
+- `QR 719.pdf` now parses as:
+  - `S1 ENTRY = ENBR`
+  - `S1 EXIT = BIKF`
+  - `S2 ENTRY = BIKF`
+  - `S2 EXIT = CYEG`
+- `QR 8452.pdf` still parses as:
+  - `S1 ENTRY = OOSA`
+  - `S1 EXIT = VOCI`
+  - `S2 ENTRY = VCBI`
+  - `S2 EXIT = YPAD`
+
+**Open Items**
+
+- Push/deploy this ETOPS parser hardening if the user wants the fix on Render
+- Consider expanding ETOPS regression coverage with more multi-sector OFPs if more layout variants appear
+
 ## 2026-05-10 — Claude Code
 
 **Summary**

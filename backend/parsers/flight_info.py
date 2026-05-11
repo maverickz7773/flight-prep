@@ -1,6 +1,11 @@
 from __future__ import annotations
 import re
 from models.briefing import FlightInfo
+from parsers.procedures import (
+    extract_sid_from_route_pages,
+    extract_star_from_route_pages,
+    is_procedure_token,
+)
 
 ICAO_UTC_OFFSET: dict[str, str] = {
     "OTHH": "+3", "OTBD": "+3",
@@ -37,6 +42,42 @@ ICAO_UTC_OFFSET: dict[str, str] = {
     "VLVT": "+7",
     "VRMM": "+5",
 }
+
+
+def _extract_cruise_levels(
+    block: str,
+    arrival_icao: str | None,
+    arrival_runway: str | None,
+) -> list[str]:
+    lines = block.splitlines()
+    start_idx = None
+    if arrival_icao and arrival_runway:
+        arrival_marker = f"{arrival_icao} {arrival_runway}"
+        for idx, line in enumerate(lines):
+            if arrival_marker in line:
+                start_idx = idx + 1
+                break
+
+    if start_idx is None:
+        return []
+
+    cruise_levels: list[str] = []
+    seen_levels: set[str] = set()
+
+    for line in lines[start_idx:]:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("FUEL TIME"):
+            break
+        if "FL" not in stripped:
+            continue
+        for fl in re.findall(r"FL\d{3}", stripped):
+            if fl not in seen_levels:
+                cruise_levels.append(fl)
+                seen_levels.add(fl)
+
+    return cruise_levels
 
 
 def parse_flight_info(pages: list[str]) -> FlightInfo:
@@ -110,11 +151,6 @@ def parse_flight_info(pages: list[str]) -> FlightInfo:
             atc_block = page
             break
 
-    cruise_levels: list[str] = []
-    cl_line = re.search(r"(FL\d{3}(?:\s+\w+/FL\d{3})+)", atc_block or text)
-    if cl_line:
-        cruise_levels = [f"FL{fl}" for fl in re.findall(r"FL(\d{3})", cl_line.group(1))]
-
     dep_rwy = None
     arr_rwy = None
     route_string = None
@@ -128,44 +164,16 @@ def parse_flight_info(pages: list[str]) -> FlightInfo:
         arr_rwy = route_match.group(5)
         route_string = route_match.group(3).strip()
 
-    sid = None
-    star = None
+    cruise_levels = _extract_cruise_levels(atc_block or text, arr_icao or None, arr_rwy)
 
-    # SID: found in waypoint pages as the airway name near departure runway
-    for page in pages:
-        dep_rwy_pattern = re.search(
-            r"\w{4}/(\d{2}[LRC]?)\s+\d{3}\s+\.\.\.\.",
-            page,
-        )
-        if dep_rwy_pattern:
-            sid_match = re.search(
-                r"(\w+\d+[A-Z])\s+\d{3}\s+CLB",
-                page,
-            )
-            if sid_match:
-                sid = sid_match.group(1)
-            break
-
-    # STAR: found on the last route leg page, airway name on the line before ICAO/RWY
-    # Skip alternate route pages ("DESTINATION TO ALTERNATE")
-    for page in reversed(pages):
-        if not (re.search(r"PAGE\s+\d+/\d+", page) and "AWY" in page and "WPT" in page):
-            continue
-        if "DESTINATION TO ALTERNATE" in page:
-            continue
-        arr_line = re.search(
-            r"(\w+\d+[A-Z])\s+\d+\s+.*?\n\w{4}/\d{2}[LRC]?\s+\d{4}",
-            page,
-        )
-        if arr_line:
-            star = arr_line.group(1)
-            break
+    sid = extract_sid_from_route_pages(pages, dep_icao or None, dep_rwy)
+    star = extract_star_from_route_pages(pages, arr_icao or None, arr_rwy)
 
     if not star and route_string:
         parts = route_string.split()
         if parts:
             star_candidate = parts[-1]
-            if re.match(r"[A-Z]+\d+[A-Z]", star_candidate):
+            if is_procedure_token(star_candidate):
                 star = star_candidate
 
     gnd_dist_match = re.search(r"GND\s+DIST\s+(\d+)", text)

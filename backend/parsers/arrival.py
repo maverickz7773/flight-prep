@@ -1,6 +1,7 @@
 from __future__ import annotations
 import re
 from models.briefing import ArrivalInfo, AlternateInfo
+from parsers.procedures import extract_star_from_route_pages, is_procedure_token
 
 
 def parse_arrival(pages: list[str]) -> ArrivalInfo:
@@ -16,22 +17,15 @@ def parse_arrival(pages: list[str]) -> ArrivalInfo:
     if route_match:
         arr_rwy = route_match.group(3)
 
-    for page in reversed(pages):
-        if not (re.search(r"PAGE\s+\d+/\d+", page) and "AWY" in page and "WPT" in page):
-            continue
-        if "DESTINATION TO ALTERNATE" in page:
-            continue
-        arr_line = re.search(
-            r"(\w+\d+[A-Z])\s+\d+\s+.*?\n\w{4}/\d{2}[LRC]?\s+\d{4}",
-            page,
-        )
-        if arr_line:
-            star = arr_line.group(1)
-            break
+    arrival_icao = None
+    if route_match:
+        arrival_icao = route_match.group(2)
+
+    star = extract_star_from_route_pages(pages, arrival_icao, arr_rwy)
 
     if not star and route_match:
         star_candidate = route_match.group(1)
-        if re.match(r"[A-Z]+\d+[A-Z]", star_candidate):
+        if is_procedure_token(star_candidate):
             star = star_candidate
 
     alternates: list[AlternateInfo] = []
