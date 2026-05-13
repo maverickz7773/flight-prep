@@ -105,21 +105,22 @@ Check standard routing.
 
 
 [OTHH]
-DEP: ACN : ADIRU alignment done by MOCC. GPS OFF, Nav Unable RNP pops out if dont change RNP. Put GPS back on after Muscat
+DEP: ACN : ADIRU alignment done by MOCC (no more in ACN). GPS OFF, Nav Unable RNP pops out if dont change RNP. Put GPS back on after Muscat
 SCB - Shortened Rwy 16L/34R 
 RAAS GPWS Switch Override. Switch ON back after 10000.
 OPT Usage : 16L #SP1 (via A8), 32R #SP1 (full length)
 
 SCB - Special Southern Corridor
 GPS RFI - GPS Outage Procedure
-Monitor Frequency 121.175
-Transponder ON
-Cabin must be secure. Release cabin after crossing FIR.
-High Speed below 10000' approved.
-Lights on until TOC
+Transponder Operational.
+Monitor Frequency 121.175 (no more in SCB)
+Cabin must be secure. Release cabin after crossing FIR.(no more in SCB)
+High Speed below 10000' approved. (no more in SCB)
+Lights on until TOC (no more in SCB)
 
-Departure Proc 32R - ALVEMI.2 - 500 feet, hdg 020 climb 4000
-Departure Proc 16 - TARVEX.2 - 500 feet, hdg 120 climb 4000
+- Notam -
+Departure Proc 34R - ALVEMI.2 - 500 feet, hdg 020 climb 4000
+Departure Proc 16L - TARVEX.2 - 500 feet, hdg 120 climb 4000
 Beware FMC was program on SID, check speed constraint.
 
 Hot Weather Operation - Check temp cabin. Switch on APU as necessary.
@@ -131,11 +132,11 @@ OPT Usage - 16L #SP1 (via A8), 32R #SP1 (full length)
 
 SCB - Special Southern Corridor
 GPS RFI - GPS Outage Procedure
-GPS Outage. Monitor map shift during intercept localizer. Taxi EFP not working
-Monitor Frequency 121.175
-Lights on TOD
+GPS Outage. Monitor map shift during intercept localizer. Taxi EFB not working.
 Transponder ON
-Cabin must be secure before FIR.
+Monitor Frequency 121.175 (no more in SCB)
+Lights on TOD (no more in SCB)
+Cabin must be secure before FIR.(no more in SCB)
 
 Hot Weather Operation : Check temp cabin. Switch on APU as necessary.
 

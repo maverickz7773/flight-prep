@@ -11,10 +11,59 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 ## Current Working Notes
 
 - Production runs from Render using the same repo root and URL: [https://flight-prep.onrender.com](https://flight-prep.onrender.com)
-- Docker must include `Operational Info.txt` or `OPS INFO` will disappear in production.
+- Docker must include both `Operational Info.txt` and `Enroute Info.txt` or local text-driven notes will disappear in production.
 - Use `scripts/smoke_check.sh` for a quick deploy check.
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
+
+## 2026-05-13 — Codex
+
+**Summary**
+
+- Added enroute FIR note support from `Enroute Info.txt` for Section 5 `Route`
+- Added cached backend loader in `backend/parsers/enroute_info.py`, keyed by FIR ICAO headers like `[OEJD]`
+- Extended `RouteSummary` with `enroute_info`, containing only route FIRs that actually have note coverage in `Enroute Info.txt`
+- Updated `frontend/src/components/sections/RouteSection.tsx` so the FIR chain stays compact by default, only FIRs with notes become clickable, and clicking a FIR opens one note panel below the FIR row
+- Kept FIRs without notes as plain text, so partial coverage does not clutter the UI
+- Updated Docker packaging to copy `Enroute Info.txt` into the production image so Section 5 FIR notes work on Render, not just locally
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_enroute_info tests.test_flight_info_parser tests.test_sid_star_parser tests.test_etops_parser tests.test_airport_notes` passed
+- `cd frontend && npm run lint` passed
+- `cd frontend && npm run build` passed
+- `./scripts/smoke_check.sh http://127.0.0.1:8000 "QR 8945.pdf"` passed
+- `docker build -t flight-prep .` passed
+- Refreshed `frontend_build` for the local FastAPI app
+- Verified route note coverage from real OFPs:
+  - `QR 239.pdf` → interactive note candidates: `OBBB`, `OEJD`, `OJAC`, `OSTT`, `LTAA`
+  - `QR 719.pdf` → interactive note candidates: `OEJD`, `OJAC`, `OSTT`, `LTAA`
+  - `QR 8452.pdf` → interactive note candidates: `OEJD`, `OOMM`, `VABF`, `VRMF`, `YMMM`
+  - FIRs without note coverage, such as `LTBB`, `LBSR`, `BIRD`, and `KZSE`, remain plain text only
+
+**Open Items**
+
+- `Enroute Info.txt` is still being built up manually over time; adding a new `[FIR]` block should automatically make that FIR interactive on the next parse
+- After push, run a Render smoke check and optionally confirm `QR 8452.pdf` opens `YMMM` correctly in Section 5 on the live site
+
+## 2026-05-13 — Codex (Local data update note)
+
+**Summary**
+
+- User continued expanding `Enroute Info.txt` locally after the Section 5 FIR-note feature was implemented
+- Confirmed new/additional FIR coverage now includes `OMAE`, `OOMM`, `VABF`, `VOMF`, `VCCF`, `VRMF`, and a dedicated `[YMMM]` block
+- Confirmed `OBBB` block was also updated locally
+
+**Verification**
+
+- Local app is running and healthy at `http://127.0.0.1:8000`
+- Searched `Enroute Info.txt` and confirmed `[YMMM]` exists as its own block
+- Verified `QR 8452.pdf` includes `MELBOURNE (YMMM)` in `route.fir_sequence`, so it is the correct local test case for the new `YMMM` FIR note
+
+**Open Items**
+
+- These latest `Enroute Info.txt` additions should be pushed together with the Section 5 code changes
+- After push, confirm the live Render app shows the same FIR-note coverage as local
 
 ## 2026-05-11 — Codex
 

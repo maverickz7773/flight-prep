@@ -136,8 +136,15 @@ export interface RouteSummary {
   route_string: string;
   waypoints: Waypoint[];
   fir_sequence: string[];
+  enroute_info: EnrouteInfoItem[];
   highest_mora: string | null;
   cruise_flight_levels: string[];
+}
+
+export interface EnrouteInfoItem {
+  fir_icao: string;
+  fir_name: string;
+  notes: string;
 }
 
 export interface AlternateInfo {

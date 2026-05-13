@@ -142,8 +142,15 @@ class RouteSummary(BaseModel):
     route_string: str
     waypoints: list[Waypoint] = []
     fir_sequence: list[str] = []
+    enroute_info: list["EnrouteInfoItem"] = []
     highest_mora: str | None = None
     cruise_flight_levels: list[str] = []
+
+
+class EnrouteInfoItem(BaseModel):
+    fir_icao: str
+    fir_name: str
+    notes: str
 
 
 class AlternateInfo(BaseModel):

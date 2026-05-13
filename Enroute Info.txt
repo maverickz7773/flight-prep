@@ -1,0 +1,345 @@
+[OBBB]
+Altitude Selection Logic:
+Set cleared level in FCU/MCP altitude window immediately upon receipt from ATC.
+Applies to "WHEN READY DESCENT and MAINTAIN" clearances.
+
+Communication Procedures (Departure OTHH):
+First contact with Tower/Departure must state: Call sign, routing (ALVEN, VAXIN, LUBET, or TULUB), passing level, climbing to level, and requested final flight level 3.
+
+Flight Level Constraints:
+Maximum available FL via LUBET L934 DAVUS is FL320 
+
+RNAV 1
+
+Holding Procedures Table IV-1-1
+
+[OEJD]
+Restricted Airspace:
+Southwestern portion of Jeddah FIR is PROHIBITED (SANAA FIR). Check coordinates.
+Entry authorized only if instructed by Jeddah ATC; IOC must be notified.
+
+ESCAT (Emergency Security Control of Air Traffic):
+Rules may be activated by Saudi authorities at any time.
+Crews must maintain vigilance and a constant listening watch on ATC frequencies 
+
+Red Sea Crossing (Uncoordinated):
+Squawk: A2000 
+South to North: Maintain FL300
+North to South : Maintain FL290
+Detail transmission: 10 minutes prior to FIR boundary crossing
+
+High Vertical Rate (HVR) :1500 fpm
+
+Free Route Airspace (FRA): Applicable within Jeddah ACC 9.
+Vertical Limits- Applicable between FL300 and FL600. RNAV 5 required.
+Communication- responsible for changing frequencies along the route to maintain continuous contact with the controller
+
+Holding Procedures Table IV-1-1
+
+
+[OJAC] 
+Contingency Communication: Primary contact point if communication fails within the Damascus.
+Tel Aviv FIR Proximity: The Tel Aviv FIR (LLLL) boundary is located approximately 20 NM West of Amman (OJAI)
+RNAV 5 is mandatory for all ATS routes within the FIR.
+High Vertical Rate (HVR) :1500 fpm
+
+Holding Procedures Table IV-1-1
+
+GPS Interference
+
+[OSTT] 
+Airspace Status:
+Designated as RESTRICTED and PROHIBITED zones.
+Prohibited areas: Southwestern Area (Golan Heights). Other area in OSTT is restricted above FL260.
+Tel Aviv FIR (LLLL) boundary is located 40 NM Southwest of Damascus aerodrome
+
+Operational Requirements:
+Serviceable Transponder, TCAS, and Weather Radar required for entry.
+Minimum Flight Level: FL320 within the Restricted portion.
+No surveillance radar; procedural ATC only
+Ground-based NAVAIDs are unserviceable.
+RNAV 5
+
+GPS Interference
+
+Communication:
+Contact DAM ACC 5 minutes prior to entry.(121.3)
+High radio workload due to multiple simultaneous frequencies.
+Westbound : into the Ankara FIR call Ercan station on 126.70MHz for relay to Ankara. Provide flight information at least 10 minutes prior to entering Ankara FIR (Information only, not to follow instruction)
+Eastbound (from Nicosia): You must establish contact with Damascus ACC 10 minutes before ETA at NIKAS.
+If you cannot reach Damascus ACC directly, pass your position report to Latakia Radio at VESAR, ALSUS, or BALMA for relay.
+Maintain a listening watch on Nicosia ACC until reaching NIKAS, where you expect the transfer to Damascus.
+
+Approved Overflight Routes:
+Westbound: SOKAN – L768 – FIRAS – R655 – LEBOR 17.
+Eastbound: LEBOR – R655 – KTN – R785 – ZELAF 17.
+**new version : all published within Restricted Damascus FIR available**
+Contingency: Deviations for weather/technical reasons require prior coordination with Damascus.
+
+Nicosia Procedure :
+Northern Gateways (with Ankara): TOMBI, VESAR, and DOREN
+Eastern Gateway (with Damascus): NIKAS
+
+Ankara to Nicosia (Southbound): 
+Establish radio contact with Nicosia ACC at least 10 minutes before the FIR boundary
+Above FL345: Use 125.5 MHz for TOMBI
+Below FL345: Use 128.075 MHz for TOMBI
+All levels: Use 126.3 MHz for VESAR and DOREN
+
+Nicosia to Ankara (Northbound): 
+Contact "Ercan" on 126.70 MHz at least 10 minutes prior to entry for relay to Ankara ACC.
+
+Holding Procedures Table IV-1-1
+
+[LCCC]
+
+Nicosia Procedure :
+Northern Gateways (with Ankara): TOMBI, VESAR, and DOREN
+Eastern Gateway (with Damascus): NIKAS
+
+Ankara to Nicosia (Southbound): 
+Establish radio contact with Nicosia ACC at least 10 minutes before the FIR boundary
+Above FL345: Use 125.5 MHz for TOMBI
+Below FL345: Use 128.075 MHz for TOMBI
+All levels: Use 126.3 MHz for VESAR and DOREN
+
+Nicosia to Ankara (Northbound): 
+Contact "Ercan" on 126.70 MHz at least 10 minutes prior to entry for relay to Ankara ACC.
+
+RNAV 5
+
+GPS Interference
+
+
+[LTAA]
+Navigation Performance:
+Multiple reports of GPS interference; monitor aircraft navigation performance continuously.
+High Terrain : check Escape Routing.
+
+Nicosia Procedure :
+Northern Gateways (with Ankara): TOMBI, VESAR, and DOREN
+Eastern Gateway (with Damascus): NIKAS
+
+Ankara to Nicosia (Southbound): 
+Establish radio contact with Nicosia ACC at least 10 minutes before the FIR boundary
+Above FL345: Use 125.5 MHz for TOMBI
+Below FL345: Use 128.075 MHz for TOMBI
+All levels: Use 126.3 MHz for VESAR and DOREN
+
+RNAV 5
+RNAV 1 required for route N/UN374
+
+Holding Procedures Table IV-1-1
+
+
+
+[OMAE] 
+Emergency Security Control of Air Traffic (ESCAT)
+
+Emergency:
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft)
+
+RNAV 1 (GNSS)
+Holding Procedures Table IV-1-1
+
+[OOMM] 
+Longitudinal Separation : 80nm / 10mins
+Horizontal Radar Separation : 5nm, 20NM between all traffic routing via RASKI
+SLOP shall be authorized
+
+Borders with Sanaa FIR (OYSC)
+High Terrain over TULBU
+
+RNAV 5 is the standard for all ATS routes.
+RNAV 1: Routes such as L700, N318, N718, and P307
+Minimum RNP 10 when approaching VABF: separation 50NM .
+
+Emergency Continental area:
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft)
+
+Emergency Oceanic area:
+Rapid Decomp no comm : old proc : 90° / 25NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : old proc :10NM Offset : > 10 nm (North Climb 300ft/South Descend 300ft)
+
+Holding Procedures Table IV-1-1
+
+
+[VABF]
+
+Communication Procedures:
+Establish CPDLC VABF 10 mins prior Entry.  Send position report.
+HF 8879, 6661, 10018 for SELCAL check. Refer Jepps ENROUTE DATA Middle East : HF FREQUENCY ALLOCATION WITHIN MUMBAI FIR
+
+RNAV 5 is the standard minima : 10 minutes longitudinal separation based on the Mach Number Technique (MNT)
+UPR : FL280 -FL460 : RNP 10 and ADS-C and CPDLC : 50nm separation
+RNP 2/4 + RCP 240 is required if you want that 20NM gap
+
+Eastbound FLAS (H24)
+L759, M300, M770, N563, N571, N877, P570, P574, P628 : All eastbound levels available except FL290
+L645, P762 : FL290 (No-PDC); others subject to coordination
+L301, L507, N895, P646 : All eastbound levels available
+M768 :FL290, FL330, FL370, FL410
+Westbound FLAS (H24)
+L759, M300, N563, N571, N877, P570, P574, P628 : FL280, FL300, FL340, FL360*, FL380, FL400
+L301, L645, N895, P762 : FL320, FL360
+L507, P646 : All westbound levels available
+M751 (per Malaysia rules) : FL300, FL320, FL340, FL360, FL380, FL400
+
+SLOP authorized in Oceanic only.
+
+Emergency Oceanic area:
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+[VOMF]
+Communication Procedures:
+Establish CPDLC VOMF 10 mins prior Entry. Send position report.
+VHF 126.15 MHz as your primary backup. HF 5670, 11285, 3470 for SELCAL check.
+
+RNAV 5 is the standard minima : 10 minutes longitudinal separation based on the Mach Number Technique (MNT)
+UPR : FL280 -FL460 : RNP 10 and ADS-C and CPDLC : 50nm separation
+RNP 2/4 + RCP 240 is required if you want that 20NM gap
+
+Eastbound FLAS (H24)
+L759, M300, M770, N563, N571, N877, P570, P574, P628 : All eastbound levels available except FL290
+L645, P762 : FL290 (No-PDC); others subject to coordination
+L301, L507, N895, P646 : All eastbound levels available
+M768 :FL290, FL330, FL370, FL410
+Westbound FLAS (H24)
+L759, M300, N563, N571, N877, P570, P574, P628 : FL280, FL300, FL340, FL360*, FL380, FL400
+L301, L645, N895, P762 : FL320, FL360
+L507, P646 : All westbound levels available
+M751 (per Malaysia rules) : FL300, FL320, FL340, FL360, FL380, FL400
+
+SLOP authorized in Oceanic only.
+
+Emergency Oceanic area:
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+[VCCF] 
+
+Communication Procedures:
+Manual Logon CPDLC VRMF : 15 mins prior entry (BIKOK from Indian FIR). Send position report.
+
+VHF 124.9
+HF 3470, 5670, 11285,13318. SELCAL check. Give ETA exit point.Exit to YMMM normally ELATI.
+
+RNP 10 and ADS-C and CPDLC : 50nm separation
+
+Airways M300 Eastbound : FL290 not available.
+Airways M300 Westbound : FL300 not available.
+
+Airways L896 Eastbound : FL290 not available.
+Airways L896 Westbound : FL320 not available.
+
+SLOP authorized in Oceanic only.
+
+Emergency :
+Rapid Decomp no comm : old proc : 90° / 25NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : old proc :10NM Offset : > 10 nm (North Climb 300ft/South Descend 300ft)
+
+
+
+[VRMF]
+Logon CPDLC VRMF : 10 mins prior entry
+
+RNP 2 : Airways T501 and T602 
+RNP 10 and ADS-C and CPDLC : 50nm separation : L516, L756, L894, L899, M512, M513, N628, and P756 
+TCAS compulsory.
+
+SLOP authorized in Oceanic only
+
+Emergency :
+Rapid Decomp no comm : old proc : 90° / 25NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : old proc :10NM Offset : > 10 nm (North Climb 300ft/South Descend 300ft)
+
+Emergency Descend on RNP1 Routes :T456 must remain on the route, Z652 may offset the route away 
+
+
+[YMMM] 
+ITCZ : expect weather. Coordinate early.
+Operational Requirements:
+Experience Levels: One Flight Crew member in a pilot seat must meet one of the following criteria : Minimum 100 hours and 10 sectors in type/variant within a 120-day period or Minimum 150 hours and 20 sectors in type/variant.
+
+Logon CPDLC YMMM : 15-45 mins prior entry. Send Position Report.
+MCDU INIT page Flight Identification must match the AC ID in the ATS Flight Plan exactly
+ADS must be Armed prior to FIR entry.
+Estimate Error: Notify ATC immediately if a previously reported position estimate is more than 2 minutes in error.
+Speed margin : within 10 kt or Mach 0.02.
+Impending Report: Pilots must give notice of a position report by saying: "[Callsign] POSITION" and wait for the controller's "Go Ahead"
+
+Planning Constraints:
+ATC Flight Plan may include additional LAT/LONG waypoints (not in OFP) to satisfy time interval requirements between direct segments in the Indian Ocean UPR zone. 
+Ensure these additional waypoints are programmed into the FMC and treated as compulsory reporting point.
+
+Navigation Performance:
+For Boeing 777: Manually insert missing EFF waypoints if FMC NAVDB capacity is exceeded; waypoints must match OFP coordinates
+Waypoint Constraint: Maximum interval of 80 minutes flight time between waypoints.
+
+Block Levels implemented. Caution it has now alerting protection.
+
+RNP 4 or RNP 10 compliant.
+
+Check airport available and Curfew.
+
+SLOP. Coordinate on 123.45 interpilot frequency 
+SLOP: Explicitly prohibited on certain domestic Y-routes
+
+
+Qatar Airways is NOT AUTHORIZED to conduct RNP-AR Approaches within Australia.
+(RNP-AR) procedures are identified by suffixes U, M, or P (e.g., RNAV-U (RNP))
+Qatar Airways is NOT AUTHORIZED for Precision Runway Monitoring (PRM) instrument approach procedures in Australia. Inform at least 120nm from destination.
+
+Approach/Takeoff Ban: ATC enforces bans when weather is below State minima
+
+Frequency Transfer: At 4 NM from the threshold, if instructions are not received due to frequency congestion, automatically change to Tower frequency
+LAHSO: Land and Hold Short Operations are NOT AUTHORIZED at aerodromes in Australia
+
+Taxiway Lighting: TWY edge lighting is generally not used; TWY CL lighting is installed instead.
+
+In Fire emergency : 131.0 Mhz direct Comm between Flight Crew and Fire Commander.
+
+Health Reporting: Crew must report specific sicknesses or deaths on board to the Ground Handling agent no later than 30 minutes prior to arrival or at top of descent
+
+Cargo Disinfection: Flights from KUL, SIN, and DOH do not require arrival disinfection; all other origins must be disinfected
+
+State Variances (Australia) | Operation | Minima Requirement
+
+Pre-Departure Clearance (PDC) Procedures : Read-back Requirements: The mandatory read-back for a PDC.
+For QR flight, PDC comes automatically, for VA flight need to request via voice.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

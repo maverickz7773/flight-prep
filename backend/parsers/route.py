@@ -1,6 +1,7 @@
 from __future__ import annotations
 import re
 from models.briefing import RouteSummary, Waypoint
+from parsers.enroute_info import build_enroute_info_items
 
 
 def parse_route(pages: list[str]) -> RouteSummary:
@@ -211,6 +212,7 @@ def parse_route(pages: list[str]) -> RouteSummary:
         route_string=route_string,
         waypoints=waypoints,
         fir_sequence=fir_sequence,
+        enroute_info=build_enroute_info_items(fir_sequence),
         highest_mora=highest_mora,
         cruise_flight_levels=cruise_fls,
     )
