@@ -36,6 +36,7 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Relaxed `backend/tests/test_enroute_info.py` so it verifies correct route/FIR mapping without breaking each time `Enroute Info.txt` grows
 - Added `KSEA` timezone coverage so `QR 719.pdf` now shows `STA (UTC-7)` correctly in Section 1
 - Verified and refined the NATS exit-point logic so synthetic markers like `ENTRY2` are replaced by the first real named waypoint after the oceanic coordinate chain, e.g. `MEDPA` for `QR 719.pdf`
+- Added a release marker to `/api/health` in `backend/main.py` (`2026-05-19-nats-v2`) so Render rollout can be verified directly after deploy
 
 **Verification**
 

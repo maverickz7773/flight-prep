@@ -23,6 +23,7 @@ app = FastAPI(title="Flight Prep API")
 logger = logging.getLogger(__name__)
 _PARSE_JOB_TTL_SECONDS = 10 * 60
 _parse_jobs: dict[str, dict[str, object | None]] = {}
+_APP_RELEASE = "2026-05-19-nats-v2"
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,6 +38,7 @@ async def health():
     return {
         "status": "ok",
         "operational_info_present": notes_data_file_exists(),
+        "release": _APP_RELEASE,
     }
 
 
