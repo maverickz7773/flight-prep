@@ -1,14 +1,17 @@
 import { useMemo, useState } from "react";
 
-import type { RouteSummary } from "@/lib/types";
+import type { NATSProcedure, RouteSummary } from "@/lib/types";
+import InlineDisclosure from "../InlineDisclosure";
 import Section from "../Section";
 
 export default function RouteSection({
   route,
   ezfw,
+  natsProcedure,
 }: {
   route: RouteSummary;
   ezfw: number;
+  natsProcedure: NATSProcedure | null;
 }) {
   const [openFirIcao, setOpenFirIcao] = useState<string | null>(null);
   const keyWaypoints = route.waypoints.filter(
@@ -34,6 +37,13 @@ export default function RouteSection({
   );
 
   const openFirInfo = openFirIcao ? enrouteInfoByIcao.get(openFirIcao) ?? null : null;
+  const natsTriggerLabels = useMemo(() => {
+    if (!natsProcedure) return [];
+    return route.fir_sequence.filter((firLabel) => {
+      const match = firLabel.match(/^(.*?)\s+\(([A-Z]{4})\)$/);
+      return !!match && natsProcedure.trigger_firs.includes(match[2]);
+    });
+  }, [natsProcedure, route.fir_sequence]);
 
   const renderFirLabel = (firLabel: string, index: number) => {
     const match = firLabel.match(/^(.*?)\s+\(([A-Z]{4})\)$/);
@@ -132,6 +142,49 @@ export default function RouteSection({
           <div className="whitespace-pre-line text-xs text-foreground leading-relaxed">
             {openFirInfo.notes}
           </div>
+        </div>
+      )}
+
+      {natsProcedure && (
+        <div className="mt-3 rounded-md border border-border bg-surface-2 px-3 py-2">
+          <InlineDisclosure title="NATS">
+            <div className="space-y-2">
+              {natsTriggerLabels.length > 0 && (
+                <p className="text-xs text-muted">
+                  Triggered by:{" "}
+                  <span className="text-foreground">{natsTriggerLabels.join(" → ")}</span>
+                </p>
+              )}
+
+              <InlineDisclosure title="NATS Enroute">
+                <div className="space-y-2">
+                  {natsProcedure.enroute_fir_callouts.length > 0 && (
+                    <div className="rounded border border-accent-green/20 bg-accent-green/5 px-3 py-2">
+                      <p className="text-accent-green text-[11px] font-bold mb-1">
+                        FIR-SPECIFIC CALLOUTS
+                      </p>
+                      <div className="space-y-1">
+                        {natsProcedure.enroute_fir_callouts.map((callout, index) => (
+                          <p key={index} className="text-foreground text-xs leading-relaxed">
+                            {callout}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-foreground whitespace-pre-line text-xs leading-relaxed">
+                    {natsProcedure.enroute_text}
+                  </p>
+                </div>
+              </InlineDisclosure>
+
+              <InlineDisclosure title="NATS Exit">
+                <p className="text-foreground whitespace-pre-line text-xs leading-relaxed">
+                  {natsProcedure.exit_text}
+                </p>
+              </InlineDisclosure>
+            </div>
+          </InlineDisclosure>
         </div>
       )}
 

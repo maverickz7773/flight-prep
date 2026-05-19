@@ -28,25 +28,31 @@ class EnrouteInfoIntegrationTests(unittest.TestCase):
 
     def test_qr_239_contains_only_firs_with_available_notes(self) -> None:
         briefing = self._parse("QR 239.pdf")
+        covered_firs = [item.fir_icao for item in briefing.route.enroute_info]
+        route_firs = {
+            fir_label.rsplit("(", 1)[1].rstrip(")")
+            for fir_label in briefing.route.fir_sequence
+            if "(" in fir_label and fir_label.endswith(")")
+        }
 
-        self.assertEqual(
-            [(item.fir_name, item.fir_icao) for item in briefing.route.enroute_info],
-            [
-                ("BAHRAIN", "OBBB"),
-                ("JEDDAH", "OEJD"),
-                ("AMMAN", "OJAC"),
-                ("DAMASCUS", "OSTT"),
-                ("ANKARA", "LTAA"),
-            ],
-        )
+        for fir_icao in ["OBBB", "OEJD", "OJAC", "OSTT", "LTAA"]:
+            self.assertIn(fir_icao, covered_firs)
+        self.assertTrue(set(covered_firs).issubset(route_firs))
 
     def test_qr_719_contains_partial_fir_note_coverage(self) -> None:
         briefing = self._parse("QR 719.pdf")
+        covered_firs = [item.fir_icao for item in briefing.route.enroute_info]
+        route_firs = {
+            fir_label.rsplit("(", 1)[1].rstrip(")")
+            for fir_label in briefing.route.fir_sequence
+            if "(" in fir_label and fir_label.endswith(")")
+        }
 
-        self.assertEqual(
-            [item.fir_icao for item in briefing.route.enroute_info],
-            ["OEJD", "OJAC", "OSTT", "LTAA"],
-        )
+        for fir_icao in ["OBBB", "OEJD", "OJAC", "OSTT", "LTAA", "LTBB", "LBSR", "LRBB", "LHCC", "LZBB", "EPWW", "EKDK", "ENOR", "BIRD", "BGGL"]:
+            self.assertIn(fir_icao, covered_firs)
+        self.assertNotIn("KZSE", covered_firs)
+        self.assertNotIn("ENOB", covered_firs)
+        self.assertTrue(set(covered_firs).issubset(route_firs))
 
 
 if __name__ == "__main__":

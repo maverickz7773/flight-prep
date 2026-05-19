@@ -12,6 +12,7 @@ from parsers.notams import parse_notams
 from parsers.crew_alerts import parse_crew_alerts
 from parsers.takeoff import parse_takeoff
 from parsers.mel import parse_mel
+from parsers.nats import parse_nats_procedure
 from parsers.omc import get_aerodrome_briefing
 from parsers.notes import get_airport_notes
 
@@ -39,6 +40,7 @@ def parse_ofp(pdf_path: str) -> BriefingData:
     weights = parse_weights(pages)
     route = parse_route(pages)
     etops = parse_etops(pages)
+    nats_procedure = parse_nats_procedure(pages, route)
     takeoff = parse_takeoff(pages, flight_info)
     arrival_info = parse_route_arrival(pages)
     weather = parse_weather(pages, route.fir_sequence)
@@ -91,6 +93,7 @@ def parse_ofp(pdf_path: str) -> BriefingData:
         departure_briefing=get_aerodrome_briefing(flight_info.departure_icao),
         arrival_briefing=get_aerodrome_briefing(flight_info.arrival_icao),
         airport_notes=airport_notes,
+        nats_procedure=nats_procedure,
     )
 
 

@@ -110,10 +110,13 @@ RNAV 5
 
 GPS Interference
 
+Can expect to change Squawk
+
 
 [LTAA]
 Navigation Performance:
 Multiple reports of GPS interference; monitor aircraft navigation performance continuously.
+Caution Ukraine Russia Belarus Prohibited Area
 High Terrain : check Escape Routing.
 
 Nicosia Procedure :
@@ -131,6 +134,38 @@ RNAV 1 required for route N/UN374
 
 Holding Procedures Table IV-1-1
 
+Escape Route : 
+LTAF to LTAC : ADA UW74 MUT UA28 BAG LTAC
+LTAC to LTAI : BAG UA28 MUT UT339 ELROP GZP EVKOR ATSUB UT336 AYT LTAI
+LTAC to LTAC : BUK UT32 GEM KSR TZK ETVER URGUP OBRUK UA28 BAG LTAC
+LTAC to LTFM : BUK UL615 ERSEN LTFM 
+SRT to LTFM : SRT UG8 GEM UT32 BUK UL615 ERSEN LTFM
+BAYIR to LTFH : BAYIR UM688 INTAB PEVOB ALFDEG ERVAK ALMUS CRM LTFH
+SRT to ORBI : SRT UM860 NINVA M860 SEPTU ORBI
+OTKEP to ORBI : OTKEP UM688 RATVO KEDIM M688 VAXEN ORBI
+
+[LTBB]
+Navigation Performance:
+Multiple reports of GPS interference; monitor aircraft navigation performance continuously.
+Caution Ukraine Russia Belarus Prohibited Area
+High Terrain : check Escape Routing.
+
+Nicosia Procedure :
+Northern Gateways (with Ankara): TOMBI, VESAR, and DOREN
+Eastern Gateway (with Damascus): NIKAS
+
+Ankara to Nicosia (Southbound): 
+Establish radio contact with Nicosia ACC at least 10 minutes before the FIR boundary
+Above FL345: Use 125.5 MHz for TOMBI
+Below FL345: Use 128.075 MHz for TOMBI
+All levels: Use 126.3 MHz for VESAR and DOREN
+
+RNAV 5
+RNAV 1 required for route N/UN374
+
+
+
+Holding Procedures Table IV-1-1
 
 
 [OMAE] 
@@ -193,6 +228,40 @@ Emergency Oceanic area:
 Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
 Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
 
+Holding Procedures Table IV-1-1
+
+[VECF] 
+Communication Procedures:
+Establish CPDLC VECF 10 mins prior Entry. Send position report.
+Kolkata - Dhaka Comm : Establish 2 way comms. Kolkata : 132.25 / Dhaka : 125.7
+HF 6556, 10066
+
+RNAV 5 is the standard minima : 10 minutes longitudinal separation based on the Mach Number Technique (MNT)
+UPR : FL280 -FL460 : RNP 10 and ADS-C and CPDLC : 50nm separation
+RNP 2/4 + RCP 240 is required if you want that 20NM gap
+
+Flight Level : Airways can be congested, hard to get optimum flight level.
+
+Eastbound FLAS (H24)
+L759, M300, M770, N563, N571, N877, P570, P574, P628 : All eastbound levels available except FL290
+L645, P762 : FL290 (No-PDC); others subject to coordination
+L301, L507, N895, P646 : All eastbound levels available
+
+M768 :FL290, FL330, FL370, FL410
+Westbound FLAS (H24)
+L759, M300, N563, N571, N877, P570, P574, P628 : FL280, FL300, FL340, FL360*, FL380, FL400
+L301, L645, N895, P762 : FL320, FL360
+L507, P646 : All westbound levels available
+M751 (per Malaysia rules) : FL300, FL320, FL340, FL360, FL380, FL400
+
+SLOP authorized in Oceanic only.
+
+Emergency Oceanic area:
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+Holding Procedures Table IV-1-1
+
 
 [VOMF]
 Communication Procedures:
@@ -216,9 +285,71 @@ M751 (per Malaysia rules) : FL300, FL320, FL340, FL360, FL380, FL400
 
 SLOP authorized in Oceanic only.
 
+Holding Procedures Table IV-1-1
+
 Emergency Oceanic area:
 Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
 Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+[VYYF]
+
+Establish CPDLC VYYF 10 mins prior Entry
+CPDLC is mandatory for reduced separation.
+Communication with ATC is difficult.
+Prohibited Airspace: The continental portion of Yangon FIR (VYYF) is prohibited for all operations below FL 260
+
+GPS Interference Area
+
+RNP 10: Required for the application of 50 NM longitudinal separation.
+
+High Terrain East of Myanmar. Check Chart QTR-40 South China.
+Critical Airways A599.
+Escape Route : 
+GULOT - VGEG
+GULOT N24 26.0 E101 10.7 MAKUL A599 CHILA CTG VGEG
+GULOT - VGHS
+GULOT N24 26.0 E101 10.7 MAKUL A599 LSO A201 AAT DAC VGHS
+GULOT - VYMD
+GULOT N24 26.0 E101 10.7 MAKUL A599 LSO B463 MDY VYMD
+VGEG - VVNB
+CTG A599 N22 32.1 E093 53.8 MDY B465 AKSAG B214 BQ W21 NOB
+
+Boarder with Kunming FIR.
+
+Emergency:
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+Holding Procedures:
+Up to and including 14,000 ft: 210 KIAS
+Above 14,000 ft: 240 KIAS
+Timing : 
+At or below 14,000 ft: 1 minute
+Above 14,000 ft: 1.5 minutes
+
+[VTBB]
+Comm : From VYYF, call BKK Control on 128.1 or 120.5 at least 15 mins prior Entry.
+
+RNAV 5
+
+Eastbound from VYYF, ATC will ask different FL preference.
+
+Emergency:
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : 10NM Offset : > 10 nm (North Climb 300ft/South Descend 300ft
+
+Holding Procedures Table IV-1-1
+
+[VDPF]
+
+All airspace is under the control of Phnom Penh ACC on 127.5 MHz
+RNAV 2 (GNSS)
+
+Emergency:
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : 10NM Offset : > 10 nm (North Climb 300ft/South Descend 300ft
+
+Holding Procedures Table IV-1-1
 
 
 
@@ -313,6 +444,248 @@ State Variances (Australia) | Operation | Minima Requirement
 
 Pre-Departure Clearance (PDC) Procedures : Read-back Requirements: The mandatory read-back for a PDC.
 For QR flight, PDC comes automatically, for VA flight need to request via voice.
+
+
+[LBSR]
+
+FIRs that Mandate ATN B1 (FANS 1/A Rejected)
+CPDLC is provided ONLY to ATN B1 equipped aircraft. Logon from FANS 1/A aircraft will NOT be accepted.
+Log on CPDLC LBSR for capable aircraft is mandatory. Establish 2 mins prior entry.
+
+RNAV 5
+Caution Ukraine Russia Belarus Prohibited Area.(boundary LTBB and LBSR)
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+[LRBB]
+
+Logon CDPLC LRBB. FIR supports both ATN B1 and FANS 1/A.
+Mandatory usage CPDLC. Logon 10 mins prior entry.
+
+RNAV 5
+Caution Ukraine Russia Belarus Prohibited Area (North East)
+
+Grid MORA 10500 for the Carpathian Mountains to the north and west of Bucharest
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+[LHCC]
+
+FIRs that Mandate ATN B1 (FANS 1/A Rejected)
+CPDLC LHCC is provided ONLY to ATN B1 equipped aircraft. Logon from FANS 1/A aircraft will NOT be accepted.
+Using CPDLC is discretion of ATC.Log on 15 mins prior entry
+
+RNAV 5
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+[LZBB] 
+FIRs that Mandate ATN B1 (FANS 1/A Rejected).
+CPDLC LZBB is provided ONLY to ATN B1 equipped aircraft. Logon from FANS 1/A aircraft will NOT be accepted. 15 mins prior Entry.
+Caution Ukraine Russia Belarus Prohibited Area (East)
+
+RNAV 5
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+[EPWW] 
+FIRs that Mandate ATN B1 (FANS 1/A Rejected).
+CPDLC EPWW is provided ONLY to ATN B1 equipped aircraft. Logon from FANS 1/A aircraft will NOT be accepted. 15 mins prior Entry.
+Caution Ukraine Russia Belarus Prohibited Area (East)
+
+Prague Coordination: Handover from Warsaw Radar to Prague requires a formal “release” clearance process
+
+RNAV 5
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+[EDUU]
+
+FIRs that Mandate ATN B1 (FANS 1/A Rejected).
+CPDLC EDUU is provided ONLY to ATN B1 equipped aircraft. Logon from FANS 1/A aircraft will NOT be accepted. 15 mins prior Entry.
+The aircraft is on Rhein Radar frequency (EDUU), but the CPDLC status continues to display the previous center (e.g., Maastricht [EDYY]
+
+RNAV 5
+
+Rate of Climb/Descent: reduce rate to 1500 fpm or less within the last 1000 ft
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+[EKDK]
+
+FIRs that Mandate ATN B1 (FANS 1/A Rejected).
+CPDLC EKDK is provided ONLY to ATN B1 equipped aircraft. Logon from FANS 1/A aircraft will NOT be accepted. 15 mins prior Entry.
+
+RNAV 5
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+[ENOR]
+
+No CPDLC like ENOB (north of Norway)
+
+High Terrain along the Norwegian coast. MORA 10400.
+
+Westbound NATS :
+BIRD : Request Oceanic Clearance via BIRD 25 mins before entry BIRD.
+Logon CPDLC BIRD. 
+Given new squawk code.
+
+ENOB : Logon to ENOB 20 minutes prior if transitioning to the Bodo OCA northern sectors.
+     : Request Oceanic Clearance via ENOB at lease 20 mins prior entry.
+
+RNP 10 or RNP 4 capability is required for performance-based longitudinal separation in the oceanic corridors.
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+[ENOB] 
+NATS Oceanic Procedure.
+Logon CPDLC ENOB. 20 minutes prior to entry.
+CPDLC position reports are NOT accepted in the Bodo FIR.
+HF SELCAL check with Bodo Radio is mandatory prior to entry.
+
+Polar Operation above N78°.
+NATS Operation.
+
+
+RNP 10 or RNP 4 capability is required for performance-based longitudinal separation in the oceanic corridors.
+
+Emergency European area (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+[BIRD]  
+NATS Oceanic Procedure.
+RCL is No Longer Required.
+Logon CPDLC : 30 minutes prior (Conservative)
+
+Maintain last Squawk
+
+RNP 2 or GNSS
+
+Communication Preference: CPDLC is the preferred method for ATC communication
+VHF : 126.75, 119.7, 125.7, 119.7
+Iceland Radio : 127.87
+No SELCAL check is required 
+
+
+NUUK : north of 63°30’N is controlled by Reykjavik ACC (BIRD)
+
+Oceanic Emergency Procedure (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+[EGGX] 
+NATS Oceanic Procedure.
+RCL required : 90 to 30 mins prior Entry Point.
+Logon CPDLC : 10 to 25 mins prior FIR.
+VHF : 127.65, 128.36
+SHANWICK Radio : Check COMM info. Based on Family (i.e A,B, C depends on Lat/Long)
+Confirm Assigned Route
+Squawk Logic: 10 minutes after Oceanic Entry, squawk 2000 (unless otherwise instructed by ATC)
+
+ETA Changes: If your estimate for the next waypoint changes by 3 minutes or more, you must send a revised ETA via CPDLC free text.
+
+Voice OCL, check frequency : QTR 123, request OCL Clearance. (Position) at (Time), (Level). Estimating (OEP) at (Time). (Next Position) next. Request Flight Level 360, Mach decimal 84. Max Flight Level 380. TMI 
+
+Gander CZQX Boundary : 30°W, check the frequency.
+
+Oceanic Emergency Procedure (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+
+[BGGL] 
+NATS Oceanic Procedure.
+Polar Operation.
+NUUK : north of 63°30’N is controlled by Reykjavik ACC (BIRD)
+NUUK : south of 63°30’N is controlled by Gander ACC (CZQX)
+Logon CZQX or BIRD depending on whether you are south or north of 63°30’N
+
+Iceland Radio : 127.87
+No SELCAL check is required
+
+SATCOM Reliability: Reliability is degraded within the "SATCOM Shadow," which extends from the North Pole to approximately 70°N.
+If SATCOM is lost, ADS reporting is terminated; crews must attempt a further logon or revert to HF/VHF voice position reporting
+North of 80°N: Inmarsat is not considered a long-range communication system due to satellite geometry. You must use Iridium or HF.
+
+Polar Planning: Greenland airspace is utilized for westbound flights crossing the North Polar Area (North of 78N)
+
+Critical Terrain: All routes over Greenland are designated as critical terrain routes, with elevations reaching up to 12,500 ft MSL.
+Chart QTR-80 : Greenland Crossing.
+
+In the event of a depressurization and emergency descent over Greenland or diversion to an aerodrome in Greenland, when operating below FL195, contact one of the flight information and altering services in Greenland.
+For diversions to Greenland aerodromes, crews must notify “Sondrestorm FIC” via VHF or HF as soon as conditions permit
+
+RNP 2
+
+SLOP authorized.
+
+Oceanic Emergency Procedure (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+[CZQX] 
+NATS Oceanic Procedure.
+Oceanic Clearance" is no longer required for Gander.
+You must still send a Request for Clearance (RCL) between 90 and 60 minutes prior to the OEP to ensure ATC has your current requested speed and level.
+
+RCL : 90 to 60 mins prior Entry Point.
+Logon CPDLC : 15 to 45 minutes prior to entry FIR.
+Squawk Logic: 10 minutes after Oceanic Entry, squawk 2000
+
+HF Radio : Check COMM info. Based on Family (i.e A,B, C depends on Lat/Long)
+
+NUUK : south of 63°30’N is controlled by Gander ACC (CZQX)
+
+Verify RNP 4 for PBCS tracks or RNP 10 for standard oceanic routes
+
+Westbound : Connected to NAR route.
+Eastbound boundary KZWY to CZQX is N45°. CPDLC Auto transfer from KZWY to CZQX. Request HF frequency thru CPDLC.
+Eastbound boundary CZQM to CZQX is W60°.
+
+Oceanic Emergency Procedure (only if no radar comm):
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
 
 
 

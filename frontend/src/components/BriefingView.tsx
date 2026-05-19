@@ -126,7 +126,12 @@ export default function BriefingView({ data }: { data: BriefingData }) {
         )}
       </div>
 
-      <FlightOverview data={fi} etops={data.etops} ezfw={data.weights.ezfw} />
+      <FlightOverview
+        data={fi}
+        etops={data.etops}
+        ezfw={data.weights.ezfw}
+        natsProcedure={data.nats_procedure}
+      />
       <FuelSection data={data.fuel} />
       <WeightSection data={data.weights} />
       <TakeoffSection
@@ -137,8 +142,13 @@ export default function BriefingView({ data }: { data: BriefingData }) {
         flightDate={data.flight_info.date}
         departureBriefing={data.departure_briefing}
         departureNote={data.airport_notes?.departure ?? null}
+        natsProcedure={data.nats_procedure}
       />
-      <RouteSection route={data.route} ezfw={data.weights.ezfw} />
+      <RouteSection
+        route={data.route}
+        ezfw={data.weights.ezfw}
+        natsProcedure={data.nats_procedure}
+      />
       <ArrivalSection
         data={data.arrival}
         destinationWeather={data.weather.destination}

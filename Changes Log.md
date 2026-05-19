@@ -11,10 +11,76 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 ## Current Working Notes
 
 - Production runs from Render using the same repo root and URL: [https://flight-prep.onrender.com](https://flight-prep.onrender.com)
-- Docker must include both `Operational Info.txt` and `Enroute Info.txt` or local text-driven notes will disappear in production.
+- Docker must include `Operational Info.txt`, `Enroute Info.txt`, and `NATS Procedure.txt` or local text-driven notes will disappear in production.
 - Use `scripts/smoke_check.sh` for a quick deploy check.
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
+
+## 2026-05-19 — Codex
+
+**Summary**
+
+- Added a new backend NATS loader in `backend/parsers/nats.py`, driven by `NATS Procedure.txt`
+- Added top-level `nats_procedure` to the shared backend/frontend data contract
+- Triggered NATS only when `route.fir_sequence` contains one of `ENOB`, `BIRD`, `EGGX`, `BGGL`, `CZQX`, or `KZWY`
+- Populated `NATS Overview` dynamically from the OFP:
+  - `TMI` parsed from the dispatch/NAT track briefing text
+  - `NATS Route` derived from the contiguous oceanic route segment
+  - entry/exit point, EET, and FIR derived from the first and last trigger-segment waypoints
+- Added collapsed NATS UI blocks to:
+  - Section 1 `Flight Overview` for `NATS Overview`
+  - Section 4 `Takeoff` for `NATS Preflight and Planning`
+  - Section 5 `Route` for a parent `NATS` toggle with nested `NATS Enroute` and `NATS Exit`
+- Preserved the existing Section 5 FIR-note behavior; NATS is additive and independent
+- Added Docker packaging for `NATS Procedure.txt` so the feature will work on Render after push
+- Relaxed `backend/tests/test_enroute_info.py` so it verifies correct route/FIR mapping without breaking each time `Enroute Info.txt` grows
+- Added `KSEA` timezone coverage so `QR 719.pdf` now shows `STA (UTC-7)` correctly in Section 1
+- Verified and refined the NATS exit-point logic so synthetic markers like `ENTRY2` are replaced by the first real named waypoint after the oceanic coordinate chain, e.g. `MEDPA` for `QR 719.pdf`
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_nats_procedure tests.test_flight_info_parser tests.test_sid_star_parser tests.test_etops_parser tests.test_airport_notes tests.test_enroute_info` passed
+- `cd frontend && npm run lint` passed
+- `cd frontend && npm run build` passed
+- `./scripts/smoke_check.sh http://127.0.0.1:8000 "QR 8945.pdf"` passed
+- `docker build -t flight-prep .` passed
+- Refreshed `frontend_build` for the local FastAPI app
+- Verified NATS parsing from real OFPs:
+  - `QR 707.pdf` → triggered, `trigger_firs = ["EGGX", "CZQX"]`, `TMI = 137`, route `GOMUP ... IRLOK`
+  - `QR 719.pdf` → triggered, `trigger_firs = ["BIRD", "BGGL"]`, route `ISVIG ... MEDPA`, `STA UTC = -7`
+  - `QR 239.pdf` → no NATS
+  - `QR 8452.pdf` → no NATS
+  - `QR 701.pdf` → triggered, route `GUNPA ... JANJO`
+  - `QR 720.pdf` → triggered, route `BOPUT ... GUNPA`
+  - `QR 8075.pdf` → triggered, route `IBERG ... ETIKI`
+
+**Open Items**
+
+- After push, run a Render verification on NAT flights such as `QR 701.pdf`, `QR 707.pdf`, and `QR 719.pdf`
+- Continue expanding `NATS Procedure.txt`, `Operational Info.txt`, and `Enroute Info.txt` as route coverage grows
+
+## 2026-05-19 — Codex
+
+**Summary**
+
+- Replaced fixed UTC offset strings in `backend/parsers/flight_info.py` with airport-to-timezone mapping plus date-aware UTC offset calculation using `zoneinfo`
+- Added missing airport coverage for examples now verified in the repo, including `KIAD` and `VDTI`, so `STA` shows UTC when those airports appear as arrivals
+- Broadened cruise extraction in `backend/parsers/flight_info.py` to read the ATC clearance cruise/step-climb lines directly, instead of depending on an arrival-runway anchor
+- Fixed `backend/parsers/weights.py` so `EZFW` is parsed from the actual weights table lines and no longer picks up tankering advisory text
+- Extended `backend/tests/test_flight_info_parser.py` with regressions for `QR 707.pdf`, `QR 849.pdf`, and `QR 8974.pdf`
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_flight_info_parser tests.test_sid_star_parser tests.test_etops_parser tests.test_airport_notes tests.test_enroute_info` passed
+- Verified parser outputs:
+  - `QR 849.pdf` → `arrival_utc_offset = +3`, `cruise = ["FL340", "FL360", "FL340", "FL300"]`, `ezfw = 217315`
+  - `QR 707.pdf` → `arrival_utc_offset = -4`, `cruise = ["FL320", "FL340", "FL360", "FL380", "FL360", "FL380"]`, `ezfw = 205441`
+  - `QR 8974.pdf` → `arrival_utc_offset = +7`, `cruise = ["FL330", "FL350", "FL370", "FL330"]`, `ezfw = 149808`
+
+**Open Items**
+
+- If more airports are seen with missing UTC offsets, add their ICAO-to-timezone mapping in `flight_info.py`
+- Frontend label behavior should update automatically from the backend offsets; no frontend code was changed in this pass
 
 ## 2026-05-13 — Codex
 

@@ -6,16 +6,27 @@ from models.briefing import Weights
 def parse_weights(pages: list[str]) -> Weights:
     text = "\n".join(pages[:5])
 
-    def find_int(pattern: str) -> int:
-        m = re.search(pattern, text)
+    def find_weight_line(prefix: str) -> str:
+        for line in text.splitlines():
+            stripped = line.strip()
+            if stripped.startswith(prefix):
+                return stripped
+        return ""
+
+    def find_int(line: str, pattern: str) -> int:
+        m = re.search(pattern, line)
         return int(m.group(1)) if m else 0
 
-    mzfw = find_int(r"MZFW\s+(\d+)")
-    ezfw = find_int(r"EZFW\s+(\d+)")
-    mtow = find_int(r"MTOW\s+(\d+)")
-    etow = find_int(r"ETOW\s+(\d+)")
-    mlwt = find_int(r"MLWT\s+(\d+)")
-    elwt = find_int(r"ELWT\s+(\d+)")
+    mzfw_line = find_weight_line("MZFW")
+    mtow_line = find_weight_line("MTOW")
+    mlwt_line = find_weight_line("MLWT")
+
+    mzfw = find_int(mzfw_line, r"MZFW\s+(\d+)")
+    ezfw = find_int(mzfw_line, r"EZFW\s+(\d+)")
+    mtow = find_int(mtow_line, r"MTOW\s+(\d+)")
+    etow = find_int(mtow_line, r"ETOW\s+(\d+)")
+    mlwt = find_int(mlwt_line, r"MLWT\s+(\d+)")
+    elwt = find_int(mlwt_line, r"ELWT\s+(\d+)")
 
     ezfw_pct = round(ezfw / mzfw * 100, 1) if mzfw else None
     etow_pct = round(etow / mtow * 100, 1) if mtow else None

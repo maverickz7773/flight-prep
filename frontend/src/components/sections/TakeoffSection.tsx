@@ -1,6 +1,7 @@
 import { useState } from "react";
-import type { TakeoffData, AerodromeBriefing, AirportWeather } from "@/lib/types";
+import type { TakeoffData, AerodromeBriefing, AirportWeather, NATSProcedure } from "@/lib/types";
 import CompactAirportWeather from "../CompactAirportWeather";
+import InlineDisclosure from "../InlineDisclosure";
 import Section from "../Section";
 
 export default function TakeoffSection({
@@ -11,6 +12,7 @@ export default function TakeoffSection({
   flightDate,
   departureBriefing,
   departureNote,
+  natsProcedure,
 }: {
   data: TakeoffData;
   departureWeather: AirportWeather | null;
@@ -19,6 +21,7 @@ export default function TakeoffSection({
   flightDate: string;
   departureBriefing: AerodromeBriefing | null;
   departureNote: string | null;
+  natsProcedure: NATSProcedure | null;
 }) {
   const [omcOpen, setOmcOpen] = useState(false);
   const sections: { label: string; content: string | null }[] = departureBriefing
@@ -65,6 +68,21 @@ export default function TakeoffSection({
         <p className="text-muted text-xs mt-2 italic">
           V-speeds and flap setting: use EFB/OPT
         </p>
+      )}
+
+      {natsProcedure && (
+        <div className="mt-3 pt-3 border-t border-border">
+          <InlineDisclosure title="NATS">
+            <div className="space-y-2">
+              <p className="text-accent-amber text-xs font-bold">
+                NATS PREFLIGHT AND PLANNING
+              </p>
+              <p className="text-foreground text-xs whitespace-pre-line leading-relaxed">
+                {natsProcedure.preflight_text}
+              </p>
+            </div>
+          </InlineDisclosure>
+        </div>
       )}
 
       {departureBriefing && (

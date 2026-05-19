@@ -32,11 +32,11 @@ class SidStarParserRegressionTests(unittest.TestCase):
         self.assertEqual(briefing.flight_info.star, "RIXUV3E")
         self.assertEqual(briefing.arrival.star, "RIXUV3E")
 
-    def test_qr_719_parses_no_sid_and_numeric_ending_star(self) -> None:
+    def test_qr_719_parses_sid_and_numeric_ending_star(self) -> None:
         briefing = self._parse("QR 719.pdf")
 
-        self.assertIsNone(briefing.flight_info.sid)
-        self.assertIsNone(briefing.takeoff.sid)
+        self.assertEqual(briefing.flight_info.sid, "TULUB2A")
+        self.assertEqual(briefing.takeoff.sid, "TULUB2A")
         self.assertEqual(briefing.flight_info.star, "GLASR3")
         self.assertEqual(briefing.arrival.star, "GLASR3")
 

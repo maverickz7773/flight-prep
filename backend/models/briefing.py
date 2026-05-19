@@ -153,6 +153,27 @@ class EnrouteInfoItem(BaseModel):
     notes: str
 
 
+class NATSOverview(BaseModel):
+    tmi: str | None = None
+    route: str | None = None
+    entry_point: str | None = None
+    entry_eet: str | None = None
+    entry_fir: str | None = None
+    exit_point: str | None = None
+    exit_eet: str | None = None
+    exit_fir: str | None = None
+
+
+class NATSProcedure(BaseModel):
+    trigger_firs: list[str] = []
+    overview_text: str
+    preflight_text: str
+    enroute_text: str
+    exit_text: str
+    enroute_fir_callouts: list[str] = []
+    overview: NATSOverview
+
+
 class AlternateInfo(BaseModel):
     icao: str
     runway: str | None = None
@@ -295,3 +316,4 @@ class BriefingData(BaseModel):
     departure_briefing: AerodromeBriefing | None = None
     arrival_briefing: AerodromeBriefing | None = None
     airport_notes: AirportNotes | None = None
+    nats_procedure: NATSProcedure | None = None

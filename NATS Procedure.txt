@@ -1,0 +1,67 @@
+[NATS Overview]
+
+Overview
+NATS TMI : 
+NATS Route :
+Entry Point :   EET :     ENTRY FIR :
+Exit Point :    EET :     EXIT FIR :
+
+[NATS Preflight and Planning]
+Refer OM C 6.8.1.1.2 
+OFP TMI No.
+ETOPS Entry and Exit.
+Full Oceanic Waypoints.
+Weather : Destination, Destination Alternates, Enroute Temp and Forecast.
+
+Tech Log. ETOPS check signed.
+MEL items affects ETOPS, PBN, RVSM, COMMS/NAV/SURV (CNS), PBCS Capabilities, Clock Accuracy.
+Updated Weather.
+
+
+[NATS Enroute]
+Refer OM C 6.8.1.1.2
+1. FMC/CPDLC : 
+ETOPS Segment (434). Check weather and alternate.
+
+2. Check Entry Point, Exit Point.
+Verify waypoint, speed and FL (climb if necessary). 
+Use OFP Lat Long in OFP to crosscheck track and distance.
+
+3.Set Oceanic Clearance in CPDLC.
+Bodo ENOB : 20 mins
+Gander CZQX : 90 - 60 mins
+Shanwick EGGX : 90 - 30 mins
+Santa Maria LPPO : at least 40 mins
+NY Oceanic East : no requirement RCL. Received during Departure PDC.
+
+4. Preset HF Frequency.
+5. Log ON CPDLC (10-25 mins). SELCAL check.
+6. Clearance Received. Verify routing, ETA, FL and Mach No.
+
+After Entry:
+1. Check RNP 4
+2. Set 10 mins :reset SQ2000 (Except BIRD : maintain SQ)
+3. Confirm uplink route.
+4. VHF 1 and 2 Comm : 123.45, 121.5
+5. Maintain ECON Spd unless intructed by ATC.
+6. SLOP.
+7. Altimeter Check.
+
+Waypoint Check :
+1. Confirm LNAV. Check tracking.
+2. Log OFP.
+3. HF Call is any.
+4. Check position report sent in FMC (after 10 mins cross check the waypoint)
+5. After 10 mins, check position aircraft symbol.
+
+At Boundary
+1. HF Call and SELCAL Check
+2. Confirm CPDLC has transferred.
+
+[NATS Exit]
+1. Confirm routing and speed.
+2. Cancel SLOP.
+3. Confirm Transponder
+
+ 
+

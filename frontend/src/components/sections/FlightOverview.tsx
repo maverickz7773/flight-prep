@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import type { FlightInfo, ETOPSInfo } from "@/lib/types";
+import type { FlightInfo, ETOPSInfo, NATSProcedure } from "@/lib/types";
+import InlineDisclosure from "../InlineDisclosure";
 import Section from "../Section";
 
 function Row({ label, value }: { label: string; value: string | null }) {
@@ -42,7 +43,17 @@ function addMinutesToTime(base: string, addMins: number): string {
   return day ? `${dayNum.toString().padStart(2, "0")}/${hh}${mm}` : `${hh}${mm}`;
 }
 
-export default function FlightOverview({ data, etops, ezfw }: { data: FlightInfo; etops: ETOPSInfo | null; ezfw: number }) {
+export default function FlightOverview({
+  data,
+  etops,
+  ezfw,
+  natsProcedure,
+}: {
+  data: FlightInfo;
+  etops: ETOPSInfo | null;
+  ezfw: number;
+  natsProcedure: NATSProcedure | null;
+}) {
   const [crewCount, setCrewCount] = useState<2 | 3 | 4>(2);
 
   const tripMins = useMemo(() => {
@@ -175,6 +186,39 @@ export default function FlightOverview({ data, etops, ezfw }: { data: FlightInfo
           </div>
         )}
       </div>
+
+      {natsProcedure && (
+        <div className="mt-3 pt-2 border-t border-border">
+          <InlineDisclosure title="NATS">
+            <div className="space-y-1 text-xs">
+              <p className="text-accent-amber font-bold">NATS OVERVIEW</p>
+              <Row label="TMI" value={natsProcedure.overview.tmi} />
+              <div className="flex">
+                <span className="text-muted w-28 shrink-0">ROUTE</span>
+                <span className="text-foreground whitespace-pre-line break-words">
+                  {natsProcedure.overview.route || "N/A"}
+                </span>
+              </div>
+              <Row
+                label="ENTRY"
+                value={
+                  natsProcedure.overview.entry_point
+                    ? `${natsProcedure.overview.entry_point}${natsProcedure.overview.entry_eet ? `  EET ${natsProcedure.overview.entry_eet}` : ""}${natsProcedure.overview.entry_fir ? `  ${natsProcedure.overview.entry_fir}` : ""}`
+                    : "N/A"
+                }
+              />
+              <Row
+                label="EXIT"
+                value={
+                  natsProcedure.overview.exit_point
+                    ? `${natsProcedure.overview.exit_point}${natsProcedure.overview.exit_eet ? `  EET ${natsProcedure.overview.exit_eet}` : ""}${natsProcedure.overview.exit_fir ? `  ${natsProcedure.overview.exit_fir}` : ""}`
+                    : "N/A"
+                }
+              />
+            </div>
+          </InlineDisclosure>
+        </div>
+      )}
     </Section>
   );
 }

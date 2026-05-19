@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./
 COPY ["Operational Info.txt", "../"]
 COPY ["Enroute Info.txt", "../"]
+COPY ["NATS Procedure.txt", "../"]
 COPY --from=frontend-build /app/frontend/out ../frontend_build/
 EXPOSE 8000
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

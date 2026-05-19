@@ -6,6 +6,7 @@ import re
 
 _DATA_PATH = Path(__file__).resolve().parents[2] / "Operational Info.txt"
 _ICAO_HEADER_RE = re.compile(r"^\[([A-Z]{4})\]$")
+_SECTION_RE = re.compile(r"^(DEP|ARR)\s*:\s*(.*)$")
 _cache: dict[str, dict[str, str]] | None = None
 _cache_mtime_ns: int | None = None
 _missing_file_warned = False
@@ -50,16 +51,11 @@ def _load() -> dict[str, dict[str, str]]:
             current_section = None
             continue
 
-        if stripped.startswith("DEP:"):
+        section_match = _SECTION_RE.match(stripped)
+        if section_match:
             flush_section()
-            current_section = "departure"
-            buffer = [stripped[4:].strip()]
-            continue
-
-        if stripped.startswith("ARR:"):
-            flush_section()
-            current_section = "arrival"
-            buffer = [stripped[4:].strip()]
+            current_section = "departure" if section_match.group(1) == "DEP" else "arrival"
+            buffer = [section_match.group(2).strip()]
             continue
 
         if current_section:

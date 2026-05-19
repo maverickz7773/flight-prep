@@ -1,5 +1,8 @@
 from __future__ import annotations
+from datetime import datetime
 import re
+from zoneinfo import ZoneInfo
+
 from models.briefing import FlightInfo
 from parsers.procedures import (
     extract_sid_from_route_pages,
@@ -7,77 +10,135 @@ from parsers.procedures import (
     is_procedure_token,
 )
 
-ICAO_UTC_OFFSET: dict[str, str] = {
-    "OTHH": "+3", "OTBD": "+3",
-    "WMKK": "+8", "WMKJ": "+8", "WMKP": "+8",
-    "WSSS": "+8",
-    "WIII": "+7", "WADD": "+8", "WIMM": "+7",
-    "VTBS": "+7", "VTBD": "+7", "VTSG": "+7", "VTSP": "+7",
-    "VHHH": "+8",
-    "RPLL": "+8",
-    "RKSI": "+9",
-    "RJTT": "+9", "RJAA": "+9",
-    "VOMM": "+5:30", "VOBL": "+5:30", "VOCI": "+5:30", "VIDP": "+5:30",
-    "VABB": "+5:30", "VCRI": "+5:30", "VCBI": "+5:30",
-    "OPKR": "+5", "OPLA": "+5", "OPRN": "+5",
-    "OEJN": "+3", "OERK": "+3", "OEDF": "+3",
-    "OMDB": "+4", "OMAD": "+4", "OMSJ": "+4",
-    "OOMS": "+4", "OOSA": "+4",
-    "OKBK": "+3",
-    "OBIC": "+3", "OBBI": "+3",
-    "EGLL": "+0", "EGLC": "+0", "EGKK": "+0",
-    "LFPG": "+1", "LFPO": "+1",
-    "EDDF": "+1", "EDDM": "+1",
-    "KJFK": "-5", "KLAX": "-8", "KORD": "-6", "KATL": "-5",
-    "CYYZ": "-5", "CYVR": "-8",
-    "YSSY": "+10", "YMML": "+10",
-    "FAOR": "+2", "FACT": "+2",
-    "SBGR": "-3",
-    "LEMD": "+1", "LEBL": "+1",
-    "LIRF": "+1", "LIMC": "+1",
-    "LTFM": "+3",
-    "UUEE": "+3", "UUDD": "+3",
-    "ZBAA": "+8", "ZSPD": "+8", "ZGGG": "+8",
-    "VDPP": "+7",
-    "VLVT": "+7",
-    "VRMM": "+5",
+ICAO_TIMEZONES: dict[str, str] = {
+    "OTHH": "Asia/Qatar",
+    "OTBD": "Asia/Qatar",
+    "WMKK": "Asia/Kuala_Lumpur",
+    "WMKJ": "Asia/Kuala_Lumpur",
+    "WMKP": "Asia/Kuala_Lumpur",
+    "WSSS": "Asia/Singapore",
+    "WIII": "Asia/Jakarta",
+    "WADD": "Asia/Makassar",
+    "WIMM": "Asia/Jakarta",
+    "VTBS": "Asia/Bangkok",
+    "VTBD": "Asia/Bangkok",
+    "VTSG": "Asia/Bangkok",
+    "VTSP": "Asia/Bangkok",
+    "VHHH": "Asia/Hong_Kong",
+    "RPLL": "Asia/Manila",
+    "RKSI": "Asia/Seoul",
+    "RJTT": "Asia/Tokyo",
+    "RJAA": "Asia/Tokyo",
+    "VOMM": "Asia/Kolkata",
+    "VOBL": "Asia/Kolkata",
+    "VOCI": "Asia/Kolkata",
+    "VIDP": "Asia/Kolkata",
+    "VABB": "Asia/Kolkata",
+    "VCRI": "Asia/Kolkata",
+    "VCBI": "Asia/Colombo",
+    "OPKR": "Asia/Karachi",
+    "OPLA": "Asia/Karachi",
+    "OPRN": "Asia/Karachi",
+    "OEJN": "Asia/Riyadh",
+    "OERK": "Asia/Riyadh",
+    "OEDF": "Asia/Riyadh",
+    "OMDB": "Asia/Dubai",
+    "OMAD": "Asia/Dubai",
+    "OMSJ": "Asia/Dubai",
+    "OOMS": "Asia/Muscat",
+    "OOSA": "Asia/Muscat",
+    "OKBK": "Asia/Kuwait",
+    "OBIC": "Asia/Qatar",
+    "OBBI": "Asia/Bahrain",
+    "EGLL": "Europe/London",
+    "EGLC": "Europe/London",
+    "EGKK": "Europe/London",
+    "LFPG": "Europe/Paris",
+    "LFPO": "Europe/Paris",
+    "EDDF": "Europe/Berlin",
+    "EDDM": "Europe/Berlin",
+    "KJFK": "America/New_York",
+    "KLAX": "America/Los_Angeles",
+    "KSEA": "America/Los_Angeles",
+    "KORD": "America/Chicago",
+    "KATL": "America/New_York",
+    "KIAD": "America/New_York",
+    "CYYZ": "America/Toronto",
+    "CYVR": "America/Vancouver",
+    "YSSY": "Australia/Sydney",
+    "YMML": "Australia/Melbourne",
+    "FAOR": "Africa/Johannesburg",
+    "FACT": "Africa/Johannesburg",
+    "SBGR": "America/Sao_Paulo",
+    "LEMD": "Europe/Madrid",
+    "LEBL": "Europe/Madrid",
+    "LIRF": "Europe/Rome",
+    "LIMC": "Europe/Rome",
+    "LTFM": "Europe/Istanbul",
+    "UUEE": "Europe/Moscow",
+    "UUDD": "Europe/Moscow",
+    "ZBAA": "Asia/Shanghai",
+    "ZSPD": "Asia/Shanghai",
+    "ZGGG": "Asia/Shanghai",
+    "VDPP": "Asia/Phnom_Penh",
+    "VDTI": "Asia/Ho_Chi_Minh",
+    "VLVT": "Asia/Vientiane",
+    "VRMM": "Asia/Yangon",
 }
 
 
 def _extract_cruise_levels(
     block: str,
-    arrival_icao: str | None,
-    arrival_runway: str | None,
 ) -> list[str]:
     lines = block.splitlines()
-    start_idx = None
-    if arrival_icao and arrival_runway:
-        arrival_marker = f"{arrival_icao} {arrival_runway}"
-        for idx, line in enumerate(lines):
-            if arrival_marker in line:
-                start_idx = idx + 1
-                break
-
-    if start_idx is None:
-        return []
-
     cruise_levels: list[str] = []
-    seen_levels: set[str] = set()
+    in_route_section = False
 
-    for line in lines[start_idx:]:
+    for line in lines:
         stripped = line.strip()
         if not stripped:
             continue
+        if stripped.startswith("ATC CLEARANCE"):
+            in_route_section = True
+            continue
+        if not in_route_section:
+            continue
         if stripped.startswith("FUEL TIME"):
             break
-        if "FL" not in stripped:
+        if "FL" not in stripped or "STA " in stripped:
             continue
         for fl in re.findall(r"FL\d{3}", stripped):
-            if fl not in seen_levels:
-                cruise_levels.append(fl)
-                seen_levels.add(fl)
+            cruise_levels.append(fl)
 
     return cruise_levels
+
+
+def _format_utc_offset(offset_seconds: int) -> str:
+    total_minutes = offset_seconds // 60
+    sign = "+" if total_minutes >= 0 else "-"
+    total_minutes = abs(total_minutes)
+    hours, minutes = divmod(total_minutes, 60)
+    if minutes == 0:
+        return f"{sign}{hours}"
+    return f"{sign}{hours}:{minutes:02d}"
+
+
+def _get_utc_offset(icao: str, flight_date: str) -> str | None:
+    timezone_name = ICAO_TIMEZONES.get(icao)
+    if not timezone_name or not flight_date:
+        return None
+
+    try:
+        flight_dt = datetime.strptime(flight_date, "%d%b%y")
+        tz = ZoneInfo(timezone_name)
+        offset = flight_dt.replace(tzinfo=tz).utcoffset()
+    except Exception:
+        return None
+
+    if offset is None:
+        return None
+
+    return _format_utc_offset(int(offset.total_seconds()))
 
 
 def parse_flight_info(pages: list[str]) -> FlightInfo:
@@ -164,7 +225,7 @@ def parse_flight_info(pages: list[str]) -> FlightInfo:
         arr_rwy = route_match.group(5)
         route_string = route_match.group(3).strip()
 
-    cruise_levels = _extract_cruise_levels(atc_block or text, arr_icao or None, arr_rwy)
+    cruise_levels = _extract_cruise_levels(atc_block or text)
 
     sid = extract_sid_from_route_pages(pages, dep_icao or None, dep_rwy)
     star = extract_star_from_route_pages(pages, arr_icao or None, arr_rwy)
@@ -182,8 +243,8 @@ def parse_flight_info(pages: list[str]) -> FlightInfo:
     wc_match = re.search(r"WC\s+([PM]\d+)", text)
     wind_component = wc_match.group(1) if wc_match else None
 
-    dep_utc = ICAO_UTC_OFFSET.get(dep_icao)
-    arr_utc = ICAO_UTC_OFFSET.get(arr_icao)
+    dep_utc = _get_utc_offset(dep_icao, date)
+    arr_utc = _get_utc_offset(arr_icao, date)
 
     return FlightInfo(
         flight_number=flight_number,

@@ -147,6 +147,27 @@ export interface EnrouteInfoItem {
   notes: string;
 }
 
+export interface NATSOverview {
+  tmi: string | null;
+  route: string | null;
+  entry_point: string | null;
+  entry_eet: string | null;
+  entry_fir: string | null;
+  exit_point: string | null;
+  exit_eet: string | null;
+  exit_fir: string | null;
+}
+
+export interface NATSProcedure {
+  trigger_firs: string[];
+  overview_text: string;
+  preflight_text: string;
+  enroute_text: string;
+  exit_text: string;
+  enroute_fir_callouts: string[];
+  overview: NATSOverview;
+}
+
 export interface AlternateInfo {
   icao: string;
   runway: string | null;
@@ -289,4 +310,5 @@ export interface BriefingData {
   departure_briefing: AerodromeBriefing | null;
   arrival_briefing: AerodromeBriefing | null;
   airport_notes: AirportNotes | null;
+  nats_procedure: NATSProcedure | null;
 }

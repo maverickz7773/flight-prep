@@ -125,8 +125,8 @@ Beware FMC was program on SID, check speed constraint.
 
 Hot Weather Operation - Check temp cabin. Switch on APU as necessary.
 
-ARR: SCB - Shortened Rwy 16L/34R 
-RAAS GPWS Switch Override. Approach RNP'T' 16L, RNP 34R. No ILS.
+ARR: SCB - Shortened Rwy 16L/34R (WIP completed)
+RAAS GPWS Switch Override. Approach RNP'T' 16L, RNP 34R. No ILS.(no more SCB)
 GPS Outage. Monitor map shift during intercept localizer
 OPT Usage - 16L #SP1 (via A8), 32R #SP1 (full length)
 
@@ -139,6 +139,16 @@ Lights on TOD (no more in SCB)
 Cabin must be secure before FIR.(no more in SCB)
 
 Hot Weather Operation : Check temp cabin. Switch on APU as necessary.
+
+- Notam -
+MISAP ILS 16L/34R suspended : 
+34R : 1000 feet, turn right 020°, climb 3000 feet, expect radar vectors
+16L : 1000 feet, turn left 120°, climb 3000 feet, expect radar vectors
+
+MISAP ILS 16L/34R suspended : 
+34L/16R : maintain runway track, climb 3000 feet, expect radar vectors
+
+ILS 34R/16L : operating, downgraded to Cat 1/T/2. Awaiting FLTCK.
 
 
 [KORD]
@@ -168,3 +178,29 @@ Flap 25.
 Runway 28C: P1-P hold GG
 Ground: 132.7
 Call metering for gate number with QTR 725. Ensure get gate number, if not ATC will taxi u around.
+
+[VDTI]
+
+DEP: To be updated
+
+
+ARR : Cargo
+RNP.05. VELVA.1D
+Transfer from BKK 135.5 to PHN 132.4.
+OFP planned for earlier descend. BKK will asked for different 
+level preference. PHN give direct to IKOMO, then direct BILBA. No D-ATIS, get ATIS around 200nm within airport. 
+Transferred to approach 123.8. Trans Level FL130. Clear RNP approach rwy 05, call establish.
+After landing vacate A6,A hold short B6. Call ground 121.9
+Taxi A, B6, C5 gate 401
+
+Check Ops Hour : 2300z to 2000z.
+Tower Frequency radio interference.
+Runway marking difficult to see during darkness and heavy rain.
+Significant upslope when entering Apron, followed by downslope.
+
+Depends on season, weather can be challenging.
+
+Check standard taxi routing.
+TCAS - 2000 within altitude : 1500 fpm
+     - 1000 within altitude : 1000 fpm
+
