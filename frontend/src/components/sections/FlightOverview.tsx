@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import type { FlightInfo, ETOPSInfo, NATSProcedure } from "@/lib/types";
-import InlineDisclosure from "../InlineDisclosure";
 import Section from "../Section";
 
 function Row({ label, value }: { label: string; value: string | null }) {
@@ -55,6 +54,8 @@ export default function FlightOverview({
   natsProcedure: NATSProcedure | null;
 }) {
   const [crewCount, setCrewCount] = useState<2 | 3 | 4>(2);
+  const [etopsOpen, setEtopsOpen] = useState(false);
+  const [natsOpen, setNatsOpen] = useState(false);
 
   const tripMins = useMemo(() => {
     if (!data.trip_time) return 0;
@@ -112,41 +113,115 @@ export default function FlightOverview({
         <Row label="WIND" value={data.wind_component} />
       </div>
 
-      {etops && etops.sectors.length > 0 && (
-        <div className="mt-3 pt-2 border-t border-border space-y-0.5">
-          {data.etops_minutes && (
-            <Row label="ETOPS" value={`${data.etops_minutes} MIN`} />
-          )}
-          {etops.sectors.map((s) => {
-            const multi = etops.sectors.length > 1;
-            const pfx = multi ? `S${s.sector_number} ` : "";
-            const gw = (fuel: number | null) =>
-              fuel != null ? `  GW ${(ezfw / 1000 + fuel).toFixed(1)}t` : "";
-            return (
-              <div key={s.sector_number} className="space-y-0.5">
-                {s.entry_icao && (
-                  <Row
-                    label={`${pfx}ENTRY`}
-                    value={`${s.entry_icao}${s.entry_eet ? `  EET ${s.entry_eet}` : ""}${gw(s.entry_fuel)}`}
-                  />
-                )}
-                {s.exit_icao && (
-                  <Row
-                    label={`${pfx}EXIT`}
-                    value={`${s.exit_icao}${s.exit_eet ? `  EET ${s.exit_eet}` : ""}${gw(s.exit_fuel)}`}
-                  />
-                )}
-                {s.alternates.length > 0 && (
-                  <Row label={`${pfx}ALTN`} value={s.alternates.join(", ")} />
+      {(data.etops_minutes || natsProcedure) && (
+        <div className="mt-3 pt-2 border-t border-border">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+            {data.etops_minutes && (
+              <button
+                type="button"
+                onClick={() => setEtopsOpen((open) => !open)}
+                className={`rounded-md border px-3 py-2 text-left transition-colors ${
+                  etopsOpen
+                    ? "border-accent-green bg-accent-green/10 text-accent-green"
+                    : "border-border bg-surface-2 text-muted hover:border-muted hover:text-foreground"
+                }`}
+              >
+                <div className="text-[11px] font-bold uppercase tracking-wide">
+                  {etopsOpen ? "▼" : "▶"} ETOPS
+                </div>
+                <div className="mt-1 text-xs">
+                  {data.etops_minutes} MIN
+                </div>
+              </button>
+            )}
+
+            {natsProcedure && (
+              <button
+                type="button"
+                onClick={() => setNatsOpen((open) => !open)}
+                className={`rounded-md border px-3 py-2 text-left transition-colors ${
+                  natsOpen
+                    ? "border-accent-green bg-accent-green/10 text-accent-green"
+                    : "border-border bg-surface-2 text-muted hover:border-muted hover:text-foreground"
+                }`}
+              >
+                <div className="text-[11px] font-bold uppercase tracking-wide">
+                  {natsOpen ? "▼" : "▶"} NATS
+                </div>
+                <div className="mt-1 text-xs">
+                  {natsProcedure.overview.tmi ? `TMI ${natsProcedure.overview.tmi}` : "Overview"}
+                </div>
+              </button>
+            )}
+          </div>
+
+          {data.etops_minutes && etopsOpen && (
+            <div className="mt-2 rounded-md border border-border bg-surface-2 px-3 py-2">
+              <div className="space-y-1 text-xs">
+                <Row label="ETOPS" value={`${data.etops_minutes} MIN`} />
+                {etops && etops.sectors.length > 0 && (
+                  <>
+                    {etops.sectors.map((s) => {
+                      const multi = etops.sectors.length > 1;
+                      const pfx = multi ? `S${s.sector_number} ` : "";
+                      const gw = (fuel: number | null) =>
+                        fuel != null ? `  GW ${(ezfw / 1000 + fuel).toFixed(1)}t` : "";
+                      return (
+                        <div key={s.sector_number} className="space-y-1">
+                          {s.entry_icao && (
+                            <Row
+                              label={`${pfx}ENTRY`}
+                              value={`${s.entry_icao}${s.entry_eet ? `  EET ${s.entry_eet}` : ""}${gw(s.entry_fuel)}`}
+                            />
+                          )}
+                          {s.exit_icao && (
+                            <Row
+                              label={`${pfx}EXIT`}
+                              value={`${s.exit_icao}${s.exit_eet ? `  EET ${s.exit_eet}` : ""}${gw(s.exit_fuel)}`}
+                            />
+                          )}
+                          {s.alternates.length > 0 && (
+                            <Row label={`${pfx}ALTN`} value={s.alternates.join(", ")} />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </>
                 )}
               </div>
-            );
-          })}
-        </div>
-      )}
-      {(!etops || etops.sectors.length === 0) && data.etops_minutes && (
-        <div className="mt-3 pt-2 border-t border-border">
-          <Row label="ETOPS" value={`${data.etops_minutes} MIN`} />
+            </div>
+          )}
+
+          {natsProcedure && natsOpen && (
+            <div className="mt-2 rounded-md border border-border bg-surface-2 px-3 py-2">
+              <div className="space-y-1 text-xs">
+                <p className="text-accent-amber font-bold">NATS OVERVIEW</p>
+                <Row label="TMI" value={natsProcedure.overview.tmi} />
+                <div className="flex">
+                  <span className="text-muted w-28 shrink-0">ROUTE</span>
+                  <span className="text-foreground whitespace-pre-line break-words">
+                    {natsProcedure.overview.route || "N/A"}
+                  </span>
+                </div>
+                <Row
+                  label="ENTRY"
+                  value={
+                    natsProcedure.overview.entry_point
+                      ? `${natsProcedure.overview.entry_point}${natsProcedure.overview.entry_eet ? `  EET ${natsProcedure.overview.entry_eet}` : ""}${natsProcedure.overview.entry_fir ? `  ${natsProcedure.overview.entry_fir}` : ""}`
+                      : "N/A"
+                  }
+                />
+                <Row
+                  label="EXIT"
+                  value={
+                    natsProcedure.overview.exit_point
+                      ? `${natsProcedure.overview.exit_point}${natsProcedure.overview.exit_eet ? `  EET ${natsProcedure.overview.exit_eet}` : ""}${natsProcedure.overview.exit_fir ? `  ${natsProcedure.overview.exit_fir}` : ""}`
+                      : "N/A"
+                  }
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -187,38 +262,6 @@ export default function FlightOverview({
         )}
       </div>
 
-      {natsProcedure && (
-        <div className="mt-3 pt-2 border-t border-border">
-          <InlineDisclosure title="NATS">
-            <div className="space-y-1 text-xs">
-              <p className="text-accent-amber font-bold">NATS OVERVIEW</p>
-              <Row label="TMI" value={natsProcedure.overview.tmi} />
-              <div className="flex">
-                <span className="text-muted w-28 shrink-0">ROUTE</span>
-                <span className="text-foreground whitespace-pre-line break-words">
-                  {natsProcedure.overview.route || "N/A"}
-                </span>
-              </div>
-              <Row
-                label="ENTRY"
-                value={
-                  natsProcedure.overview.entry_point
-                    ? `${natsProcedure.overview.entry_point}${natsProcedure.overview.entry_eet ? `  EET ${natsProcedure.overview.entry_eet}` : ""}${natsProcedure.overview.entry_fir ? `  ${natsProcedure.overview.entry_fir}` : ""}`
-                    : "N/A"
-                }
-              />
-              <Row
-                label="EXIT"
-                value={
-                  natsProcedure.overview.exit_point
-                    ? `${natsProcedure.overview.exit_point}${natsProcedure.overview.exit_eet ? `  EET ${natsProcedure.overview.exit_eet}` : ""}${natsProcedure.overview.exit_fir ? `  ${natsProcedure.overview.exit_fir}` : ""}`
-                    : "N/A"
-                }
-              />
-            </div>
-          </InlineDisclosure>
-        </div>
-      )}
     </Section>
   );
 }

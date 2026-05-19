@@ -16,6 +16,27 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-20 — Codex
+
+**Summary**
+
+- Added a shared app version constant and set the current UI version to `v1.1.1`
+- Updated the upload screen so the old `Upload OFP PDF for cockpit-ready briefing` subtitle is replaced by the version label
+- Updated the parsed briefing top bar to show `v1.1.1` beside `FLIGHT PREP`
+- Refined Section 1 `Flight Overview` on mobile by moving `ETOPS` and `NATS` into compact side-by-side toggle buttons
+- Hid ETOPS details by default and kept both ETOPS and NATS content opening full-width underneath for cleaner iPhone/iPad readability
+
+**Verification**
+
+- `cd frontend && npm run lint`
+- `cd frontend && npm run build`
+- Refreshed `frontend_build` from the latest static export
+- Confirmed the local upload page now shows only `FLIGHT PREP` and `v1.1.1`
+
+**Open Items**
+
+- Verify Render shows the same `v1.1.1` label after the new deploy finishes
+
 ## 2026-05-19 — Codex
 
 **Summary**

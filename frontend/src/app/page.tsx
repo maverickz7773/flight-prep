@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import type { AirportNotes, BriefingData, ParseJobStart, ParseJobStatus } from "@/lib/types";
 import BriefingView from "@/components/BriefingView";
 import { generateTextBriefing } from "@/lib/textBriefing";
+import { APP_VERSION } from "@/lib/version";
 
 const PARSE_POLL_INTERVAL_MS = 2000;
 const PARSE_POLL_TIMEOUT_MS = 5 * 60 * 1000;
@@ -195,7 +196,12 @@ export default function Home() {
     return (
       <div className="min-h-screen">
         <div className="no-print flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-3 bg-surface border-b border-border">
-          <h1 className="text-accent-green font-bold text-lg">FLIGHT PREP</h1>
+          <div className="flex items-baseline gap-2">
+            <h1 className="text-accent-green font-bold text-lg">FLIGHT PREP</h1>
+            <span className="text-[11px] sm:text-xs text-muted tracking-wide">
+              {APP_VERSION}
+            </span>
+          </div>
           <div className="flex gap-2 sm:gap-3">
             <button
               onClick={copyToClipboard}
@@ -232,7 +238,7 @@ export default function Home() {
           FLIGHT PREP
         </h1>
         <p className="text-muted text-sm mb-8">
-          Upload OFP PDF for cockpit-ready briefing
+          {APP_VERSION}
         </p>
 
         <label
