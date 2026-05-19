@@ -20,6 +20,27 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 
 **Summary**
 
+- Added a tracked Synology project file at `compose.yaml` for the private NAS deployment
+- Added `scripts/release_synology.sh` to automate the Synology release flow:
+  - update `frontend/src/lib/version.ts`
+  - update the GHCR image tag in `compose.yaml`
+  - build and push a `linux/amd64` image to `ghcr.io/maverickz7773/flight-prep`
+- Updated `AGENTS.md` with a dedicated Synology deployment section and a Synology update checklist for Codex and Claude Code
+
+**Verification**
+
+- `bash -n scripts/release_synology.sh`
+- Confirmed the current Synology deployment is running from `ghcr.io/maverickz7773/flight-prep:v1.1.1`
+
+**Open Items**
+
+- When releasing the next version, run `./scripts/release_synology.sh vX.Y.Z`, then upload the updated `compose.yaml` to Synology and restart the `flight-prep` project
+- Keep Render as backup until Synology has been stable in daily use
+
+## 2026-05-20 — Codex
+
+**Summary**
+
 - Added a shared app version constant and set the current UI version to `v1.1.1`
 - Updated the upload screen so the old `Upload OFP PDF for cockpit-ready briefing` subtitle is replaced by the version label
 - Updated the parsed briefing top bar to show `v1.1.1` beside `FLIGHT PREP`

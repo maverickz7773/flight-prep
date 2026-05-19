@@ -1,0 +1,7 @@
+services:
+  flight-prep:
+    image: ghcr.io/maverickz7773/flight-prep:v1.1.1
+    container_name: flight-prep
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

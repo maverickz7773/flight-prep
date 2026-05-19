@@ -14,6 +14,22 @@ Flight Prep converts airline OFP (Operational Flight Plan) PDFs in Lido format i
 - **Update flow**: make changes → commit → `git push` → Render rebuilds (~3-5 min)
 - **Architecture**: Single server. Frontend is statically exported and served by FastAPI. No proxy, no CORS issues.
 
+### Synology Deployment
+
+- **Primary private host**: Synology DS224+ via Container Manager + Tailscale
+- **Current Synology URL**: `http://100.83.254.51:8000`
+- **Container image**: `ghcr.io/maverickz7773/flight-prep:<version>`
+- **Current project path on NAS**: `/volume1/docker/flight-prep`
+- **Compose file in repo root**: `compose.yaml`
+- **Preferred release flow**:
+  1. Make code/content changes on the Mac repo
+  2. Run local checks
+  3. Run `./scripts/release_synology.sh vX.Y.Z`
+  4. Commit and push repo changes
+  5. Upload the updated `compose.yaml` to Synology `/docker/flight-prep/`
+  6. Restart or recreate the `flight-prep` project in Container Manager
+- **Note**: Text-only changes in `Operational Info.txt`, `Enroute Info.txt`, and `NATS Procedure.txt` still require a new Docker image and Synology restart, because those files are baked into the image.
+
 ## Development Commands
 
 ```bash
@@ -136,12 +152,30 @@ Use this checklist for both Codex and Claude Code so changes stay compatible in 
    - `docker build -t flight-prep .`
 6. Push to `main` only after the relevant checks pass.
 
+### Synology Update Checklist
+
+Use this after any user-facing app or text-file change that should go live on Synology.
+
+1. Update the code or the text source file (`Operational Info.txt`, `Enroute Info.txt`, `NATS Procedure.txt`, etc.).
+2. If the app version should change, use the next release tag like `v1.1.2`.
+3. Update `Changes Log.md`.
+4. Run the normal local checks (`npm run lint`, `npm run build`, backend tests if needed).
+5. Run:
+   - `./scripts/release_synology.sh vX.Y.Z`
+6. Commit and push the repo changes.
+7. Upload the repo-root `compose.yaml` to Synology `/docker/flight-prep/`.
+8. In Synology Container Manager, restart or recreate the `flight-prep` project.
+9. Verify the app on:
+   - `http://100.83.254.51:8000`
+
 ## Shared Handoff Notes
 
 - `Changes Log.md` is the shared progress file between Codex and Claude Code.
 - `Operational Info.txt` is runtime-critical for `OPS INFO`; if it is missing from Docker, production will lose airport notes.
 - Current smoke-test PDF is `QR 8945.pdf`.
 - Keep local planning/reference files out of deploy commits unless they are intentionally part of the repo.
+- `compose.yaml` in the repo root is the tracked Synology project file and should stay aligned with the current GHCR image tag.
+- `scripts/release_synology.sh` updates `frontend/src/lib/version.ts`, updates `compose.yaml`, and pushes the `linux/amd64` Synology image to GHCR.
 
 ## Theme
 
