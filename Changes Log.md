@@ -16,6 +16,45 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-25 — Codex
+
+**Summary**
+
+- Fixed contingency fuel parsing in `backend/parsers/fuel.py` for minimum-fuel layouts like `CONT MINM 590 0005 BLK 0100`
+- Switched contingency parsing to read the first real `CONT` line, ignore the separate `AT DEP` advisory line, and strip any trailing `BLK` portion before extracting type, fuel, and time
+- Added `backend/tests/test_fuel_parser.py` to cover both:
+  - minimum contingency format from `QR 1150.pdf`
+  - percentage contingency format from `QR 8974.pdf`
+- Reordered Section 2 `FUEL (KG)` rows in the frontend to the operational sequence:
+  - `TAXI`, `TRIP`, `CONT`, `ALTN`, `FINL`, `MIN FUEL`, `EXTRA`, `RAMP`
+- Moved `T/O` out of the main fuel sequence into its own separate line so it stays visible without interrupting the requested order
+- Shortened the Section 2 label from `MIN FUEL REQ` to `MIN FUEL`
+- Updated local runtime note files:
+  - added/updated `OLBB` in `Enroute Info.txt`
+  - added/updated `OEDF` and `OLBA` in `Operational Info.txt`
+- Verified the new text-file entries against real OFPs:
+  - `QR 1150.pdf` now picks up `OEDF` arrival `OPS INFO`
+  - `QR 427.pdf` now picks up `OLBA` departure `OPS INFO`
+  - `QR 427.pdf` also shows the new `OLBB` enroute FIR note
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_fuel_parser`
+- `cd backend && venv/bin/python -m unittest tests.test_flight_info_parser`
+- `cd frontend && npm run lint`
+- `cd frontend && npm run build`
+- Refreshed `frontend_build` from the latest static export
+- Confirmed live parse results locally:
+  - `QR 1150.pdf` → `CONT 590`, type `MINM`, time `0005`
+  - `QR 8974.pdf` → `CONT 1185`, type `3P/C VTBS`, time `0010`
+  - `QR 1150.pdf` → `OEDF` arrival `OPS INFO` present
+  - `QR 427.pdf` → `OLBA` departure `OPS INFO` present
+  - `QR 427.pdf` → `OLBB` FIR note present in Section 5
+
+**Open Items**
+
+- If more contingency layouts appear in future OFPs, add them as regression cases in `backend/tests/test_fuel_parser.py`
+
 ## 2026-05-20 — Codex
 
 **Summary**

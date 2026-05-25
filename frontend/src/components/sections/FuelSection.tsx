@@ -37,16 +37,13 @@ export default function FuelSection({ data }: { data: FuelSummary }) {
     <Section number={2} title="FUEL (KG)">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0.5">
         <FuelRow label="TAXI" value={data.taxi} time={data.taxi_time} />
-        <FuelRow label="RAMP" value={data.ramp} time={data.ramp_time} />
         <FuelRow label="TRIP" value={data.trip} time={data.trip_time} />
-        <FuelRow label="T/O" value={data.takeoff ?? 0} />
         <FuelRow
           label="CONT"
           value={data.contingency}
           time={data.contingency_time}
           note={data.contingency_type ?? undefined}
         />
-        <FuelRow label="EXTRA" value={data.extra} time={data.extra_time} />
         <FuelRow
           label="ALTN"
           value={data.alternate}
@@ -54,16 +51,26 @@ export default function FuelSection({ data }: { data: FuelSummary }) {
           note={data.alternate_airport ?? undefined}
         />
         <FuelRow
-          label="MIN REQ"
-          value={data.min_fuel_required ?? 0}
-          time={data.min_fuel_time}
-        />
-        <FuelRow
           label="FINL"
           value={data.final_reserve}
           time={data.final_reserve_time}
         />
+        <FuelRow
+          label="MIN FUEL"
+          value={data.min_fuel_required ?? 0}
+          time={data.min_fuel_time}
+        />
+        <FuelRow label="EXTRA" value={data.extra} time={data.extra_time} />
+        <FuelRow label="RAMP" value={data.ramp} time={data.ramp_time} />
       </div>
+      {data.takeoff != null && (
+        <div className="mt-2 pt-2 border-t border-border flex">
+          <span className="text-muted w-20 shrink-0">T/O</span>
+          <span className="text-foreground w-24 text-right tabular-nums">
+            {data.takeoff.toLocaleString()}
+          </span>
+        </div>
+      )}
       {data.expected_landing && (
         <div className="mt-2 pt-2 border-t border-border flex">
           <span className="text-accent-green font-bold w-20">LANDING</span>

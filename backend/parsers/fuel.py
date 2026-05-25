@@ -6,6 +6,27 @@ from models.briefing import FuelSummary
 def parse_fuel(pages: list[str]) -> FuelSummary:
     text = "\n".join(pages[:5])
 
+    def parse_contingency() -> tuple[int, str | None, str | None]:
+        for raw_line in text.splitlines():
+            line = " ".join(raw_line.split())
+            if not line.startswith("CONT "):
+                continue
+            if " AT DEP " in line:
+                continue
+
+            cont_segment = line.split(" BLK ", 1)[0].strip()
+            tokens = cont_segment.split()
+            if len(tokens) < 3:
+                continue
+
+            if len(tokens) >= 4 and tokens[-1].isdigit() and len(tokens[-1]) == 4 and tokens[-2].isdigit():
+                return int(tokens[-2]), " ".join(tokens[1:-2]).strip() or None, tokens[-1]
+
+            if tokens[-1].isdigit():
+                return int(tokens[-1]), " ".join(tokens[1:-1]).strip() or None, None
+
+        return 0, None, None
+
     def find_fuel(pattern: str) -> int:
         m = re.search(pattern, text)
         return int(m.group(1)) if m else 0
@@ -18,16 +39,7 @@ def parse_fuel(pages: list[str]) -> FuelSummary:
     trip = int(trip_match.group(1)) if trip_match else find_fuel(r"TRIP\s+(\d+)")
     trip_time = trip_match.group(2) if trip_match else None
 
-    cont_match = re.search(r"CONT\s+([\w/]+)\s+(\w*)\s*(\d+)\s+(\d{4})", text)
-    if not cont_match:
-        cont_match = re.search(r"CONT\s+([\w/]+)\s+(\w*)\s*(\d+)", text)
-    contingency = int(cont_match.group(3)) if cont_match else 0
-    cont_type = None
-    cont_time = None
-    if cont_match:
-        cont_type = f"{cont_match.group(1)} {cont_match.group(2)}".strip()
-        if cont_match.lastindex and cont_match.lastindex >= 4:
-            cont_time = cont_match.group(4)
+    contingency, cont_type, cont_time = parse_contingency()
 
     altn_match = re.search(r"ALTN\s+(\w{4})\s+(\d+)\s+(\d{4})", text)
     if not altn_match:

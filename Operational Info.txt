@@ -204,3 +204,52 @@ Check standard taxi routing.
 TCAS - 2000 within altitude : 1500 fpm
      - 1000 within altitude : 1000 fpm
 
+
+[OEDF]
+DEP:
+Rwy 34L : plan for LABNA.1E (caution altitude constraint at 7000)
+Request Datalink Clearance : Expect Runway heading climb 4000 feet.
+After departure call 126.3.Passing 3000 feet, right turn turn direct LABNA.
+At LABNA, switch to BAHRAIN 124.3. Bahrain gives clearance airways N318 to GEXIM.
+At GEXIM, switch to DOHA, DOHA gives runway and STAR clearance. Descend 10000'
+
+Max pavement : 336.0 (F), 332.0 (W).
+To Doha : short sector, brief arrival.
+
+
+ARR:
+From DOH, short sector : brief for arrival.
+Set FMC Speed : 300kts.
+Doha : 121.1, BAHRAIN : 127.850
+Runway 34L
+STAR via NARMI.1J(longer) or NARMI1.K(shorter).Plan for shorter.
+Bahrain asked to descend 10000 feet to be level by NARMI.
+Then at NARMI switch to DAMMAM 126.3. After NARMI vector heading 260, for ILS.34L.
+Descend 5000 feet.
+GPS interference. Caution map shift.
+TMA : 200kts
+
+[OLBA]
+DEP:
+High terrain to the East.MGA 11000.
+Check Special EOSID fron Rwy 03,16,17. Other runway normal EOSID.
+Geopolitical Proximity: The FIR is located approximately 25 NM west of the Syrian border and 35 NM north of the Israel border.
+GPS interference.
+
+Max Pavement : Rwy 21 : 294.0(W), 297.0(L), Rwy 35: 336.0(W), 340.0(L).
+
+RWY 16 : Not authorized for Take-off (local regulation)
+RWY 34 : Not authorized for Landing (local regulation)
+
+
+ARR:
+High terrain and turbulence/strong crosswinds on approach.
+Geopolitical Proximity: The FIR is located approximately 25 NM west of the Syrian border and 35 NM north of the Israel border.
+
+GPS interference. Caution map shift.
+False LOC reported.
+Rwy 16 : ILS Glide Slope reported unreliable below 500 feet.
+
+RWY 16 : Not authorized for Take-off (local regulation)
+RWY 34 : Not authorized for Landing (local regulation)
+

@@ -91,6 +91,16 @@ Contact "Ercan" on 126.70 MHz at least 10 minutes prior to entry for relay to An
 
 Holding Procedures Table IV-1-1
 
+[OLBB] 
+Airspace Restrictions : Prohibition: Operations below FL320 are prohibited within the Beirut FIR except 
+flights arriving at or departing from Beirut (OLBA/BEY) and Larnaca (LCLK/LCA.
+
+The FIR is located approximately 25 NM west of the Syrian border and 35 NM north of the Israel border.
+GPS Interference.
+
+Holding Procedures Table IV-1-1
+
+
 [LCCC]
 
 Nicosia Procedure :
