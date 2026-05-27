@@ -106,17 +106,9 @@ Check standard routing.
 
 [OTHH]
 DEP: ACN : ADIRU alignment done by MOCC (no more in ACN). GPS OFF, Nav Unable RNP pops out if dont change RNP. Put GPS back on after Muscat
-SCB - Shortened Rwy 16L/34R 
 RAAS GPWS Switch Override. Switch ON back after 10000.
-OPT Usage : 16L #SP1 (via A8), 32R #SP1 (full length)
 
-SCB - Special Southern Corridor
 GPS RFI - GPS Outage Procedure
-Transponder Operational.
-Monitor Frequency 121.175 (no more in SCB)
-Cabin must be secure. Release cabin after crossing FIR.(no more in SCB)
-High Speed below 10000' approved. (no more in SCB)
-Lights on until TOC (no more in SCB)
 
 - Notam -
 Departure Proc 34R - ALVEMI.2 - 500 feet, hdg 020 climb 4000
@@ -231,18 +223,40 @@ TMA : 200kts
 
 [OLBA]
 DEP:
+Rwy 21 : LEBOR.1D. Call ground on 121.9 to get ATC clearance.
+Initial climb 5000'.After departure call 119.3. Beirut give clearance climb until FL290. Further climb restricted to AMMAN.
+Call AMMAN, 128.5 to establish 2 comms.
+
+Normal : Rwy 21 and 34.
+Gradient required 5%
 High terrain to the East.MGA 11000.
 Check Special EOSID fron Rwy 03,16,17. Other runway normal EOSID.
 Geopolitical Proximity: The FIR is located approximately 25 NM west of the Syrian border and 35 NM north of the Israel border.
 GPS interference.
 
-Max Pavement : Rwy 21 : 294.0(W), 297.0(L), Rwy 35: 336.0(W), 340.0(L).
+Military TCAS may not be compatible.
+
+Max Pavement : Rwy 21/34 : 294.0(W), 297.0(L), Rwy 35: 336.0(W), 340.0(L).
+
+Taxi L and M : ensure service road clear
+Rwy 34/35 shared common area for threshold.
 
 RWY 16 : Not authorized for Take-off (local regulation)
 RWY 34 : Not authorized for Landing (local regulation)
 
 
 ARR:
+ILS.03. CHEKA.1N
+Call Beirut control before Entry FIR, 119.3.
+Cordinate with Damascus 121.3 for descend.
+If lost GPS, inform Beirut, they will revise STAR : CHEKA.1N.
+Initially clear to descend 13000', then 6000', then 4000'. From there, clear for ILS.03.
+STAR CHEKA.1N : RAMLA altitude 5000A, but in approach chart 3000.
+Runway 03 displaced threshold.
+After vacate F, join J, M, gate 21.
+
+Normal : Runway 16 and Rwy 03
+Rwy 03 threshold displacement.
 High terrain and turbulence/strong crosswinds on approach.
 Geopolitical Proximity: The FIR is located approximately 25 NM west of the Syrian border and 35 NM north of the Israel border.
 
@@ -252,4 +266,11 @@ Rwy 16 : ILS Glide Slope reported unreliable below 500 feet.
 
 RWY 16 : Not authorized for Take-off (local regulation)
 RWY 34 : Not authorized for Landing (local regulation)
+
+Check authorized stand parking.
+
+Notam :
+ILS RWY 21 IS UNUSABLE AT THIS TIME.
+ILS/LOC RWY03 COVERAGE IS REDUCED AT 29 DEGREES ON THE LEFT SIDE
+OF THE APPROACH AND 25 DEGREES ON THE RIGHT SIDE OF THE APPROACH
 

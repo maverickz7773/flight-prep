@@ -38,6 +38,7 @@ Holding Procedures Table IV-1-1
 
 
 [OJAC] 
+Freq : 128.5, inform aircraft registration
 Contingency Communication: Primary contact point if communication fails within the Damascus.
 Tel Aviv FIR Proximity: The Tel Aviv FIR (LLLL) boundary is located approximately 20 NM West of Amman (OJAI)
 RNAV 5 is mandatory for all ATS routes within the FIR.

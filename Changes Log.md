@@ -20,6 +20,31 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 
 **Summary**
 
+- Updated `Enroute Info.txt`:
+  - added an `OJAC` communication note: `Freq : 128.5, inform aircraft registration`
+- Updated `Operational Info.txt`:
+  - simplified `OTHH` departure notes by removing several completed or SCB-only items
+  - expanded `OLBA` departure notes with `LEBOR1D`, frequencies, climb restrictions, gradient, pavement, and taxi cautions
+  - expanded `OLBA` arrival notes with `CHEKA.1N`, descent/frequency flow, runway 03 details, gate/taxi guidance, and current ILS-related NOTAM notes
+
+**Verification**
+
+- Direct local parse checks:
+  - `QR 426.pdf` → `OLBA` arrival note now begins with `ILS.03. CHEKA.1N`
+  - `QR 427.pdf` → `OLBA` departure note now begins with `Rwy 21 : LEBOR.1D...`
+  - `QR 426.pdf` and `QR 427.pdf` → `OJAC` enroute FIR note now begins with `Freq : 128.5, inform aircraft registration`
+  - `QR 426.pdf` and `QR 427.pdf` → `OLBB` FIR note still present
+  - `QR 1150.pdf` → `OEDF` arrival note still present
+
+**Open Items**
+
+- Render will pick up these text-file updates after the new commit deploys
+- Synology still needs a new image/restart cycle later if these text changes should go live there
+
+## 2026-05-28 — Codex
+
+**Summary**
+
 - Added HTML no-cache headers in `backend/main.py` for the top-level app page so Safari and other browsers stop sticking to an older visible app version after a release
 - Fixed SID parsing in `backend/parsers/procedures.py` for OFPs like `QR 427.pdf`, where the departure runway and SID appear on the same ATC-clearance line (`OLBA 21 LEBOR1D ...`) instead of on a separate runway line
 - Added `OLBA` to the airport timezone map in `backend/parsers/flight_info.py` so Section 1 now shows `STD UTC` for Beirut departures
