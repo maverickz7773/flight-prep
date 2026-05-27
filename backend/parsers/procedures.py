@@ -34,8 +34,11 @@ def _leading_token(line: str) -> str | None:
 
 def _find_runway_line_index(lines: list[str], icao: str | None, runway: str | None) -> int | None:
     for idx, line in enumerate(lines):
-        match = RUNWAY_LINE_RE.match(line.strip())
+        stripped = line.strip()
+        match = RUNWAY_LINE_RE.match(stripped)
         if not match:
+            if icao and runway and re.search(rf"\b{re.escape(icao)}\s+{re.escape(runway)}\b", stripped):
+                return idx
             continue
         if icao and match.group("icao") != icao:
             continue
@@ -45,19 +48,32 @@ def _find_runway_line_index(lines: list[str], icao: str | None, runway: str | No
     return None
 
 
-def extract_sid_from_route_pages(
-    pages: list[str],
+def _extract_sid_from_lines(
+    lines: list[str],
     departure_icao: str | None,
     departure_runway: str | None,
 ) -> str | None:
-    route_pages = iter_route_pages(pages)
-    if not route_pages:
-        return None
-
-    lines = route_pages[0].splitlines()
     runway_idx = _find_runway_line_index(lines, departure_icao, departure_runway)
     if runway_idx is None:
         return None
+
+    runway_line = lines[runway_idx].strip()
+    runway_line_patterns: list[re.Pattern[str]] = []
+    if departure_icao and departure_runway:
+        runway_line_patterns.append(
+            re.compile(rf"^{re.escape(departure_icao)}/{re.escape(departure_runway)}\b\s*(?P<rest>.*)$")
+        )
+        runway_line_patterns.append(
+            re.compile(rf"\b{re.escape(departure_icao)}\s+{re.escape(departure_runway)}\b\s*(?P<rest>.*)$")
+        )
+
+    for pattern in runway_line_patterns:
+        match = pattern.search(runway_line)
+        if not match:
+            continue
+        token = _leading_token(match.group("rest"))
+        if token and is_procedure_token(token):
+            return token
 
     for line in lines[runway_idx + 1:]:
         stripped = line.strip()
@@ -68,6 +84,27 @@ def extract_sid_from_route_pages(
         token = _leading_token(stripped)
         if token and is_procedure_token(token):
             return token
+
+    return None
+
+
+def extract_sid_from_route_pages(
+    pages: list[str],
+    departure_icao: str | None,
+    departure_runway: str | None,
+) -> str | None:
+    route_pages = iter_route_pages(pages)
+    if route_pages:
+        sid = _extract_sid_from_lines(route_pages[0].splitlines(), departure_icao, departure_runway)
+        if sid:
+            return sid
+
+    for page in pages[:5]:
+        if "ATC CLEARANCE" not in page and "DEFRTE:" not in page:
+            continue
+        sid = _extract_sid_from_lines(page.splitlines(), departure_icao, departure_runway)
+        if sid:
+            return sid
 
     return None
 

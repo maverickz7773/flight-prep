@@ -16,6 +16,36 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-28 — Codex
+
+**Summary**
+
+- Added HTML no-cache headers in `backend/main.py` for the top-level app page so Safari and other browsers stop sticking to an older visible app version after a release
+- Fixed SID parsing in `backend/parsers/procedures.py` for OFPs like `QR 427.pdf`, where the departure runway and SID appear on the same ATC-clearance line (`OLBA 21 LEBOR1D ...`) instead of on a separate runway line
+- Added `OLBA` to the airport timezone map in `backend/parsers/flight_info.py` so Section 1 now shows `STD UTC` for Beirut departures
+- Added backend regression coverage for:
+  - `QR 427.pdf` SID parsing in `backend/tests/test_sid_star_parser.py`
+  - `QR 427.pdf` departure UTC offset in `backend/tests/test_flight_info_parser.py`
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_sid_star_parser`
+- `cd backend && venv/bin/python -m unittest tests.test_flight_info_parser`
+- Direct parse checks:
+  - `QR 427.pdf` → `SID = LEBOR1D`
+  - `QR 427.pdf` → `STD = 27/1625`, `departure_utc_offset = +3`
+  - `QR 426.pdf` → `SID = TULUB2A`
+  - `QR 701.pdf` → `SID = TULUB2A`
+  - `QR 1150.pdf` → `SID = TULUB2A`
+- `curl -I http://127.0.0.1:8000` confirms HTML now returns:
+  - `Cache-Control: no-store, no-cache, must-revalidate, max-age=0`
+  - `Pragma: no-cache`
+  - `Expires: 0`
+
+**Open Items**
+
+- The latest manual edits in `Enroute Info.txt` and `Operational Info.txt` remain local unless intentionally included in a later release commit
+
 ## 2026-05-25 — Codex
 
 **Summary**
@@ -36,6 +66,7 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
   - `QR 1150.pdf` now picks up `OEDF` arrival `OPS INFO`
   - `QR 427.pdf` now picks up `OLBA` departure `OPS INFO`
   - `QR 427.pdf` also shows the new `OLBB` enroute FIR note
+- Added backend HTML no-cache headers in `backend/main.py` so future releases do not get stuck on an older visible app version in Safari or other browsers
 
 **Verification**
 
@@ -50,6 +81,10 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
   - `QR 1150.pdf` → `OEDF` arrival `OPS INFO` present
   - `QR 427.pdf` → `OLBA` departure `OPS INFO` present
   - `QR 427.pdf` → `OLBB` FIR note present in Section 5
+- `curl -I http://127.0.0.1:8000` confirms HTML now returns:
+  - `Cache-Control: no-store, no-cache, must-revalidate, max-age=0`
+  - `Pragma: no-cache`
+  - `Expires: 0`
 
 **Open Items**
 

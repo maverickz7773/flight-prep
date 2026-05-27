@@ -48,6 +48,12 @@ class SidStarParserRegressionTests(unittest.TestCase):
         self.assertEqual(briefing.flight_info.star, "LAEEB1P")
         self.assertEqual(briefing.arrival.star, "LAEEB1P")
 
+    def test_qr_427_parses_sid_from_embedded_atc_clearance_departure_line(self) -> None:
+        briefing = self._parse("QR 427.pdf")
+
+        self.assertEqual(briefing.flight_info.sid, "LEBOR1D")
+        self.assertEqual(briefing.takeoff.sid, "LEBOR1D")
+
 
 if __name__ == "__main__":
     unittest.main()

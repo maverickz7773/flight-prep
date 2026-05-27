@@ -50,6 +50,7 @@ ICAO_TIMEZONES: dict[str, str] = {
     "OKBK": "Asia/Kuwait",
     "OBIC": "Asia/Qatar",
     "OBBI": "Asia/Bahrain",
+    "OLBA": "Asia/Beirut",
     "EGLL": "Europe/London",
     "EGLC": "Europe/London",
     "EGKK": "Europe/London",
