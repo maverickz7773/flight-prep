@@ -16,6 +16,26 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-05-28 — Codex (Synology release cut)
+
+**Summary**
+
+- Ran `./scripts/release_synology.sh v1.1.3`
+- Updated `frontend/src/lib/version.ts` to `v1.1.3`
+- Updated repo-root `compose.yaml` to `ghcr.io/maverickz7773/flight-prep:v1.1.3`
+- Built and pushed the Synology image for `linux/amd64` to GHCR so the NAS can pick up the latest pushed note-file changes
+
+**Verification**
+
+- `./scripts/release_synology.sh v1.1.3`
+- `cd frontend && npm run lint`
+- `cd frontend && npm run build`
+
+**Open Items**
+
+- Upload the updated `compose.yaml` to Synology `/docker/flight-prep/`
+- Recreate or restart the `flight-prep` project in Container Manager so Synology pulls `v1.1.3`
+
 ## 2026-05-28 — Codex
 
 **Summary**
