@@ -12,11 +12,27 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from parsers.ofp_parser import parse_ofp
-from models.briefing import AirportNotes, BriefingData, ParseJobStart, ParseJobStatus
+from models.briefing import (
+    AirportFeedback,
+    AirportFeedbackCreate,
+    AirportFeedbackEntry,
+    AirportNotes,
+    BriefingData,
+    DeleteStatus,
+    ParseJobStart,
+    ParseJobStatus,
+)
 from parsers.notes import (
     get_airport_notes,
     get_notes_data_path,
     notes_data_file_exists,
+)
+from services.airport_feedback import (
+    airport_feedback_enabled,
+    create_airport_feedback,
+    delete_airport_feedback,
+    get_airport_feedback,
+    get_airport_feedback_db_path,
 )
 
 app = FastAPI(title="Flight Prep API")
@@ -54,6 +70,7 @@ async def health():
     return {
         "status": "ok",
         "operational_info_present": notes_data_file_exists(),
+        "airport_feedback_enabled": airport_feedback_enabled(),
         "release": _APP_RELEASE,
     }
 
@@ -65,6 +82,11 @@ async def startup_checks():
         logger.info("Operational info file loaded from %s", notes_path)
     else:
         logger.warning("Operational info file missing at startup: %s", notes_path)
+
+    if airport_feedback_enabled():
+        logger.info("Airport feedback enabled using %s", get_airport_feedback_db_path())
+    else:
+        logger.info("Airport feedback disabled")
 
 
 def _cleanup_old_jobs() -> None:
@@ -171,6 +193,36 @@ async def airport_notes_endpoint(departure: str, arrival: str):
         departure=departure_note,
         arrival=arrival_note,
     )
+
+
+@app.get("/api/airport-feedback", response_model=AirportFeedback | None)
+async def airport_feedback_endpoint(departure: str, arrival: str):
+    return get_airport_feedback(departure, arrival)
+
+
+@app.post("/api/airport-feedback", response_model=AirportFeedbackEntry)
+async def create_airport_feedback_endpoint(payload: AirportFeedbackCreate):
+    if not airport_feedback_enabled():
+        raise HTTPException(status_code=403, detail="Airport feedback feature is disabled")
+
+    try:
+        return create_airport_feedback(payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.delete("/api/airport-feedback/{entry_id}", response_model=DeleteStatus)
+async def delete_airport_feedback_endpoint(entry_id: int):
+    if not airport_feedback_enabled():
+        raise HTTPException(status_code=403, detail="Airport feedback feature is disabled")
+
+    deleted = delete_airport_feedback(entry_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Airport feedback entry not found")
+
+    return DeleteStatus(deleted=True)
 
 
 frontend_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend_build")

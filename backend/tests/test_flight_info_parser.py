@@ -65,6 +65,14 @@ class FlightInfoParserRegressionTests(unittest.TestCase):
         self.assertEqual(briefing.flight_info.departure_icao, "OLBA")
         self.assertEqual(briefing.flight_info.departure_utc_offset, "+3")
 
+    def test_qr_8564_parses_destination_utc_offset(self) -> None:
+        briefing = self._parse("QR 8564.pdf")
+
+        self.assertEqual(briefing.flight_info.departure_icao, "OTHH")
+        self.assertEqual(briefing.flight_info.arrival_icao, "DNMM")
+        self.assertEqual(briefing.flight_info.departure_utc_offset, "+3")
+        self.assertEqual(briefing.flight_info.arrival_utc_offset, "+1")
+
 
 if __name__ == "__main__":
     unittest.main()

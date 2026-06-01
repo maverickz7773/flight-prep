@@ -15,6 +15,7 @@ from parsers.mel import parse_mel
 from parsers.nats import parse_nats_procedure
 from parsers.omc import get_aerodrome_briefing
 from parsers.notes import get_airport_notes
+from services.airport_feedback import get_airport_feedback
 
 
 def extract_pages(pdf_path: str) -> list[str]:
@@ -75,6 +76,10 @@ def parse_ofp(pdf_path: str) -> BriefingData:
             departure=departure_note,
             arrival=arrival_note,
         )
+    airport_feedback = get_airport_feedback(
+        flight_info.departure_icao,
+        flight_info.arrival_icao,
+    )
 
     return BriefingData(
         flight_info=flight_info,
@@ -93,6 +98,7 @@ def parse_ofp(pdf_path: str) -> BriefingData:
         departure_briefing=get_aerodrome_briefing(flight_info.departure_icao),
         arrival_briefing=get_aerodrome_briefing(flight_info.arrival_icao),
         airport_notes=airport_notes,
+        airport_feedback=airport_feedback,
         nats_procedure=nats_procedure,
     )
 

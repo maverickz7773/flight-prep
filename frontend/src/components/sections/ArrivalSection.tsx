@@ -1,5 +1,6 @@
 import { useState } from "react";
-import type { ArrivalInfo, AerodromeBriefing, AirportWeather } from "@/lib/types";
+import type { ArrivalInfo, AerodromeBriefing, AirportFeedbackEntry, AirportWeather } from "@/lib/types";
+import AirportFeedbackPanel from "../AirportFeedbackPanel";
 import CompactAirportWeather from "../CompactAirportWeather";
 import Section from "../Section";
 
@@ -9,16 +10,22 @@ export default function ArrivalSection({
   destinationTime,
   destinationReferenceTime,
   flightDate,
+  departureIcao,
+  arrivalIcao,
   arrivalBriefing,
   arrivalNote,
+  arrivalFeedback,
 }: {
   data: ArrivalInfo;
   destinationWeather: AirportWeather | null;
   destinationTime?: string;
   destinationReferenceTime?: string;
   flightDate: string;
+  departureIcao: string;
+  arrivalIcao: string;
   arrivalBriefing: AerodromeBriefing | null;
   arrivalNote: string | null;
+  arrivalFeedback?: AirportFeedbackEntry[] | null;
 }) {
   const [omcOpen, setOmcOpen] = useState(false);
   const sections: { label: string; content: string | null }[] = arrivalBriefing
@@ -61,6 +68,20 @@ export default function ArrivalSection({
             {arrivalNote}
           </p>
         </div>
+      )}
+
+      {arrivalFeedback && (
+        <AirportFeedbackPanel
+          key={`arrival-feedback-${arrivalIcao}-${arrivalFeedback.map((entry) => entry.id).join(",")}`}
+          section="arrival"
+          airportIcao={arrivalIcao}
+          flightDate={flightDate}
+          fromIcao={departureIcao}
+          toIcao={arrivalIcao}
+          star={data.star}
+          runway={data.runway}
+          initialEntries={arrivalFeedback}
+        />
       )}
 
       {arrivalBriefing && (

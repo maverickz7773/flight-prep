@@ -1,7 +1,12 @@
 services:
   flight-prep:
-    image: ghcr.io/maverickz7773/flight-prep:v1.1.3
+    image: ghcr.io/maverickz7773/flight-prep:v1.1.4
     container_name: flight-prep
+    environment:
+      AIRPORT_FEEDBACK_ENABLED: "1"
+      AIRPORT_FEEDBACK_DB_PATH: /app/data/airport_feedback.sqlite3
     ports:
       - "8000:8000"
     restart: unless-stopped
+    volumes:
+      - ./data:/app/data

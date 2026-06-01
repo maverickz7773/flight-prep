@@ -281,6 +281,27 @@ export interface AirportNotes {
   arrival: string | null;
 }
 
+export interface AirportFeedbackEntry {
+  id: number;
+  section: string;
+  airport_icao: string;
+  flight_date: string;
+  route_text: string | null;
+  from_icao: string;
+  to_icao: string;
+  sid: string | null;
+  star: string | null;
+  runway: string | null;
+  approach_runway: string | null;
+  comments: string;
+  created_at: string;
+}
+
+export interface AirportFeedback {
+  departure: AirportFeedbackEntry[];
+  arrival: AirportFeedbackEntry[];
+}
+
 export interface ParseJobStart {
   job_id: string;
   status: string;
@@ -310,5 +331,6 @@ export interface BriefingData {
   departure_briefing: AerodromeBriefing | null;
   arrival_briefing: AerodromeBriefing | null;
   airport_notes: AirportNotes | null;
+  airport_feedback: AirportFeedback | null;
   nats_procedure: NATSProcedure | null;
 }

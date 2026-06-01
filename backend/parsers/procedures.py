@@ -32,6 +32,18 @@ def _leading_token(line: str) -> str | None:
     return stripped.split()[0]
 
 
+def _extract_clearance_block(line_iter: list[str], start_idx: int) -> str:
+    parts: list[str] = []
+    for line in line_iter[start_idx + 1:]:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("FL") or stripped.startswith("FUEL TIME"):
+            break
+        parts.append(stripped)
+    return " ".join(parts)
+
+
 def _find_runway_line_index(lines: list[str], icao: str | None, runway: str | None) -> int | None:
     for idx, line in enumerate(lines):
         stripped = line.strip()
@@ -126,6 +138,15 @@ def extract_star_from_route_pages(
             if runway_idx is None:
                 continue
             arrival_found = True
+            for idx in range(runway_idx - 1, -1, -1):
+                stripped = lines[idx].strip()
+                if not stripped or stripped.startswith("ELEV ") or stripped.startswith("Page "):
+                    continue
+                token = _leading_token(stripped)
+                if token == "DCT":
+                    return None
+                if token and is_procedure_token(token):
+                    return token
             start_idx = runway_idx - 1
 
         for idx in range(start_idx, -1, -1):
@@ -135,5 +156,26 @@ def extract_star_from_route_pages(
             token = _leading_token(stripped)
             if token and is_procedure_token(token):
                 return token
+
+    if arrival_icao and arrival_runway:
+        route_pages_forward = iter_route_pages(pages)
+        for page in route_pages_forward:
+            lines = page.splitlines()
+            for idx, line in enumerate(lines):
+                stripped = line.strip()
+                if "ATC CLEARANCE" not in stripped and "DEFRTE:" not in stripped:
+                    continue
+                clearance = _extract_clearance_block(lines, idx)
+                match = re.search(
+                    rf"\b(?P<token>[A-Z0-9]+)\s+{re.escape(arrival_icao)}\s+{re.escape(arrival_runway)}\b",
+                    clearance,
+                )
+                if not match:
+                    continue
+                token = match.group("token")
+                if token == "DCT":
+                    return None
+                if is_procedure_token(token):
+                    return token
 
     return None

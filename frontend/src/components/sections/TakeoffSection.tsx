@@ -1,5 +1,12 @@
 import { useState } from "react";
-import type { TakeoffData, AerodromeBriefing, AirportWeather, NATSProcedure } from "@/lib/types";
+import type {
+  TakeoffData,
+  AerodromeBriefing,
+  AirportFeedbackEntry,
+  AirportWeather,
+  NATSProcedure,
+} from "@/lib/types";
+import AirportFeedbackPanel from "../AirportFeedbackPanel";
 import CompactAirportWeather from "../CompactAirportWeather";
 import InlineDisclosure from "../InlineDisclosure";
 import Section from "../Section";
@@ -10,8 +17,11 @@ export default function TakeoffSection({
   departureTime,
   departureReferenceTime,
   flightDate,
+  departureIcao,
+  arrivalIcao,
   departureBriefing,
   departureNote,
+  departureFeedback,
   natsProcedure,
 }: {
   data: TakeoffData;
@@ -19,8 +29,11 @@ export default function TakeoffSection({
   departureTime?: string;
   departureReferenceTime?: string;
   flightDate: string;
+  departureIcao: string;
+  arrivalIcao: string;
   departureBriefing: AerodromeBriefing | null;
   departureNote: string | null;
+  departureFeedback: AirportFeedbackEntry[] | null;
   natsProcedure: NATSProcedure | null;
 }) {
   const [omcOpen, setOmcOpen] = useState(false);
@@ -68,6 +81,20 @@ export default function TakeoffSection({
         <p className="text-muted text-xs mt-2 italic">
           V-speeds and flap setting: use EFB/OPT
         </p>
+      )}
+
+      {departureFeedback && (
+        <AirportFeedbackPanel
+          key={`departure-feedback-${departureIcao}-${departureFeedback.map((entry) => entry.id).join(",")}`}
+          section="departure"
+          airportIcao={departureIcao}
+          flightDate={flightDate}
+          fromIcao={departureIcao}
+          toIcao={arrivalIcao}
+          sid={data.sid}
+          runway={data.runway}
+          initialEntries={departureFeedback}
+        />
       )}
 
       {natsProcedure && (

@@ -16,6 +16,159 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-06-01 — Codex
+
+**Summary**
+
+- Added missing ICAO timezone mappings in `backend/parsers/flight_info.py` for the airports surfaced by `QR 8564.pdf`
+- New coverage added for:
+  - destination and alternates:
+    - `DNMM`
+    - `DGAA`
+    - `DNPO`
+    - `DNAA`
+    - `DNKN`
+  - additional enroute/operational airports from the same OFP:
+    - `OEMA`
+    - `OETF`
+    - `OERS`
+    - `HEGN`
+    - `HECA`
+    - `HEAX`
+    - `HELX`
+    - `FTTJ`
+- Added a `QR 8564.pdf` regression in `backend/tests/test_flight_info_parser.py`
+- `QR 8564` now parses:
+  - `STD` from `OTHH` with `UTC+3`
+  - `STA` to `DNMM` with `UTC+1`
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_flight_info_parser`
+- Direct parse check:
+  - `QR 8564.pdf` → `dep OTHH +3`
+  - `QR 8564.pdf` → `arr DNMM +1`
+
+**Open Items**
+
+- The app currently only displays UTC offsets in Section 1 for departure and arrival, even though the timezone map now covers the wider airport set from `QR 8564`
+- If the user later wants UTC displayed for alternates or other airport lists in the UI, that would be a separate frontend/backend display enhancement
+
+## 2026-06-02 — Codex
+
+**Summary**
+
+- Fixed STAR extraction for direct-to-airport arrivals in `backend/parsers/procedures.py`
+- `QR 8564.pdf` was incorrectly getting a STAR because the parser reverse-scanned the waypoint table and picked up a non-STAR marker
+- The STAR extractor now:
+  - prefers the procedure line immediately before the destination runway line on route pages
+  - treats `DCT` before the arrival airport as “no STAR”
+  - still falls back to the ATC clearance line when a real STAR token is explicitly present there
+- Added a regression in `backend/tests/test_sid_star_parser.py` to ensure `QR 8564` keeps `STAR = None`
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_sid_star_parser`
+- Direct parse spot checks:
+  - `QR 8564.pdf` → `STAR = None`
+  - `QR 849.pdf` → `STAR = TOVOX2L`
+  - `QR 427.pdf` → `STAR = ORLEK1L`
+  - `QR 701.pdf` → `STAR = PARCH4`
+  - `QR 707.pdf` → `STAR = HYPER9`
+
+**Open Items**
+
+- If the user later finds other “direct to VOR” or “direct to airport” arrivals, reuse `QR 8564` as the regression pattern to guard STAR parsing against false positives
+
+## 2026-06-01 — Codex
+
+**Summary**
+
+- Added a Synology-first airport feedback feature for Section 4 `TAKEOFF` and Section 6 `ARRIVAL`
+- Kept feedback fully separate from `Operational Info.txt`; new feedback now persists in a SQLite datastore managed by a new backend service:
+  - `backend/services/airport_feedback.py`
+- Added new backend models and wired `airport_feedback` into `BriefingData`
+- Added new feedback API endpoints:
+  - `GET /api/airport-feedback`
+  - `POST /api/airport-feedback`
+  - `DELETE /api/airport-feedback/{id}`
+- Enabled feedback by default on local and containerized non-Render environments, while keeping Render disabled via config
+- Updated the frontend so Sections 4 and 6 now show a `FEEDBACK` block under `OPS INFO` and before `OM C`
+- Added add/view/delete feedback flow:
+  - editable departure defaults for `Date`, `Route`, `SID`, and `Runway`
+  - arrival form simplified to airport-only above comments
+  - newest-first accumulated entries
+  - date as clickable summary
+  - permanent per-entry delete with confirmation
+- Kept feedback visibility keyed by airport + section only:
+  - all `departure` entries for an airport appear whenever that airport is the departure airport
+  - all `arrival` entries for an airport appear whenever that airport is the arrival airport
+  - OFP number, flight number, route pair, and date do not control matching
+- Extended saved feedback metadata with:
+  - `route_text` for saved departure display
+  - `runway` for saved departure display
+- Added saved-briefing hydration for airport feedback in `frontend/src/app/page.tsx`
+- Updated deployment/runtime files for Synology feedback persistence:
+  - `compose.yaml` now mounts `./data:/app/data`
+  - `Dockerfile` creates `/app/data`
+  - `render.yaml` explicitly disables the feature with `AIRPORT_FEEDBACK_ENABLED=0`
+  - `.gitignore` now ignores `data/*.sqlite3`
+  - tracked `data/.gitkeep`
+- Added backend regression coverage for feedback CRUD and API behavior in `backend/tests/test_airport_feedback.py`
+- Added `httpx` to `backend/requirements.txt` so FastAPI `TestClient`-based API tests run in the repo venv
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_airport_feedback tests.test_airport_notes tests.test_sid_star_parser tests.test_flight_info_parser`
+- `cd frontend && npm run lint`
+- `cd frontend && npm run build`
+- Refreshed locally served static frontend:
+  - `rm -rf frontend_build && cp -R frontend/out frontend_build`
+- Local runtime sanity checks against `http://127.0.0.1:8000`:
+  - `/api/health` returns `"airport_feedback_enabled": true`
+  - `/api/airport-feedback?departure=OTHH&arrival=OLBA` returns grouped lists scoped only by airport + section
+
+**Open Items**
+
+- Manual UI acceptance is still pending for the revised editable departure form and simplified arrival form in the local app
+- Synology deployment still needs a new image/version cut before this feature goes live on the NAS
+- Render should remain intentionally disabled for this feature until the user explicitly wants cloud feedback persistence
+
+## 2026-06-01 — Codex
+
+**Summary**
+
+- Renamed the airport feedback panel heading from `FEEDBACK` to `FLIGHT HISTORY`
+- Kept the action label as `Add Feedback`
+- Updated the collapsed saved-entry summary row in both Section 4 and Section 6 to show:
+  - `Date`
+  - route summary in compact ICAO form, for example `WMKK OTHH`
+- Revised Section 6 `ARRIVAL` flight history form to match the Section 4 `TAKEOFF` structure:
+  - `Date`
+  - `STAR`
+  - `Route`
+  - `Runway`
+  - `Comments`
+- Extended feedback persistence to store and display saved arrival `STAR` values
+- Updated expanded arrival history entries to show the same saved fields:
+  - `Date`
+  - `STAR`
+  - `Route`
+  - `Runway`
+  - comment
+  - saved timestamp
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_airport_feedback`
+- `cd frontend && npm run lint`
+- `cd frontend && npm run build`
+- refreshed locally served static frontend after the build
+
+**Open Items**
+
+- Manual local UI check is still needed to confirm the new arrival form/layout feels good on mobile
+
 ## 2026-05-28 — Codex (Synology release cut)
 
 **Summary**

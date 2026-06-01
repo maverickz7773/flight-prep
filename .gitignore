@@ -8,5 +8,6 @@ backend/**/__pycache__/
 .env
 frontend_build/
 frontend/out/
+data/*.sqlite3
 *.pdf
 *.png

@@ -287,6 +287,45 @@ class AirportNotes(BaseModel):
     arrival: str | None = None
 
 
+class AirportFeedbackEntry(BaseModel):
+    id: int
+    section: str
+    airport_icao: str
+    flight_date: str
+    route_text: str | None = None
+    from_icao: str
+    to_icao: str
+    sid: str | None = None
+    star: str | None = None
+    runway: str | None = None
+    approach_runway: str | None = None
+    comments: str
+    created_at: str
+
+
+class AirportFeedback(BaseModel):
+    departure: list["AirportFeedbackEntry"] = []
+    arrival: list["AirportFeedbackEntry"] = []
+
+
+class AirportFeedbackCreate(BaseModel):
+    section: str
+    airport_icao: str
+    flight_date: str
+    route_text: str | None = None
+    from_icao: str
+    to_icao: str
+    sid: str | None = None
+    star: str | None = None
+    runway: str | None = None
+    approach_runway: str | None = None
+    comments: str
+
+
+class DeleteStatus(BaseModel):
+    deleted: bool
+
+
 class ParseJobStart(BaseModel):
     job_id: str
     status: str
@@ -316,4 +355,5 @@ class BriefingData(BaseModel):
     departure_briefing: AerodromeBriefing | None = None
     arrival_briefing: AerodromeBriefing | None = None
     airport_notes: AirportNotes | None = None
+    airport_feedback: AirportFeedback | None = None
     nats_procedure: NATSProcedure | None = None

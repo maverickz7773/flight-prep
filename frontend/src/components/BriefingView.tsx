@@ -140,8 +140,11 @@ export default function BriefingView({ data }: { data: BriefingData }) {
         departureTime={data.weather.departure ? airportTimes[data.weather.departure.icao] : undefined}
         departureReferenceTime={data.flight_info.std}
         flightDate={data.flight_info.date}
+        departureIcao={data.flight_info.departure_icao}
+        arrivalIcao={data.flight_info.arrival_icao}
         departureBriefing={data.departure_briefing}
         departureNote={data.airport_notes?.departure ?? null}
+        departureFeedback={data.airport_feedback?.departure ?? null}
         natsProcedure={data.nats_procedure}
       />
       <RouteSection
@@ -155,8 +158,11 @@ export default function BriefingView({ data }: { data: BriefingData }) {
         destinationTime={data.weather.destination ? airportTimes[data.weather.destination.icao] : undefined}
         destinationReferenceTime={data.flight_info.sta}
         flightDate={data.flight_info.date}
+        departureIcao={data.flight_info.departure_icao}
+        arrivalIcao={data.flight_info.arrival_icao}
         arrivalBriefing={data.arrival_briefing}
         arrivalNote={data.airport_notes?.arrival ?? null}
+        arrivalFeedback={data.airport_feedback?.arrival ?? null}
       />
       <WxNotamSection
         weather={data.weather}

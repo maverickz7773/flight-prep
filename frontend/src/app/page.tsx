@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import type { AirportNotes, BriefingData, ParseJobStart, ParseJobStatus } from "@/lib/types";
+import type {
+  AirportFeedback,
+  AirportNotes,
+  BriefingData,
+  ParseJobStart,
+  ParseJobStatus,
+} from "@/lib/types";
 import BriefingView from "@/components/BriefingView";
 import { generateTextBriefing } from "@/lib/textBriefing";
 import { APP_VERSION } from "@/lib/version";
@@ -53,6 +59,22 @@ async function fetchAirportNotes(
   return (await res.json()) as AirportNotes | null;
 }
 
+async function fetchAirportFeedback(
+  briefing: BriefingData,
+): Promise<AirportFeedback | null> {
+  const params = new URLSearchParams({
+    departure: briefing.flight_info.departure_icao,
+    arrival: briefing.flight_info.arrival_icao,
+  });
+
+  const res = await fetch(`${getApiBase()}/api/airport-feedback?${params.toString()}`);
+  if (!res.ok) {
+    throw new Error(`Airport feedback lookup failed: ${res.status}`);
+  }
+
+  return (await res.json()) as AirportFeedback | null;
+}
+
 export default function Home() {
   const [briefing, setBriefing] = useState<BriefingData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -69,18 +91,32 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!briefing || briefing.airport_notes) return;
+    if (!briefing) return;
+
+    const needsAirportNotes = !briefing.airport_notes;
+    if (!needsAirportNotes && briefing.airport_feedback === undefined) return;
 
     let cancelled = false;
 
     void (async () => {
       try {
-        const airportNotes = await fetchAirportNotes(briefing);
-        if (!airportNotes || cancelled) return;
+        const [airportNotes, airportFeedback] = await Promise.all([
+          needsAirportNotes ? fetchAirportNotes(briefing) : Promise.resolve(briefing.airport_notes),
+          fetchAirportFeedback(briefing),
+        ]);
+        if (cancelled) return;
+
+        const currentFeedbackJson = JSON.stringify(briefing.airport_feedback ?? null);
+        const fetchedFeedbackJson = JSON.stringify(airportFeedback);
+        const shouldUpdate =
+          (needsAirportNotes && airportNotes !== briefing.airport_notes) ||
+          fetchedFeedbackJson !== currentFeedbackJson;
+        if (!shouldUpdate) return;
 
         const updatedBriefing: BriefingData = {
           ...briefing,
           airport_notes: airportNotes,
+          airport_feedback: airportFeedback,
         };
 
         setBriefing(updatedBriefing);
@@ -88,7 +124,7 @@ export default function Home() {
           localStorage.setItem("lastBriefing", JSON.stringify(updatedBriefing));
         } catch {}
       } catch {
-        // Saved briefings from older builds simply stay without notes if lookup fails.
+        // Saved briefings from older builds simply stay without supplemental lookups if fetch fails.
       }
     })();
 

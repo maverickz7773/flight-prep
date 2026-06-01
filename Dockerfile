@@ -10,6 +10,7 @@ WORKDIR /app/backend
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./
+RUN mkdir -p /app/data
 COPY ["Operational Info.txt", "../"]
 COPY ["Enroute Info.txt", "../"]
 COPY ["NATS Procedure.txt", "../"]
