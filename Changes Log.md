@@ -16,6 +16,35 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-06-02 — Codex
+
+**Summary**
+
+- Updated [Enroute Info.txt](/Users/eby/Personal/Programming/Cloude%20Code%20Tutorial/Flight%20Prep/Enroute%20Info.txt) with expanded Africa/Malaysia enroute coverage
+- Added new FIR sections for:
+  - `WMFC`
+  - `HECC`
+  - `HLLL`
+  - `FTTT`
+  - `DNKK`
+- Clarified older Red Sea crossing wording in existing enroute sections
+- Updated [Operational Info.txt](/Users/eby/Personal/Programming/Cloude%20Code%20Tutorial/Flight%20Prep/Operational%20Info.txt) with a new `[DNMM] Arr:` airport note block
+- `DNMM` arrival notes now include:
+  - holding-fuel caution in below-minima weather
+  - LOS approach boundary-entry reminder
+  - speed restriction below FL100 within 49 DME
+  - glide slope / RNAV / VOR 18R cautions
+  - runway/taxiway surface and parking cautions
+
+**Verification**
+
+- Reviewed the local diff for `Enroute Info.txt` and `Operational Info.txt`
+- Local app remained healthy at `http://127.0.0.1:8000`
+
+**Open Items**
+
+- Synology still needs the normal `compose.yaml` upload and project recreate after the new image/version push
+
 ## 2026-06-01 — Codex
 
 **Summary**

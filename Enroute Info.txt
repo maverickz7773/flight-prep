@@ -22,7 +22,7 @@ ESCAT (Emergency Security Control of Air Traffic):
 Rules may be activated by Saudi authorities at any time.
 Crews must maintain vigilance and a constant listening watch on ATC frequencies 
 
-Red Sea Crossing (Uncoordinated):
+Red Sea Crossing (Uncoordinated): old procedure, now already have VOR located in the area
 Squawk: A2000 
 South to North: Maintain FL300
 North to South : Maintain FL290
@@ -403,6 +403,28 @@ Weather Deviation no comm : old proc :10NM Offset : > 10 nm (North Climb 300ft/S
 
 Emergency Descend on RNP1 Routes :T456 must remain on the route, Z652 may offset the route away 
 
+[WMFC] 
+
+Logon CPDLC WMFC : 10 mins prior entry  : but intermittent
+Separation : 
+50 NM Longitudinal: Applied between RNP 10 aircraft on routes like L510, N571, P574, P628, and M768, provided the aircraft is also CPDLC/ADS-C or within VHF range
+10-Minute Separation: If RNP 10 or CPDLC requirements are not met, a standard 10-minute longitudinal separation using the Mach Number Technique (MNT) is typically applied.
+RNP 4 Bonus: While not mandated for entry, aircraft approved for RNP 4 that also meet PBCS (RCP240/RSP180) criteria may be eligible for further reduced separation (e.g., 30 NM) on certain segments like M767
+
+RNP 10 : L510, L629, L635, L642, L645, L649, M646, N571, N633, N884, N892, P501, P574, P627, P628, and Y338.
+
+FLAS : refer Jepps Pacific Malaysia.
+
+TCAS : maximum of 1500 fpm, and ideally between 500 and 1000 fpm, when within the last 2000 ft before your cleared flight level.
+
+Speed on Descent : 270 kts
+
+Emergency Oceanic :
+Rapid Decomp no comm : 90° / 15NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : old proc :10NM Offset : > 10 nm (North Climb 300ft/South Descend 300ft)
+
+Holding Procedures Table IV-1-1
+
 
 [YMMM] 
 ITCZ : expect weather. Coordinate early.
@@ -694,6 +716,125 @@ Eastbound boundary CZQM to CZQX is W60°.
 Oceanic Emergency Procedure (only if no radar comm):
 Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
 Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+[HECC]
+Communication : 5 or 10 mins depends on point of entry
+Sinai Restriction : Flights must not be planned to overfly the Sinai Peninsula below FL300. 
+Climb performance restricted flights shall not be planned below FL280.
+Overflying the Sinai Peninsula below FL260 is prohibited, except for aircraft in climb or descent for Cairo (HECA) or Sharm El Sheikh (HESH).
+
+Red Sea Crossing (Uncoordinated):old procedure, now already have VOR located in the area
+Squawk: A2000 
+South to North: Maintain FL300
+North to South : Maintain FL290
+Detail transmission: 10 minutes prior to FIR boundary crossing
+
+GPS Interference
+
+RNAV 5
+
+Contigency Procedure :
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+[HLLL]
+Communication : 10 to 15 mins depends on point of entry.
+Entering the Tripoli FIR from Cairo (HECC) or N’Djamena (FTTT) FIRs must attempt frequency contact at least 10 minutes prior to entry as follows :
+From Cairo via DITAR: Contact Kufra TWR on VHF 121.9MHz
+From N’Djamena via TONBA: Contact Kufra TWR on VHF 121.9MHz.
+HF 11300KHz (day) and 5517KHz (night)
+
+Tripoli Prohibited Area : Portion NW of line connecting N2149.2 E01921.6 and N2743.5 E02500.0
+Tripoli Restricted Area: Portion SE of line connecting N2149.2 E01921.6 and N2743.5 E02500.0.Can fly at FL260 and above.
+Only route DITAR R778 TONBA (and vice versa) is approved for company operations.
+Caution with direct routings; overfly ARLOS, SALUN, and METRU per flight plan to avoid prohibited FIR areas
+
+Sudan Prohibited Area: Portion of FIR north of line connecting N0904.1 E02327.7 and N0832.6 E03319.6 is PROHIBITED 
+
+
+In Flight Broadcast Procedure : 126.9 MHz
+10 minutes before entering and listen watch.
+Every 20 minutes.
+"QTR __, FIR___, Position____, Time _____, FL_____, Airways___,
+ ETA____, Time____, Next____.
+ QTR____, FL_____, North/South Bound Airways ____ in FIR _______".
+
+High Terrain near TONBA : MGA 12500
+RNP 5
+SLOP authorized.
+Use 123.45 MHz for inter-pilot coordination of Strategic Lateral Offset Procedures (SLOP)
+
+Holding Precedure Table IV-1-2 : 
+Surface to 6,000 ft: 200 kt
+6,001 ft to 14,000 ft: 230 kt
+Above 14,000 ft: 265 kt
+
+
+Contigency Procedure :
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+[FTTT]
+Communication : Logon CPDLC FTTT 15 to 45 mins prior entry.
+Reporting point TONBA is used for crossing from Tripoli FIR into N'Djamena FIR via route R778.
+Responsibility for the N’Djamena UIR is split at the 14th north parallel :
+North of 14N: Responsibility is transferred to Niamey ACC
+South of 14N: Responsibility is transferred to Brazzaville ACC
+Niamey and Brazzaville ACCs are responsible for ensuring that flights on routes UM998 and UG727 are coordinated with Kano ACC to maintain longitudinal separation
+
+Restricted area NIGER portion of DRRR, FTTT and HLLL : FL260 or above
+
+In Flight Broadcast Procedure : 126.9 MHz
+10 minutes before entering and listen watch.
+Every 20 minutes.
+"QTR __, FIR___, Position____, Time _____, FL_____, Airways___,
+ ETA____, Time____, Next____.
+ QTR____, FL_____, North/South Bound Airways ____ in FIR _______".
+
+High Terrain near TONBA : MGA 12500
+RNP 10
+SLOP authorized.
+Use 123.45 or 126.9 MHz for inter-pilot coordination of Strategic Lateral Offset Procedures (SLOP).
+Pilots must report to the controller when normal navigation is resumed after a lateral deviation of 1 or 2NM right of track
+
+Holding Precedure Table IV-1-1
+Contigency Procedure :
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+[DNKK]
+
+Communication : Logon CPDLC DNMM for Lagos and DNKN/DNKK for KANO Control 10 mins prior entry.
+Entering Lagos FIR to contact 120.9 or 127.3, 10 mins prior entry.
+Lagos - Accra Routing: It is usual to establish radio contact with Accra before being released by Lagos and vice versa
+
+Restricted area NIGER portion of DRRR, FTTT and HLLL : FL260 or above
+
+In Flight Broadcast Procedure : 126.9 MHz
+10 minutes before entering and listen watch.
+Every 20 minutes.
+"QTR __, FIR___, Position____, Time _____, FL_____, Airways___,
+ ETA____, Time____, Next____.
+ QTR____, FL_____, North/South Bound Airways ____ in FIR _______".
+
+RNAV 10 and RNP10 depends on airways.
+SLOP authorized.
+Use 123.45 or 126.9 MHz for inter-pilot coordination of Strategic Lateral Offset Procedures (SLOP).
+Pilots must report to the controller when normal navigation is resumed after a lateral deviation of 1 or 2NM right of track
+
+Holding Precedure Table IV-1-1
+Contigency Procedure :
+Rapid Decomp no comm : ICAO : minimimum 30° / 5NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South Descend 300ft
+
+
+
+
+
+
+
 
 
 

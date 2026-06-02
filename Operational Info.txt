@@ -274,3 +274,28 @@ ILS RWY 21 IS UNUSABLE AT THIS TIME.
 ILS/LOC RWY03 COVERAGE IS REDUCED AT 29 DEGREES ON THE LEFT SIDE
 OF THE APPROACH AND 25 DEGREES ON THE RIGHT SIDE OF THE APPROACH
 
+
+[DNMM]
+Arr:
+If weather below minima, consider holding fuel for 1 hour.
+Inaccurate reports of wind/vis.
+
+Inbound clearance must be obtain from LOS approach before crossing control area. Set FMC 25nm.
+
+Speed : below FL100 within 49 DME, speed 230kts.
+
+Reported GS failure/false indication when using ILS. Consider RNAV.
+No IAP for Rwy 36L/R.
+VOR 18R offset.
+
+TCAS traffic might not displayed.
+
+No RETI.
+Taxiway East of Rwy18L/36R not authorized.
+Runway marking faded and hard to see. 
+Pot holes and upslopes.
+Expect marshaller on parking and tow in.
+
+If parking cargo congested, expect to park at Terminal. Check authorized parking.
+
+

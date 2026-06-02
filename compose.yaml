@@ -1,6 +1,6 @@
 services:
   flight-prep:
-    image: ghcr.io/maverickz7773/flight-prep:v1.1.4
+    image: ghcr.io/maverickz7773/flight-prep:v1.1.5
     container_name: flight-prep
     environment:
       AIRPORT_FEEDBACK_ENABLED: "1"
