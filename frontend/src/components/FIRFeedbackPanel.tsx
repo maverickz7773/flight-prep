@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { FIRFeedbackEntry } from "@/lib/types";
 import InlineDisclosure from "./InlineDisclosure";
@@ -52,6 +52,37 @@ export default function FIRFeedbackPanel({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [comments, setComments] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function refreshEntries() {
+      try {
+        const params = new URLSearchParams({
+          firs: firIcao,
+        });
+        const res = await fetch(`/api/fir-feedback?${params.toString()}`);
+        if (!res.ok) return;
+
+        const payload = (await res.json()) as Record<string, FIRFeedbackEntry[]> | null;
+        if (cancelled || !payload) return;
+
+        const latestEntries = payload[firIcao] ?? [];
+        setEntries(latestEntries);
+        setExpandedId((current) =>
+          current != null && latestEntries.some((entry) => entry.id === current) ? current : null
+        );
+      } catch {
+        // Keep the latest local entries if refresh fails.
+      }
+    }
+
+    void refreshEntries();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [firIcao]);
 
   async function handleSave() {
     if (!comments.trim()) {

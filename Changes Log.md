@@ -40,12 +40,14 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
   - summary rows showing `Date` plus compact route pair
   - per-entry permanent delete with confirmation
 - Added saved-briefing FIR-history hydration in the frontend so older localStorage briefings can fetch the latest FIR history on reload
+- Fixed the Section 5 FIR-history reopen bug by refreshing FIR entries from the API when the FIR card mounts, so a newly saved note is still present after closing and reopening the same FIR
 
 **Verification**
 
 - `cd backend && venv/bin/python -m unittest tests.test_airport_feedback`
 - `cd frontend && npm run lint`
 - `cd frontend && npm run build`
+- Reproduced the save/close/reopen behavior locally and patched the FIR panel to refresh from `/api/fir-feedback` on reopen
 
 **Open Items**
 
