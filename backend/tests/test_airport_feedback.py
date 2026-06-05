@@ -8,7 +8,7 @@ import unittest
 from fastapi.testclient import TestClient
 
 import main
-from models.briefing import AirportFeedbackCreate
+from models.briefing import AirportFeedbackCreate, FIRFeedbackCreate
 from services import airport_feedback
 
 
@@ -109,6 +109,48 @@ class AirportFeedbackServiceTests(unittest.TestCase):
             [newer_arrival_entry.id, older_arrival_entry.id],
         )
 
+    def test_create_list_and_delete_fir_feedback_entries(self) -> None:
+        older_fir_entry = airport_feedback.create_fir_feedback(
+            FIRFeedbackCreate(
+                fir_icao="WMFC",
+                fir_name="KUALA LUMPUR FIR",
+                flight_date="10May26",
+                route_text="WMKK DCT IGARI L894 OTHH",
+                from_icao="WMKK",
+                to_icao="OTHH",
+                comments="Older FIR feedback entry",
+            )
+        )
+        newer_fir_entry = airport_feedback.create_fir_feedback(
+            FIRFeedbackCreate(
+                fir_icao="WMFC",
+                fir_name="KUALA LUMPUR FIR",
+                flight_date="31May26",
+                route_text="WMKK DCT PULIP L894 OTHH",
+                from_icao="WMKK",
+                to_icao="OTHH",
+                comments="Newer FIR feedback entry from a different OFP",
+            )
+        )
+
+        grouped = airport_feedback.get_fir_feedback(["WMFC", "OBBB"])
+
+        self.assertIsNotNone(grouped)
+        self.assertEqual(
+            [entry.id for entry in grouped["WMFC"]],
+            [newer_fir_entry.id, older_fir_entry.id],
+        )
+        self.assertEqual(grouped["WMFC"][0].route_text, "WMKK DCT PULIP L894 OTHH")
+        self.assertEqual(grouped["OBBB"], [])
+
+        deleted = airport_feedback.delete_fir_feedback(newer_fir_entry.id)
+        self.assertTrue(deleted)
+
+        grouped_after_delete = airport_feedback.get_fir_feedback(["WMFC"])
+
+        self.assertIsNotNone(grouped_after_delete)
+        self.assertEqual([entry.id for entry in grouped_after_delete["WMFC"]], [older_fir_entry.id])
+
 
 class AirportFeedbackApiTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -200,6 +242,61 @@ class AirportFeedbackApiTests(unittest.TestCase):
         self.assertEqual(len(get_after_delete.json()["departure"]), 1)
         self.assertEqual(get_after_delete.json()["arrival"], [])
 
+    def test_post_get_and_delete_fir_feedback(self) -> None:
+        create_res = self.client.post(
+            "/api/fir-feedback",
+            json={
+                "fir_icao": "WMFC",
+                "fir_name": "KUALA LUMPUR FIR",
+                "flight_date": "10May26",
+                "route_text": "WMKK DCT IGARI L894 OTHH",
+                "from_icao": "WMKK",
+                "to_icao": "OTHH",
+                "comments": "Keep an eye on CPDLC logon timing.",
+            },
+        )
+        self.assertEqual(create_res.status_code, 200)
+        created = create_res.json()
+        self.assertEqual(created["fir_icao"], "WMFC")
+        self.assertEqual(created["route_text"], "WMKK DCT IGARI L894 OTHH")
+
+        second_create_res = self.client.post(
+            "/api/fir-feedback",
+            json={
+                "fir_icao": "WMFC",
+                "fir_name": "KUALA LUMPUR FIR",
+                "flight_date": "31May26",
+                "route_text": "WMKK DCT PULIP L894 OTHH",
+                "from_icao": "WMKK",
+                "to_icao": "OTHH",
+                "comments": "Second history entry for the same FIR.",
+            },
+        )
+        self.assertEqual(second_create_res.status_code, 200)
+
+        get_res = self.client.get(
+            "/api/fir-feedback",
+            params={"firs": "WMFC,OBBB"},
+        )
+        self.assertEqual(get_res.status_code, 200)
+        grouped = get_res.json()
+        self.assertEqual(len(grouped["WMFC"]), 2)
+        self.assertEqual(grouped["WMFC"][0]["flight_date"], "31May26")
+        self.assertEqual(grouped["WMFC"][1]["flight_date"], "10May26")
+        self.assertEqual(grouped["OBBB"], [])
+
+        delete_res = self.client.delete(f"/api/fir-feedback/{created['id']}")
+        self.assertEqual(delete_res.status_code, 200)
+        self.assertEqual(delete_res.json(), {"deleted": True})
+
+        get_after_delete = self.client.get(
+            "/api/fir-feedback",
+            params={"firs": "WMFC"},
+        )
+        self.assertEqual(get_after_delete.status_code, 200)
+        self.assertEqual(len(get_after_delete.json()["WMFC"]), 1)
+        self.assertEqual(get_after_delete.json()["WMFC"][0]["flight_date"], "31May26")
+
     def test_disabled_mode_hides_feature_and_rejects_mutations(self) -> None:
         os.environ["AIRPORT_FEEDBACK_ENABLED"] = "0"
 
@@ -230,6 +327,30 @@ class AirportFeedbackApiTests(unittest.TestCase):
 
         delete_res = self.client.delete("/api/airport-feedback/1")
         self.assertEqual(delete_res.status_code, 403)
+
+        fir_get_res = self.client.get(
+            "/api/fir-feedback",
+            params={"firs": "WMFC"},
+        )
+        self.assertEqual(fir_get_res.status_code, 200)
+        self.assertIsNone(fir_get_res.json())
+
+        fir_create_res = self.client.post(
+            "/api/fir-feedback",
+            json={
+                "fir_icao": "WMFC",
+                "fir_name": "KUALA LUMPUR FIR",
+                "flight_date": "10May26",
+                "route_text": "WMKK DCT IGARI L894 OTHH",
+                "from_icao": "WMKK",
+                "to_icao": "OTHH",
+                "comments": "Should be rejected while disabled.",
+            },
+        )
+        self.assertEqual(fir_create_res.status_code, 403)
+
+        fir_delete_res = self.client.delete("/api/fir-feedback/1")
+        self.assertEqual(fir_delete_res.status_code, 403)
 
 
 if __name__ == "__main__":

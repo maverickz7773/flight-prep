@@ -19,6 +19,8 @@ from models.briefing import (
     AirportNotes,
     BriefingData,
     DeleteStatus,
+    FIRFeedbackCreate,
+    FIRFeedbackEntry,
     ParseJobStart,
     ParseJobStatus,
 )
@@ -30,8 +32,11 @@ from parsers.notes import (
 from services.airport_feedback import (
     airport_feedback_enabled,
     create_airport_feedback,
+    create_fir_feedback,
     delete_airport_feedback,
+    delete_fir_feedback,
     get_airport_feedback,
+    get_fir_feedback,
     get_airport_feedback_db_path,
 )
 
@@ -221,6 +226,37 @@ async def delete_airport_feedback_endpoint(entry_id: int):
     deleted = delete_airport_feedback(entry_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Airport feedback entry not found")
+
+    return DeleteStatus(deleted=True)
+
+
+@app.get("/api/fir-feedback", response_model=dict[str, list[FIRFeedbackEntry]] | None)
+async def fir_feedback_endpoint(firs: str):
+    fir_list = [item.strip().upper() for item in firs.split(",") if item.strip()]
+    return get_fir_feedback(fir_list)
+
+
+@app.post("/api/fir-feedback", response_model=FIRFeedbackEntry)
+async def create_fir_feedback_endpoint(payload: FIRFeedbackCreate):
+    if not airport_feedback_enabled():
+        raise HTTPException(status_code=403, detail="Airport feedback feature is disabled")
+
+    try:
+        return create_fir_feedback(payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.delete("/api/fir-feedback/{entry_id}", response_model=DeleteStatus)
+async def delete_fir_feedback_endpoint(entry_id: int):
+    if not airport_feedback_enabled():
+        raise HTTPException(status_code=403, detail="Airport feedback feature is disabled")
+
+    deleted = delete_fir_feedback(entry_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="FIR feedback entry not found")
 
     return DeleteStatus(deleted=True)
 

@@ -151,6 +151,9 @@ export default function BriefingView({ data }: { data: BriefingData }) {
         route={data.route}
         ezfw={data.weights.ezfw}
         natsProcedure={data.nats_procedure}
+        flightDate={data.flight_info.date}
+        departureIcao={data.flight_info.departure_icao}
+        arrivalIcao={data.flight_info.arrival_icao}
       />
       <ArrivalSection
         data={data.arrival}

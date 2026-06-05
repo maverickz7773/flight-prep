@@ -15,7 +15,7 @@ from parsers.mel import parse_mel
 from parsers.nats import parse_nats_procedure
 from parsers.omc import get_aerodrome_briefing
 from parsers.notes import get_airport_notes
-from services.airport_feedback import get_airport_feedback
+from services.airport_feedback import get_airport_feedback, get_fir_feedback
 
 
 def extract_pages(pdf_path: str) -> list[str]:
@@ -80,6 +80,8 @@ def parse_ofp(pdf_path: str) -> BriefingData:
         flight_info.departure_icao,
         flight_info.arrival_icao,
     )
+    fir_feedback = get_fir_feedback([item.fir_icao for item in route.enroute_info]) or {}
+    route = route.model_copy(update={"fir_feedback": fir_feedback})
 
     return BriefingData(
         flight_info=flight_info,

@@ -16,6 +16,45 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-06-05 — Codex
+
+**Summary**
+
+- Added FIR-scoped `FLIGHT HISTORY` to Section 5 `ROUTE` using the same SQLite DB file as airport history with a separate `fir_feedback` table
+- Extended the backend feedback service and API with:
+  - `GET /api/fir-feedback?firs=...`
+  - `POST /api/fir-feedback`
+  - `DELETE /api/fir-feedback/{id}`
+- Extended `RouteSummary` with `fir_feedback`, grouped by FIR ICAO for immediate render on first parse
+- Updated the Route-section FIR card so a FIR becomes interactive when it has either:
+  - static enroute notes, or
+  - saved FIR flight history
+- Revised the FIR card UI to show two compact disclosures:
+  - `NOTES`
+  - `FLIGHT HISTORY`
+- Added a dedicated frontend `FIRFeedbackPanel` with:
+  - read-only OFP-derived `Date`
+  - read-only OFP-derived `Route`
+  - comments-only save form
+  - newest-first saved history
+  - summary rows showing `Date` plus compact route pair
+  - per-entry permanent delete with confirmation
+- Added saved-briefing FIR-history hydration in the frontend so older localStorage briefings can fetch the latest FIR history on reload
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_airport_feedback`
+- `cd frontend && npm run lint`
+- `cd frontend && npm run build`
+
+**Open Items**
+
+- Local manual test still needed in the running app:
+  - save FIR history on one OFP
+  - open another OFP crossing the same FIR
+  - confirm the same FIR history appears there
+- Render should remain effectively disabled for this feature until a Synology-first rollout is explicitly requested
+
 ## 2026-06-02 — Codex
 
 **Summary**

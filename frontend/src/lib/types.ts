@@ -137,6 +137,7 @@ export interface RouteSummary {
   waypoints: Waypoint[];
   fir_sequence: string[];
   enroute_info: EnrouteInfoItem[];
+  fir_feedback: Record<string, FIRFeedbackEntry[]>;
   highest_mora: string | null;
   cruise_flight_levels: string[];
 }
@@ -300,6 +301,18 @@ export interface AirportFeedbackEntry {
 export interface AirportFeedback {
   departure: AirportFeedbackEntry[];
   arrival: AirportFeedbackEntry[];
+}
+
+export interface FIRFeedbackEntry {
+  id: number;
+  fir_icao: string;
+  fir_name: string;
+  flight_date: string;
+  route_text: string | null;
+  from_icao: string;
+  to_icao: string;
+  comments: string;
+  created_at: string;
 }
 
 export interface ParseJobStart {

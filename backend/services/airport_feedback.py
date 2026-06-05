@@ -6,7 +6,13 @@ import os
 from pathlib import Path
 import sqlite3
 
-from models.briefing import AirportFeedback, AirportFeedbackCreate, AirportFeedbackEntry
+from models.briefing import (
+    AirportFeedback,
+    AirportFeedbackCreate,
+    AirportFeedbackEntry,
+    FIRFeedbackCreate,
+    FIRFeedbackEntry,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -72,6 +78,21 @@ def _connect() -> sqlite3.Connection:
         )
         """
     )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS fir_feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fir_icao TEXT NOT NULL,
+            fir_name TEXT NOT NULL,
+            flight_date TEXT NOT NULL,
+            route_text TEXT,
+            from_icao TEXT NOT NULL,
+            to_icao TEXT NOT NULL,
+            comments TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        )
+        """
+    )
     existing_columns = {
         row["name"] for row in conn.execute("PRAGMA table_info(airport_feedback)").fetchall()
     }
@@ -103,6 +124,20 @@ def _row_to_entry(row: sqlite3.Row) -> AirportFeedbackEntry:
     )
 
 
+def _row_to_fir_entry(row: sqlite3.Row) -> FIRFeedbackEntry:
+    return FIRFeedbackEntry(
+        id=int(row["id"]),
+        fir_icao=str(row["fir_icao"]),
+        fir_name=str(row["fir_name"]),
+        flight_date=str(row["flight_date"]),
+        route_text=row["route_text"],
+        from_icao=str(row["from_icao"]),
+        to_icao=str(row["to_icao"]),
+        comments=str(row["comments"]),
+        created_at=str(row["created_at"]),
+    )
+
+
 def _list_for_section(conn: sqlite3.Connection, airport_icao: str, section: str) -> list[AirportFeedbackEntry]:
     rows = conn.execute(
         """
@@ -114,6 +149,19 @@ def _list_for_section(conn: sqlite3.Connection, airport_icao: str, section: str)
         (airport_icao.upper(), section),
     ).fetchall()
     return [_row_to_entry(row) for row in rows]
+
+
+def _list_for_fir(conn: sqlite3.Connection, fir_icao: str) -> list[FIRFeedbackEntry]:
+    rows = conn.execute(
+        """
+        SELECT *
+        FROM fir_feedback
+        WHERE fir_icao = ?
+        ORDER BY datetime(created_at) DESC, id DESC
+        """,
+        (fir_icao.upper(),),
+    ).fetchall()
+    return [_row_to_fir_entry(row) for row in rows]
 
 
 def get_airport_feedback(departure: str, arrival: str) -> AirportFeedback | None:
@@ -128,6 +176,18 @@ def get_airport_feedback(departure: str, arrival: str) -> AirportFeedback | None
         departure=departure_items,
         arrival=arrival_items,
     )
+
+
+def get_fir_feedback(firs: list[str]) -> dict[str, list[FIRFeedbackEntry]] | None:
+    if not airport_feedback_enabled():
+        return None
+
+    unique_firs = list(dict.fromkeys(fir.strip().upper() for fir in firs if fir and fir.strip()))
+    if not unique_firs:
+        return {}
+
+    with closing(_connect()) as conn:
+        return {fir: _list_for_fir(conn, fir) for fir in unique_firs}
 
 
 def create_airport_feedback(payload: AirportFeedbackCreate) -> AirportFeedbackEntry:
@@ -191,6 +251,65 @@ def create_airport_feedback(payload: AirportFeedbackCreate) -> AirportFeedbackEn
     return _row_to_entry(row)
 
 
+def create_fir_feedback(payload: FIRFeedbackCreate) -> FIRFeedbackEntry:
+    if not airport_feedback_enabled():
+        raise RuntimeError("Airport feedback feature is disabled")
+
+    fir_icao = payload.fir_icao.strip().upper()
+    fir_name = payload.fir_name.strip()
+    comments = payload.comments.strip()
+    if not fir_icao:
+        raise ValueError("fir_icao is required")
+    if not fir_name:
+        raise ValueError("fir_name is required")
+    if not payload.flight_date.strip():
+        raise ValueError("flight_date is required")
+    if not payload.from_icao.strip() or not payload.to_icao.strip():
+        raise ValueError("from_icao and to_icao are required")
+    if not comments:
+        raise ValueError("comments are required")
+
+    created_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+    with closing(_connect()) as conn:
+        cursor = conn.execute(
+            """
+            INSERT INTO fir_feedback (
+                fir_icao,
+                fir_name,
+                flight_date,
+                route_text,
+                from_icao,
+                to_icao,
+                comments,
+                created_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                fir_icao,
+                fir_name,
+                payload.flight_date.strip(),
+                payload.route_text.strip() if payload.route_text else None,
+                payload.from_icao.strip().upper(),
+                payload.to_icao.strip().upper(),
+                comments,
+                created_at,
+            ),
+        )
+        entry_id = int(cursor.lastrowid)
+        conn.commit()
+        row = conn.execute(
+            "SELECT * FROM fir_feedback WHERE id = ?",
+            (entry_id,),
+        ).fetchone()
+
+    if row is None:
+        raise RuntimeError("Failed to load created FIR feedback entry")
+
+    return _row_to_fir_entry(row)
+
+
 def delete_airport_feedback(entry_id: int) -> bool:
     if not airport_feedback_enabled():
         raise RuntimeError("Airport feedback feature is disabled")
@@ -198,6 +317,19 @@ def delete_airport_feedback(entry_id: int) -> bool:
     with closing(_connect()) as conn:
         cursor = conn.execute(
             "DELETE FROM airport_feedback WHERE id = ?",
+            (entry_id,),
+        )
+        conn.commit()
+        return cursor.rowcount > 0
+
+
+def delete_fir_feedback(entry_id: int) -> bool:
+    if not airport_feedback_enabled():
+        raise RuntimeError("Airport feedback feature is disabled")
+
+    with closing(_connect()) as conn:
+        cursor = conn.execute(
+            "DELETE FROM fir_feedback WHERE id = ?",
             (entry_id,),
         )
         conn.commit()

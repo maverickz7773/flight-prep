@@ -5,6 +5,7 @@ import type {
   AirportFeedback,
   AirportNotes,
   BriefingData,
+  FIRFeedbackEntry,
   ParseJobStart,
   ParseJobStatus,
 } from "@/lib/types";
@@ -75,6 +76,33 @@ async function fetchAirportFeedback(
   return (await res.json()) as AirportFeedback | null;
 }
 
+async function fetchFirFeedback(
+  briefing: BriefingData,
+): Promise<Record<string, FIRFeedbackEntry[]>> {
+  const firs = Array.from(
+    new Set(
+      (briefing.route.enroute_info ?? [])
+        .map((item) => item.fir_icao)
+        .filter((value): value is string => Boolean(value))
+    )
+  );
+
+  if (firs.length === 0) {
+    return {};
+  }
+
+  const params = new URLSearchParams({
+    firs: firs.join(","),
+  });
+
+  const res = await fetch(`${getApiBase()}/api/fir-feedback?${params.toString()}`);
+  if (!res.ok) {
+    throw new Error(`FIR feedback lookup failed: ${res.status}`);
+  }
+
+  return ((await res.json()) as Record<string, FIRFeedbackEntry[]> | null) ?? {};
+}
+
 export default function Home() {
   const [briefing, setBriefing] = useState<BriefingData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -94,29 +122,36 @@ export default function Home() {
     if (!briefing) return;
 
     const needsAirportNotes = !briefing.airport_notes;
-    if (!needsAirportNotes && briefing.airport_feedback === undefined) return;
 
     let cancelled = false;
 
     void (async () => {
       try {
-        const [airportNotes, airportFeedback] = await Promise.all([
+        const [airportNotes, airportFeedback, firFeedback] = await Promise.all([
           needsAirportNotes ? fetchAirportNotes(briefing) : Promise.resolve(briefing.airport_notes),
           fetchAirportFeedback(briefing),
+          fetchFirFeedback(briefing),
         ]);
         if (cancelled) return;
 
         const currentFeedbackJson = JSON.stringify(briefing.airport_feedback ?? null);
         const fetchedFeedbackJson = JSON.stringify(airportFeedback);
+        const currentFirFeedbackJson = JSON.stringify(briefing.route.fir_feedback ?? {});
+        const fetchedFirFeedbackJson = JSON.stringify(firFeedback);
         const shouldUpdate =
           (needsAirportNotes && airportNotes !== briefing.airport_notes) ||
-          fetchedFeedbackJson !== currentFeedbackJson;
+          fetchedFeedbackJson !== currentFeedbackJson ||
+          fetchedFirFeedbackJson !== currentFirFeedbackJson;
         if (!shouldUpdate) return;
 
         const updatedBriefing: BriefingData = {
           ...briefing,
           airport_notes: airportNotes,
           airport_feedback: airportFeedback,
+          route: {
+            ...briefing.route,
+            fir_feedback: firFeedback,
+          },
         };
 
         setBriefing(updatedBriefing);

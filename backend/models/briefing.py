@@ -143,6 +143,7 @@ class RouteSummary(BaseModel):
     waypoints: list[Waypoint] = []
     fir_sequence: list[str] = []
     enroute_info: list["EnrouteInfoItem"] = []
+    fir_feedback: dict[str, list["FIRFeedbackEntry"]] = {}
     highest_mora: str | None = None
     cruise_flight_levels: list[str] = []
 
@@ -319,6 +320,28 @@ class AirportFeedbackCreate(BaseModel):
     star: str | None = None
     runway: str | None = None
     approach_runway: str | None = None
+    comments: str
+
+
+class FIRFeedbackEntry(BaseModel):
+    id: int
+    fir_icao: str
+    fir_name: str
+    flight_date: str
+    route_text: str | None = None
+    from_icao: str
+    to_icao: str
+    comments: str
+    created_at: str
+
+
+class FIRFeedbackCreate(BaseModel):
+    fir_icao: str
+    fir_name: str
+    flight_date: str
+    route_text: str | None = None
+    from_icao: str
+    to_icao: str
     comments: str
 
 

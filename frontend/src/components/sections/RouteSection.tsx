@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 
 import type { NATSProcedure, RouteSummary } from "@/lib/types";
+import FIRFeedbackPanel from "../FIRFeedbackPanel";
 import InlineDisclosure from "../InlineDisclosure";
 import Section from "../Section";
 
@@ -8,10 +9,16 @@ export default function RouteSection({
   route,
   ezfw,
   natsProcedure,
+  flightDate,
+  departureIcao,
+  arrivalIcao,
 }: {
   route: RouteSummary;
   ezfw: number;
   natsProcedure: NATSProcedure | null;
+  flightDate: string;
+  departureIcao: string;
+  arrivalIcao: string;
 }) {
   const [openFirIcao, setOpenFirIcao] = useState<string | null>(null);
   const keyWaypoints = route.waypoints.filter(
@@ -37,6 +44,17 @@ export default function RouteSection({
   );
 
   const openFirInfo = openFirIcao ? enrouteInfoByIcao.get(openFirIcao) ?? null : null;
+  const firFeedbackByIcao = useMemo(
+    () =>
+      new Map(
+        Object.entries(route.fir_feedback ?? {}).map(([firIcao, entries]) => [
+          firIcao,
+          entries,
+        ])
+      ),
+    [route.fir_feedback]
+  );
+  const openFirFeedbackEntries = openFirIcao ? firFeedbackByIcao.get(openFirIcao) ?? [] : [];
   const natsTriggerLabels = useMemo(() => {
     if (!natsProcedure) return [];
     return route.fir_sequence.filter((firLabel) => {
@@ -49,9 +67,10 @@ export default function RouteSection({
     const match = firLabel.match(/^(.*?)\s+\(([A-Z]{4})\)$/);
     const firIcao = match?.[2] ?? null;
     const firInfo = firIcao ? enrouteInfoByIcao.get(firIcao) : undefined;
+    const firHistoryEntries = firIcao ? firFeedbackByIcao.get(firIcao) ?? [] : [];
     const isOpen = firIcao != null && openFirIcao === firIcao;
 
-    const content = firInfo && firIcao ? (
+    const content = (firInfo || firHistoryEntries.length > 0) && firIcao ? (
       <button
         type="button"
         onClick={() => setOpenFirIcao(isOpen ? null : firIcao)}
@@ -74,6 +93,14 @@ export default function RouteSection({
       </span>
     );
   };
+
+  const openFirName =
+    openFirInfo?.fir_name ??
+    route.fir_sequence
+      .map((firLabel) => firLabel.match(/^(.*?)\s+\(([A-Z]{4})\)$/))
+      .find((match) => match?.[2] === openFirIcao)?.[1] ??
+    openFirFeedbackEntries[0]?.fir_name ??
+    openFirIcao;
 
   return (
     <Section number={5} title="ROUTE">
@@ -134,13 +161,30 @@ export default function RouteSection({
         {route.fir_sequence.map(renderFirLabel)}
       </div>
 
-      {openFirInfo && (
+      {openFirIcao && (openFirInfo || openFirFeedbackEntries.length > 0) && (
         <div className="mt-2 rounded-md border border-border bg-surface-2 px-3 py-2">
           <div className="mb-1 text-xs font-bold text-accent-green">
-            {openFirInfo.fir_name} ({openFirInfo.fir_icao})
+            {openFirName} ({openFirIcao})
           </div>
-          <div className="whitespace-pre-line text-xs text-foreground leading-relaxed">
-            {openFirInfo.notes}
+          <div className="space-y-2">
+            {openFirInfo?.notes && (
+              <InlineDisclosure title="NOTES" defaultOpen>
+                <div className="whitespace-pre-line text-xs text-foreground leading-relaxed">
+                  {openFirInfo.notes}
+                </div>
+              </InlineDisclosure>
+            )}
+
+            <FIRFeedbackPanel
+              key={`fir-feedback-${openFirIcao}-${openFirFeedbackEntries.map((entry) => entry.id).join(",")}`}
+              firIcao={openFirIcao}
+              firName={openFirName || openFirIcao}
+              flightDate={flightDate}
+              fromIcao={departureIcao}
+              toIcao={arrivalIcao}
+              routeText={route.route_string}
+              initialEntries={openFirFeedbackEntries}
+            />
           </div>
         </div>
       )}
