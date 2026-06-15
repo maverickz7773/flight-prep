@@ -184,7 +184,7 @@ commit_and_push_release() {
 
 upload_compose_to_synology() {
   log "Uploading compose.yaml to Synology"
-  scp -P "$SYNOLOGY_SSH_PORT" compose.yaml "${SYNOLOGY_SSH_USER}@${SYNOLOGY_SSH_HOST}:${SYNOLOGY_TARGET_PATH}/compose.yaml"
+  scp -O -P "$SYNOLOGY_SSH_PORT" compose.yaml "${SYNOLOGY_SSH_USER}@${SYNOLOGY_SSH_HOST}:${SYNOLOGY_TARGET_PATH}/compose.yaml"
 }
 
 refresh_synology_project() {

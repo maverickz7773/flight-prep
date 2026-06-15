@@ -47,10 +47,15 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - `cd frontend && npm run build`
 - `cd backend && venv/bin/python -m unittest tests.test_airport_notes`
 - `./scripts/release_all.sh --dry-run v1.1.9` after creating `.synology-release.env`
+- Completed the first live automated release as `v1.1.9`
+- Confirmed Synology is running `ghcr.io/maverickz7773/flight-prep:v1.1.9`
+- Confirmed `http://100.83.254.51:8000/api/health` returns `status: ok`
+- Confirmed the Synology frontend displays `v1.1.9`
+- Confirmed `/volume1/docker/flight-prep/data/airport_feedback.sqlite3` remained present after recreation
+- Updated the upload step to use legacy SCP mode (`scp -O`) for DSM SSH compatibility
 
 **Open Items**
 
-- The real SSH/Tailscale deploy path still needs one live run against Synology after `.synology-release.env` is filled with the correct NAS SSH username
 - Render verification is still indirect through `git push origin main`; the new script does not add separate Render polling yet
 
 ## 2026-06-15 — Codex
