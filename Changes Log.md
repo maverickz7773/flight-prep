@@ -38,10 +38,15 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - `cd frontend && npm run lint`
 - `cd frontend && npm run build`
 - Refreshed the local `frontend_build` served at `http://127.0.0.1:8000`
+- Released commit `77dfa8f` to `main`
+- Confirmed local, Synology, and Render display `v1.1.10`
+- Confirmed Synology is running `ghcr.io/maverickz7773/flight-prep:v1.1.10`
+- Confirmed Synology parses `QR 8945.pdf` company route as `SZX-20ET`
+- Ran `./scripts/smoke_check.sh https://flight-prep.onrender.com "QR 8945.pdf"`
 
 **Open Items**
 
-- Verify the company route display on Synology and Render after the `v1.1.10` deployment
+- None for this release
 
 ## 2026-06-15 — Codex
 
