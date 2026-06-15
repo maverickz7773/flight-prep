@@ -103,6 +103,49 @@ Check initial Approach Chart
 Speed control 160 -> 5nm.
 Check standard routing.
 
+[RPLL]
+DEP: 
+Restriction airways L628 : FL280 and FL340.
+Departure Proc :
+Call ATC for clearance (5 mins).
+Call ground for start up clearance.
+Call ramp for pushback and start. Check startup point.
+Call ground for Taxi.
+
+
+Expect radar vectors to SIRCA, climb 7000.
+NADP'A' : Accelaration : 3000, Thrust Reduction : 1500.
+Runway poorly lit. Potholes, soft spots.
+Taxi lines are difficult to see during darks and heavy rains.
+Taxi lane can be confusing especially at crossing Rwy 31/13.
+
+Ramp Operations terminated when TS and lightning activity.
+
+Terrain on North East. Check MVA chart. GPWS activation occurred at Manila.
+Special EOSID Runway 06.
+
+ARR: 
+Traffic and weather deviation may require additional fuel. Carry atleast 2500 kgs extra.
+Prepare for extensive radar vectors.
+Maximum ROD/ROC : 1500fpm within 2000'
+Terrain on North East. Check MVA chart. GPWS activation occurred at Manila.
+Speed :
+TMA (check area in Jepps FD) : 250 kts
+20nm : 210 kts, 10nm : 180kts, 5nm : 150kts.
+
+False Localizer and Glideslope reported.
+
+Runway poorly lit. Potholes, soft spots.
+Taxi lines are difficult to see during darks and heavy rains.
+Taxi lane can be confusing especially at crossing Rwy 31/13.
+
+Ramp Operations terminated when TS and lightning activity.
+
+Holding Procedures : Table IV-I-II
+
+RETI : LMT
+
+
 
 [OTHH]
 DEP: ACN : ADIRU alignment done by MOCC (no more in ACN). GPS OFF, Nav Unable RNP pops out if dont change RNP. Put GPS back on after Muscat

@@ -425,6 +425,29 @@ Weather Deviation no comm : old proc :10NM Offset : > 10 nm (North Climb 300ft/S
 
 Holding Procedures Table IV-1-1
 
+[RPHI]
+Logon CPDLC RPHI : 10 -25 mins prior entry : A582,A590,G578,M501,G467
+
+Hong Kong to Manila: A461: Available flight levels are FL290, FL330, FL370, and FL410
+Boundary FIR NOMAN.
+RNP 10 on A461 above FL290
+
+Manila to Ho Chi Minh: L628 : No-Pre-Departure Coordination (No-PDC) flight levels are FL280 and FL340
+CPDLC RPHI.
+HF 8902 13300
+LSWD procedures.
+Boundary FIR ARESI.
+CPDLC VVHM : Log on 15-45 mins.
+RNP 10
+
+Speed TMA Manila : 250 kts : Check area in Jepps FD
+
+Holding Procedures Table IV-1-II
+
+Emergency Oceanic :
+Rapid Decomp no comm : 90° / 25NM Offset : (North Climb 500ft/South Descend 500ft)
+Weather Deviation no comm : old proc :10NM Offset : > 10 nm (North Climb 300ft/South Descend 300ft)
+
 
 [YMMM] 
 ITCZ : expect weather. Coordinate early.
@@ -740,6 +763,7 @@ Weather Deviation no comm : ICAO :5NM Offset : > 5 nm (North Climb 300ft/South D
 
 
 [HLLL]
+Refer SCB overfly Tripoli.
 Communication : 10 to 15 mins depends on point of entry.
 Entering the Tripoli FIR from Cairo (HECC) or N’Djamena (FTTT) FIRs must attempt frequency contact at least 10 minutes prior to entry as follows :
 From Cairo via DITAR: Contact Kufra TWR on VHF 121.9MHz

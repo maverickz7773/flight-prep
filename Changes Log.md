@@ -16,6 +16,37 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
 
+## 2026-06-15 — Codex
+
+**Summary**
+
+- Updated [Operational Info.txt](/Users/eby/Personal/Programming/Cloude%20Code%20Tutorial/Flight%20Prep/Operational%20Info.txt) with a new `[RPLL]` airport note block
+- `RPLL` departure notes now include:
+  - `L628` airway flight-level restriction
+  - Manila clearance / startup / pushback / taxi call flow
+  - expected vectors to `SIRCA`
+  - `NADP A` acceleration and thrust-reduction reminders
+  - runway, taxi, ramp-lightning, terrain, and `EOSID RWY 06` cautions
+- `RPLL` arrival notes now include:
+  - extra-fuel guidance for vectoring/weather deviation
+  - `ROD/ROC` caution
+  - speed profile guidance
+  - false localizer / glideslope caution
+  - runway / taxi / ramp-lightning cautions
+  - holding and `RETI` references
+- Updated [Enroute Info.txt](/Users/eby/Personal/Programming/Cloude%20Code%20Tutorial/Flight%20Prep/Enroute%20Info.txt):
+  - added a new `[RPHI]` FIR block with CPDLC, airway, boundary, RNP, HF, LSWD, speed, holding, and oceanic emergency notes
+  - added `Refer SCB overfly Tripoli.` to `[HLLL]`
+
+**Verification**
+
+- Reviewed the local diff for `Operational Info.txt` and `Enroute Info.txt`
+- Confirmed the local app remained available at `http://127.0.0.1:8000`
+
+**Open Items**
+
+- Synology still needs the usual `compose.yaml` upload and project recreate/restart after the new image is cut
+
 ## 2026-06-05 — Codex
 
 **Summary**
