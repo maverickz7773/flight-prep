@@ -72,6 +72,20 @@ class FlightInfoParserRegressionTests(unittest.TestCase):
         self.assertEqual(briefing.flight_info.arrival_icao, "DNMM")
         self.assertEqual(briefing.flight_info.departure_utc_offset, "+3")
         self.assertEqual(briefing.flight_info.arrival_utc_offset, "+1")
+        self.assertEqual(briefing.flight_info.company_route, "91H-LOS")
+
+    def test_company_route_identifiers(self) -> None:
+        expected_routes = {
+            "QR 935.pdf": "MNL-45",
+            "QR 932.pdf": "40-MNL",
+            "QR 8812.pdf": "90H-LOS",
+            "QR 8945.pdf": "SZX-20ET",
+        }
+
+        for filename, expected_route in expected_routes.items():
+            with self.subTest(filename=filename):
+                briefing = self._parse(filename)
+                self.assertEqual(briefing.flight_info.company_route, expected_route)
 
 
 if __name__ == "__main__":

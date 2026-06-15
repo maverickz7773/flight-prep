@@ -25,6 +25,7 @@ class FlightInfo(BaseModel):
     arrival_runway: str | None = None
     sid: str | None = None
     star: str | None = None
+    company_route: str | None = None
     route_string: str | None = None
     ground_distance: int | None = None
     wind_component: str | None = None

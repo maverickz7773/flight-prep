@@ -21,6 +21,7 @@ export interface FlightInfo {
   arrival_runway: string | null;
   sid: string | null;
   star: string | null;
+  company_route: string | null;
   route_string: string | null;
   ground_distance: number | null;
   wind_component: string | null;

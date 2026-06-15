@@ -106,9 +106,17 @@ export default function BriefingView({ data }: { data: BriefingData }) {
         </div>
         {data.mel_items.length > 0 ? (
           <div className="mt-2 pt-2 border-t border-accent-amber/30">
-            <p className="text-accent-amber text-xs font-bold mb-1">
-              MEL/CDL ITEMS ({data.mel_items.length})
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 mb-1">
+              <p className="text-accent-amber text-xs font-bold">
+                MEL/CDL ITEMS ({data.mel_items.length})
+              </p>
+              {fi.company_route && (
+                <p className="text-xs">
+                  <span className="text-muted">ROUTE: </span>
+                  <span className="text-foreground font-bold">{fi.company_route}</span>
+                </p>
+              )}
+            </div>
             {data.mel_items.map((mel, i) => (
               <div key={i} className="text-xs ml-2 mb-0.5">
                 <span className="text-accent-amber font-bold">{mel.reference}</span>
@@ -121,7 +129,15 @@ export default function BriefingView({ data }: { data: BriefingData }) {
           </div>
         ) : (
           <div className="mt-2 pt-2 border-t border-border">
-            <p className="text-xs text-muted">MEL/CDL: N/A</p>
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+              <p className="text-xs text-muted">MEL/CDL: N/A</p>
+              {fi.company_route && (
+                <p className="text-xs">
+                  <span className="text-muted">ROUTE: </span>
+                  <span className="text-foreground font-bold">{fi.company_route}</span>
+                </p>
+              )}
+            </div>
           </div>
         )}
       </div>

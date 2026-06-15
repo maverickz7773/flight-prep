@@ -20,6 +20,33 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 
 **Summary**
 
+- Added company route identifier parsing from the operational route line before the departure ICAO
+- Added `company_route` to the backend and frontend `FlightInfo` contract
+- Confirmed support for:
+  - `QR 935.pdf` → `MNL-45`
+  - `QR 932.pdf` → `40-MNL`
+  - `QR 8564.pdf` → `91H-LOS`
+  - `QR 8812.pdf` → `90H-LOS`
+  - `QR 8945.pdf` → `SZX-20ET`
+- Added the company route beside the `MEL/CDL` information in the briefing header
+- Kept the header row responsive so MEL/CDL and route information can wrap cleanly on mobile
+- Prepared the change for release as `v1.1.10`
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_flight_info_parser`
+- `cd frontend && npm run lint`
+- `cd frontend && npm run build`
+- Refreshed the local `frontend_build` served at `http://127.0.0.1:8000`
+
+**Open Items**
+
+- Verify the company route display on Synology and Render after the `v1.1.10` deployment
+
+## 2026-06-15 — Codex
+
+**Summary**
+
 - Added a one-command `flight-prep` Synology release wrapper at `/Users/eby/Personal/Programming/Cloude Code Tutorial/Flight Prep/scripts/release_all.sh`
 - Kept the automation scoped to `flight-prep` only with hardcoded safety checks for:
   - image repo `ghcr.io/maverickz7773/flight-prep`

@@ -228,7 +228,17 @@ def parse_flight_info(pages: list[str]) -> FlightInfo:
 
     dep_rwy = None
     arr_rwy = None
+    company_route = None
     route_string = None
+
+    company_route_match = re.search(
+        r"\b([A-Z0-9]+(?:-[A-Z0-9]+)+)\s*:\s*([A-Z]{4})\b",
+        atc_block or text,
+    )
+    if company_route_match and (
+        not dep_icao or company_route_match.group(2) == dep_icao
+    ):
+        company_route = company_route_match.group(1)
 
     route_match = re.search(
         r"(\w{4})\s+(\d{2}[LRC]?)\s+((?:[A-Z][A-Z0-9]+\s+)+)(\w{4})\s+(\d{2}[LRC]?)",
@@ -283,6 +293,7 @@ def parse_flight_info(pages: list[str]) -> FlightInfo:
         arrival_runway=arr_rwy,
         sid=sid,
         star=star,
+        company_route=company_route,
         route_string=route_string,
         ground_distance=ground_distance,
         wind_component=wind_component,
