@@ -6,6 +6,7 @@ backend/**/__pycache__/
 *.pyc
 .DS_Store
 .env
+.synology-release.env
 frontend_build/
 frontend/out/
 data/*.sqlite3

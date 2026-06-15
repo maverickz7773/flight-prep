@@ -23,11 +23,19 @@ Flight Prep converts airline OFP (Operational Flight Plan) PDFs in Lido format i
 - **Compose file in repo root**: `compose.yaml`
 - **Preferred release flow**:
   1. Make code/content changes on the Mac repo
-  2. Run local checks
-  3. Run `./scripts/release_synology.sh vX.Y.Z`
-  4. Commit and push repo changes
-  5. Upload the updated `compose.yaml` to Synology `/docker/flight-prep/`
-  6. Restart or recreate the `flight-prep` project in Container Manager
+  2. Ensure `.synology-release.env` exists (copy from `.synology-release.env.example`)
+  3. Run `./scripts/release_all.sh vX.Y.Z`
+- **What `release_all.sh` does**:
+  1. runs local verification
+  2. updates `frontend/src/lib/version.ts`
+  3. updates repo-root `compose.yaml`
+  4. builds and pushes the `linux/amd64` Synology image to GHCR
+  5. commits and pushes `main` so Render auto-deploys
+  6. uploads `compose.yaml` to Synology `/volume1/docker/flight-prep`
+  7. recreates only the Synology `flight-prep` app over SSH/Tailscale
+  8. verifies Synology health and frontend version
+- **Dry run**: `./scripts/release_all.sh --dry-run vX.Y.Z`
+- **Operator note**: see `docs/synology-release.md`
 - **Note**: Text-only changes in `Operational Info.txt`, `Enroute Info.txt`, and `NATS Procedure.txt` still require a new Docker image and Synology restart, because those files are baked into the image.
 
 ## Development Commands
@@ -159,13 +167,10 @@ Use this after any user-facing app or text-file change that should go live on Sy
 1. Update the code or the text source file (`Operational Info.txt`, `Enroute Info.txt`, `NATS Procedure.txt`, etc.).
 2. If the app version should change, use the next release tag like `v1.1.2`.
 3. Update `Changes Log.md`.
-4. Run the normal local checks (`npm run lint`, `npm run build`, backend tests if needed).
+4. Ensure `.synology-release.env` exists with the Synology SSH/Tailscale settings.
 5. Run:
-   - `./scripts/release_synology.sh vX.Y.Z`
-6. Commit and push the repo changes.
-7. Upload the repo-root `compose.yaml` to Synology `/docker/flight-prep/`.
-8. In Synology Container Manager, restart or recreate the `flight-prep` project.
-9. Verify the app on:
+   - `./scripts/release_all.sh vX.Y.Z`
+6. Verify the app on:
    - `http://100.83.254.51:8000`
 
 ## Shared Handoff Notes
@@ -176,6 +181,7 @@ Use this after any user-facing app or text-file change that should go live on Sy
 - Keep local planning/reference files out of deploy commits unless they are intentionally part of the repo.
 - `compose.yaml` in the repo root is the tracked Synology project file and should stay aligned with the current GHCR image tag.
 - `scripts/release_synology.sh` updates `frontend/src/lib/version.ts`, updates `compose.yaml`, and pushes the `linux/amd64` Synology image to GHCR.
+- `scripts/release_all.sh` is the top-level `flight-prep`-only automation wrapper and must never be broadened to touch `ebt-ofp-prep`.
 
 ## Theme
 

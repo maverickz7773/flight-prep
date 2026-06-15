@@ -20,6 +20,43 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 
 **Summary**
 
+- Added a one-command `flight-prep` Synology release wrapper at `/Users/eby/Personal/Programming/Cloude Code Tutorial/Flight Prep/scripts/release_all.sh`
+- Kept the automation scoped to `flight-prep` only with hardcoded safety checks for:
+  - image repo `ghcr.io/maverickz7773/flight-prep`
+  - Synology path `/volume1/docker/flight-prep`
+  - project name `flight-prep`
+  - container name `flight-prep`
+- Added Synology SSH/Tailscale config templating with:
+  - tracked example file `/Users/eby/Personal/Programming/Cloude Code Tutorial/Flight Prep/.synology-release.env.example`
+  - ignored local secrets file `.synology-release.env`
+- Refactored `/Users/eby/Personal/Programming/Cloude Code Tutorial/Flight Prep/scripts/release_synology.sh` so it can also run in `--skip-build` mode for dry-run validation
+- Added Synology deploy automation steps to:
+  - upload repo-root `compose.yaml` to `/volume1/docker/flight-prep`
+  - detect `docker compose` first, then `docker-compose`
+  - recreate only the `flight-prep` app over SSH/Tailscale
+  - verify the running container image tag
+  - verify Synology health and frontend version
+- Added a short operator guide at `/Users/eby/Personal/Programming/Cloude Code Tutorial/Flight Prep/docs/synology-release.md`
+- Updated `/Users/eby/Personal/Programming/Cloude Code Tutorial/Flight Prep/AGENTS.md` so the new primary Synology flow is `./scripts/release_all.sh vX.Y.Z`
+
+**Verification**
+
+- `bash -n scripts/release_synology.sh`
+- `bash -n scripts/release_all.sh`
+- `cd frontend && npm run lint`
+- `cd frontend && npm run build`
+- `cd backend && venv/bin/python -m unittest tests.test_airport_notes`
+- `./scripts/release_all.sh --dry-run v1.1.9` after creating `.synology-release.env`
+
+**Open Items**
+
+- The real SSH/Tailscale deploy path still needs one live run against Synology after `.synology-release.env` is filled with the correct NAS SSH username
+- Render verification is still indirect through `git push origin main`; the new script does not add separate Render polling yet
+
+## 2026-06-15 — Codex
+
+**Summary**
+
 - Updated [Operational Info.txt](/Users/eby/Personal/Programming/Cloude%20Code%20Tutorial/Flight%20Prep/Operational%20Info.txt) with a new `[RPLL]` airport note block
 - `RPLL` departure notes now include:
   - `L628` airway flight-level restriction

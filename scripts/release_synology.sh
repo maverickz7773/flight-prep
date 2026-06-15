@@ -5,12 +5,39 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-VERSION="${1:-}"
 IMAGE_REPO="ghcr.io/maverickz7773/flight-prep"
 PLATFORM="linux/amd64"
+SKIP_BUILD=0
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/release_synology.sh [--skip-build] v1.1.2
+
+Options:
+  --skip-build   Update version.ts and compose.yaml without building/pushing Docker
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --skip-build)
+      SKIP_BUILD=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+VERSION="${1:-}"
 
 if [[ -z "$VERSION" ]]; then
-  echo "Usage: scripts/release_synology.sh v1.1.2"
+  usage
   exit 1
 fi
 
@@ -19,13 +46,18 @@ if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   exit 1
 fi
 
-if ! command -v docker >/dev/null 2>&1; then
-  echo "docker is required"
+if [[ ! -f compose.yaml ]]; then
+  echo "compose.yaml not found in repo root"
   exit 1
 fi
 
-if [[ ! -f compose.yaml ]]; then
-  echo "compose.yaml not found in repo root"
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "python3 is required"
+  exit 1
+fi
+
+if [[ "$SKIP_BUILD" -eq 0 ]] && ! command -v docker >/dev/null 2>&1; then
+  echo "docker is required"
   exit 1
 fi
 
@@ -62,19 +94,26 @@ if text == updated:
 compose_file.write_text(updated)
 PY
 
-echo "Building and pushing ${IMAGE_TAG} for ${PLATFORM}..."
-docker buildx build \
-  --platform "${PLATFORM}" \
-  -t "${IMAGE_TAG}" \
-  --push \
-  .
+if [[ "$SKIP_BUILD" -eq 0 ]]; then
+  echo "Building and pushing ${IMAGE_TAG} for ${PLATFORM}..."
+  docker buildx build \
+    --platform "${PLATFORM}" \
+    -t "${IMAGE_TAG}" \
+    --push \
+    .
+else
+  echo "Skipping Docker build/push; release files updated only."
+fi
 
 echo
 echo "Synology release prepared:"
 echo "- frontend/src/lib/version.ts updated to ${VERSION}"
 echo "- compose.yaml updated to ${IMAGE_TAG}"
-echo
-echo "Next steps:"
-echo "1. Commit and push the repo changes."
-echo "2. Upload compose.yaml to /docker/flight-prep on Synology."
-echo "3. Restart or recreate the flight-prep project in Container Manager."
+
+if [[ "$SKIP_BUILD" -eq 0 ]]; then
+  echo
+  echo "Next steps:"
+  echo "1. Commit and push the repo changes."
+  echo "2. Upload compose.yaml to /volume1/docker/flight-prep on Synology."
+  echo "3. Refresh the flight-prep project on Synology."
+fi
