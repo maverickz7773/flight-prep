@@ -31,10 +31,15 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 - Confirmed `QR 872.pdf` parses `SID=KUPRO2E` and `STAR=SASAN2`
 - Confirmed `QR 8564.pdf` still does not invent a STAR for the direct/VOR arrival case
 - Spot-checked `QR 8945.pdf` and `QR 8288.pdf` SID/STAR parsing after the fix
+- Rebuilt and pushed `ghcr.io/maverickz7773/flight-prep:v1.1.10`
+- Recreated the Synology `flight-prep` project only
+- Confirmed Synology health endpoint returns `status: ok`
+- Confirmed Synology frontend still displays `v1.1.10`
+- Confirmed Synology parse of `QR 872.pdf` returns `STAR=SASAN2`
 
 **Open Items**
 
-- Rebuild and redeploy the `v1.1.10` Synology image so the private app receives the parser hotfix without changing the displayed version
+- None for this hotfix
 
 ## 2026-06-17 — Codex
 
