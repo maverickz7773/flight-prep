@@ -162,9 +162,9 @@ Use this checklist for both Codex and Claude Code so changes stay compatible in 
 
 ### Synology Update Checklist
 
-Use this after any user-facing app or text-file change that should go live on Synology.
+Use this after any user-facing app change that should go live on Synology.
 
-1. Update the code or the text source file (`Operational Info.txt`, `Enroute Info.txt`, `NATS Procedure.txt`, etc.).
+1. Update the code or bundled text source file (`NATS Procedure.txt`, etc.).
 2. If the app version should change, use the next release tag like `v1.1.2`.
 3. Update `Changes Log.md`.
 4. Ensure `.synology-release.env` exists with the Synology SSH/Tailscale settings.
@@ -173,10 +173,24 @@ Use this after any user-facing app or text-file change that should go live on Sy
 6. Verify the app on:
    - `http://100.83.254.51:8000`
 
+### Synology Note-Only Updates
+
+Use this for routine airport/FIR note changes that should not change the visible app version.
+
+1. Update the NAS-mounted files in `/volume1/docker/flight-prep/`:
+   - `Operational Info.txt` for Section 4/6 `OPS INFO`
+   - `Enroute Info.txt` for Section 5 FIR notes
+2. Do not bump `frontend/src/lib/version.ts`.
+3. Do not build a new Docker image.
+4. A container restart is usually not required; the backend reloads these files by modified time on the next PDF parse.
+5. If the UI still shows old notes after parsing a new PDF, restart only the `flight-prep` project in Synology Container Manager.
+
 ## Shared Handoff Notes
 
 - `Changes Log.md` is the shared progress file between Codex and Claude Code.
-- `Operational Info.txt` is runtime-critical for `OPS INFO`; if it is missing from Docker, production will lose airport notes.
+- `Operational Info.txt` is runtime-critical for `OPS INFO`.
+- On Synology, `Operational Info.txt` and `Enroute Info.txt` are mounted from `/volume1/docker/flight-prep/` so routine note-only updates do not require a Docker image rebuild or app version bump.
+- Render still uses the text files baked into the Docker image, so public Render text-note updates still require a normal release.
 - Current smoke-test PDF is `QR 8945.pdf`.
 - Keep local planning/reference files out of deploy commits unless they are intentionally part of the repo.
 - `compose.yaml` in the repo root is the tracked Synology project file and should stay aligned with the current GHCR image tag.

@@ -341,4 +341,31 @@ Expect marshaller on parking and tow in.
 
 If parking cargo congested, expect to park at Terminal. Check authorized parking.
 
+[HECA]
+DEP:
+Expect GPS Interference.
+RT ATC can be difficult to understand. Too long and too fast.
+Departure Clearance : Confirm Immigration Security Check Completed. ATC clearance will give exit FIR clearance.
+NAP 1 : Acc 3000'
+Taxi upslope to the South. When landing plan runway exit as to use minimum braking.
+Poor Lighting Reported
+Caution Light poles on taxiway between W1 and W2.
+
+ARR:
+Sinai Restriction Level.
+Elev 462'. Check profile height and performance.
+Expect to have GPS RFI. Monitor raw data if required.
+RT ATC can be difficult to understand. Too long and too fast.
+No STAR given. Expect vector. FMC set CVO/-15. Rwy 05 MENLI Height : 13500'
+Low TA : 4500'.
+Speed Control :
+Below 4500' : 220kts, Start turn to intercept localizer : 180kts
+160kts to 5.
+PAPI reported difficult to see until 0.5nm from Runway.
+Taxi upslope to the South. When landing plan runway exit as to use minimum braking.
+Poor Lighting Reported
+Caution Light poles on taxiway between W1 and W2.
+
+
+Monitor Imigresen.
 

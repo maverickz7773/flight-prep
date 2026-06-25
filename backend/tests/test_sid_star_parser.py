@@ -60,6 +60,12 @@ class SidStarParserRegressionTests(unittest.TestCase):
         self.assertIsNone(briefing.flight_info.star)
         self.assertIsNone(briefing.arrival.star)
 
+    def test_qr_872_parses_star_before_destination_alternate_section(self) -> None:
+        briefing = self._parse("QR 872.pdf")
+
+        self.assertEqual(briefing.flight_info.star, "SASAN2")
+        self.assertEqual(briefing.arrival.star, "SASAN2")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -12,9 +12,58 @@ Use this file as the shared handoff log between Codex and Claude Code when both 
 
 - Production runs from Render using the same repo root and URL: [https://flight-prep.onrender.com](https://flight-prep.onrender.com)
 - Docker must include `Operational Info.txt`, `Enroute Info.txt`, and `NATS Procedure.txt` or local text-driven notes will disappear in production.
+- Synology mounts `Operational Info.txt` and `Enroute Info.txt` from `/volume1/docker/flight-prep/` so routine private note updates do not require an app version bump.
 - Use `scripts/smoke_check.sh` for a quick deploy check.
 - Current smoke PDF: `QR 8945.pdf`
 - Backend regression tests live in `backend/tests/`
+
+## 2026-06-25 — Codex
+
+**Summary**
+
+- Fixed STAR extraction for primary arrivals when the final route page also contains a destination-to-alternate section
+- `QR 872.pdf` now correctly reads `SASAN2` from the primary arrival segment before the alternate routing begins
+- Kept the visible app version unchanged at `v1.1.10` for this same-version Synology hotfix
+
+**Verification**
+
+- `cd backend && venv/bin/python -m unittest tests.test_sid_star_parser`
+- Confirmed `QR 872.pdf` parses `SID=KUPRO2E` and `STAR=SASAN2`
+- Confirmed `QR 8564.pdf` still does not invent a STAR for the direct/VOR arrival case
+- Spot-checked `QR 8945.pdf` and `QR 8288.pdf` SID/STAR parsing after the fix
+
+**Open Items**
+
+- Rebuild and redeploy the `v1.1.10` Synology image so the private app receives the parser hotfix without changing the displayed version
+
+## 2026-06-17 — Codex
+
+**Summary**
+
+- Updated Synology `compose.yaml` to mount `Operational Info.txt` and `Enroute Info.txt` from the NAS project folder
+- Kept the app image and visible version at `v1.1.10`
+- Documented a note-only Synology update path so routine `OPS INFO` and FIR-note changes do not require Docker rebuilds or version bumps
+- Clarified that Render still uses text files baked into the Docker image and therefore still requires a normal release for public text-note updates
+
+**Verification**
+
+- Confirmed Section 4/6 `OPS INFO` reads from `Operational Info.txt`
+- Confirmed Section 5 FIR notes read from `Enroute Info.txt`
+- Confirmed the backend reloads both files by modified time on future parses
+- Uploaded `compose.yaml`, `Operational Info.txt`, and `Enroute Info.txt` to `/volume1/docker/flight-prep/`
+- Recreated the Synology `flight-prep` project once to activate the NAS-mounted files
+- Confirmed the running container has active mounts for:
+  - `/volume1/docker/flight-prep/Operational Info.txt` -> `/app/Operational Info.txt`
+  - `/volume1/docker/flight-prep/Enroute Info.txt` -> `/app/Enroute Info.txt`
+  - `/volume1/docker/flight-prep/data` -> `/app/data`
+- Confirmed Synology remained healthy on `v1.1.10`
+- Fixed the HECA note labels from `Dep:` / `Arr:` to parser-compatible `DEP:` / `ARR:`
+- Confirmed `QR 1302.pdf` (`HECA -> OTHH`) shows HECA departure `OPS INFO` in Section 4
+- Confirmed `QR 1301.pdf` (`OTHH -> HECA`) shows HECA arrival `OPS INFO` in Section 6
+
+**Open Items**
+
+- None for the Synology note-mount setup
 
 ## 2026-06-15 — Codex
 

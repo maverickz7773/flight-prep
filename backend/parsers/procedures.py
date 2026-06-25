@@ -17,8 +17,21 @@ def is_route_page(page: str) -> bool:
     )
 
 
+def _primary_route_text(page: str) -> str:
+    """Keep destination arrival lines while excluding alternate routing below."""
+    alternate_marker = "DESTINATION TO ALTERNATE"
+    if alternate_marker not in page:
+        return page
+    return page[: page.index(alternate_marker)]
+
+
 def iter_route_pages(pages: list[str]) -> list[str]:
-    return [page for page in pages if is_route_page(page) and "DESTINATION TO ALTERNATE" not in page]
+    route_pages: list[str] = []
+    for page in pages:
+        if not is_route_page(page):
+            continue
+        route_pages.append(_primary_route_text(page))
+    return route_pages
 
 
 def is_procedure_token(token: str) -> bool:

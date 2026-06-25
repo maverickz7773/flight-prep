@@ -10,3 +10,5 @@ services:
     restart: unless-stopped
     volumes:
       - ./data:/app/data
+      - "./Operational Info.txt:/app/Operational Info.txt:ro"
+      - "./Enroute Info.txt:/app/Enroute Info.txt:ro"
